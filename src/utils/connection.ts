@@ -58,11 +58,7 @@ export async function executeQuery(query: string, params?: { [key: string]: any 
         // Ejecutar el procedimiento almacenado
         const result = await request.execute(query);
 
-        //console.log(result);
         // Verificar y procesar el resultado
-
-        //const jsonResult: queryResponse = JSON.parse(result.recordset[0].JsonResult);
-
         
          if (result.recordset?.length > 0 && result.recordset[0].JsonResult) {
             const jsonResult: queryResponse = JSON.parse(result.recordset[0].JsonResult);

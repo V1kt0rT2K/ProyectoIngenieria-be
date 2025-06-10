@@ -1,6 +1,6 @@
 import express, { Express, Request, Response, NextFunction } from "express";
 import indexRoutes from './indexRoutes';
-import { queryResponse } from "./queryResponse";
+import { queryResponse } from "./utils/queryResponse";
 // import createWebSocketServer from './services/websocketService'; // Importa el servidor WebSocket
 
 const app: Express = express();
