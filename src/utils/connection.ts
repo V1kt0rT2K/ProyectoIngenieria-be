@@ -1,15 +1,15 @@
 import sql, { ConnectionPool } from 'mssql';
 //require('dotenv').config();
 
-//import { DB_DATABASE, DB_PASSWORD, DB_SERVER, DB_USER } from "./config";
+import {config} from "../config";
 
 import {queryResponse} from './queryResponse';
 
 export const dbSettings = {
-    user: 'fulano1234_SQLLogin_1',
-    password: 'grh33bcjf8',
-    server: 'abcdPrueba.mssql.somee.com',
-    database: 'abcdPrueba',
+    user: config.DB_USER,
+    password: config.DB_PASSWORD,
+    server: config.DB_SERVER,
+    database: config.DB_NAME,
     options: {
         encrypt: false,
         trustServerCertificate: true, // true para desarrollador
