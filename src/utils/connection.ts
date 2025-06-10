@@ -68,12 +68,12 @@ export async function executeQuery(query: string, params?: { [key: string]: any 
             return jsonResult;
         } else {
             // Retornar mensaje de error si no hay datos
-            return queryResponse.error(404, "No se encontraron datos", 1);
+            return queryResponse.error(404, "No se encontraron datos");
         }
     } catch (error) {
         console.error('Error al ejecutar consulta:', error);
         // Retornar respuesta de error en caso de excepción
-        return queryResponse.error(500, "Error interno del servidor", 4);
+        return queryResponse.error(500, "Error interno del servidor");
     }
 }
 
@@ -99,11 +99,11 @@ export async function executeQueryNoFormat(query: string, params?: { [key: strin
             return jsonResult;
         } else {
             // Retornar mensaje de error si no hay datos
-            return queryResponse.error(404, "No se encontraron datos", 1);
+            return queryResponse.error(404, "No se encontraron datos");
         }
     } catch (error) {
         console.error('Error al ejecutar consulta:', error);
         // Retornar respuesta de error en caso de excepción
-        return queryResponse.error(500, "Error interno del servidor", 4);
+        return queryResponse.error(500, "Error interno del servidor");
     }
 }

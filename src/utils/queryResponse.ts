@@ -1,27 +1,24 @@
 interface IMeta {
     status: number;
     message: string;
-    criticity: number;
 }
 
 export class queryResponse {
     data: any[];
     meta: IMeta[];
-    hasError: boolean;
 
     constructor(data: any[], meta: IMeta[], hasError: boolean) {
         this.data = data;
         this.meta = meta;
-        this.hasError = hasError;
     }
 
-    static success(data: any[], message: string, criticity: number): queryResponse {
+    static success(data: any[], message: string): queryResponse {
         const status: number = 200;
-        return new queryResponse(data, [{ status, message, criticity }], false);
+        return new queryResponse(data, [{ status, message }], false);
     }
 
-    static error(status: number, message: string, criticity: number): queryResponse {
-        return new queryResponse([], [{ status, message, criticity }], true);
+    static error(status: number, message: string): queryResponse {
+        return new queryResponse([], [{ status, message}], true);
     }
 
     static multipleErrors(meta: IMeta[]): queryResponse {

@@ -27,7 +27,7 @@ app.use((req:Request, res:Response, next:NextFunction) => {
 
   app.use((err: { status: number; }, req:Request, res:Response, next:NextFunction) => {
     if (err instanceof SyntaxError && err.status === 400 && 'body' in err) {
-      return res.status(400).send(queryResponse.error(400, "Error en la solicitud", 3));
+      return res.status(400).send(queryResponse.error(400, "Error en la solicitud"));
     }
     next();
 });

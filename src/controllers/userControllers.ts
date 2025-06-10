@@ -17,7 +17,7 @@ export const getAllUsers = async (req: Request, res: Response) => {
     } 
     catch (error) {
         console.error('Error al ejecutar consulta:', error);
-        return res.status(500).send(queryResponse.error(500, "Error interno del servidor", 4));
+        return res.status(500).send(queryResponse.error(500, "Error interno del servidor"));
     } 
 
 }
@@ -33,7 +33,7 @@ export const saveUser = async (req: Request, res: Response) => {
     } 
     catch (error) {
         console.error('Error al ejecutar consulta:', error);
-        return res.status(500).send(queryResponse.error(500, "Error interno del servidor", 4));
+        return res.status(500).send(queryResponse.error(500, "Error interno del servidor"));
     } 
 
 }
