@@ -1,109 +1,65 @@
-import sql, { ConnectionPool } from 'mssql';
-//require('dotenv').config();
+import db , {ConnectionPool} from 'mssql';
+import { config } from '../config';
+import { Request } from 'express';
 
-import {config} from "../config";
-
-import {queryResponse} from './queryResponse';
-
-export const dbSettings = {
-    user: config.DB_USER,
-    password: config.DB_PASSWORD,
-    server: config.DB_SERVER,
-    database: config.DB_NAME,
+const connectionConfig = {
+    user : config.DB_USER,
+    password : config.DB_PASSWORD,
+    database : config.DB_NAME,
+    server : config.DB_SERVER,
     options: {
         encrypt: false,
-        trustServerCertificate: true, // true para desarrollador
-    },
-    pool: {
-        max: 20, // Número máximo de conexiones en el pool
-        min: 0,  // Número mínimo de conexiones en el pool
-        idleTimeoutMillis: 120000 // Tiempo que una conexión puede estar inactiva antes de ser cerrada
-    }
+        trustServerCertificate: false,
+    }  
+
 };
 
-let pool: ConnectionPool;
+let pool : ConnectionPool;
 
-export async function connectDB() {
-    if (!pool) {
-        try {
-            pool = await sql.connect(dbSettings);
-            console.log("Conexión exitosa");
-        } catch (error) {
-            console.log("Error al conectarse");
-            console.error(error);
-        }
+async function connectDB() {
+    try{
+        pool = await db.connect(connectionConfig);
+    }catch(error){
+        console.log(error);
     }
     return pool;
-}
+};
 
-export async function disconnectDB() {
-    console.log("cerrando conexión")
+
+async function disconnectDB() {
     await pool.close();
 }
 
-export async function executeQuery(query: string, params?: { [key: string]: any }): Promise<queryResponse> {
-    try {
+
+export async function executeProcedure(query: string, params? : { [key:string] : any }) : Promise<any>{
+    try{
         const pool = await connectDB();
         const request = pool.request();
 
-        // Si hay parámetros, añadirlos a la solicitud
-        if (params) {
-            for (const key in params) {
-                if (params.hasOwnProperty(key)) {
-                    request.input(key, params[key]);
-                }
+        if(params){
+            for(let key in params){
+                request.input(key, params[key]);
             }
         }
 
-        // Ejecutar el procedimiento almacenado
         const result = await request.execute(query);
 
-        // Verificar y procesar el resultado
-        
-         if (result.recordset?.length > 0 && result.recordset[0].JsonResult) {
-            const jsonResult: queryResponse = JSON.parse(result.recordset[0].JsonResult);
+        console.log("result interno", result);
 
-            //console.log("jsonResult", jsonResult);
-            
-            return jsonResult;
-        } else {
-            // Retornar mensaje de error si no hay datos
-            return queryResponse.error(404, "No se encontraron datos");
+        if(result.recordset[0].JsonResponse){
+            const jsonResponse = JSON.parse(result.recordset[0].JsonResponse);
+
+            return jsonResponse;
+        }else{
+            console.log('No hay datos que mostrar');
+            return '';
         }
-    } catch (error) {
-        console.error('Error al ejecutar consulta:', error);
-        // Retornar respuesta de error en caso de excepción
-        return queryResponse.error(500, "Error interno del servidor");
     }
+    catch(error){
+        console.log(error);
+    }
+
+    return '';
 }
 
-export async function executeQueryNoFormat(query: string, params?: { [key: string]: any }): Promise<queryResponse> {
-    try {
-        const pool = await connectDB();
-        const request = pool.request();
 
-        // Si hay parámetros, añadirlos a la solicitud
-        if (params) {
-            for (const key in params) {
-                if (params.hasOwnProperty(key)) {
-                    request.input(key, params[key]);
-                }
-            }
-        }
-
-        // Ejecutar el procedimiento almacenado
-        const result = await request.execute(query);
-        // Verificar y procesar el resultado
-        if (result.recordset?.length > 0 && result.recordset[0]) {
-            const jsonResult: queryResponse = new queryResponse([result.recordset[0]],[],false)
-            return jsonResult;
-        } else {
-            // Retornar mensaje de error si no hay datos
-            return queryResponse.error(404, "No se encontraron datos");
-        }
-    } catch (error) {
-        console.error('Error al ejecutar consulta:', error);
-        // Retornar respuesta de error en caso de excepción
-        return queryResponse.error(500, "Error interno del servidor");
-    }
-}
