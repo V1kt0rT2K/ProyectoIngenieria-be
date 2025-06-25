@@ -11,6 +11,7 @@ Person.init(
     },
     identityNumber:{
         type: DataTypes.STRING(13),
+        unique: true,
         allowNull: false
     },
     firstName:{
