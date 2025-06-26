@@ -1,11 +1,11 @@
 import  express, {Express, Request, Response,NextFunction} from 'express';
-//import userRoutes from './routes/userRoutes';
 import assetRoutes from './routes/assetRoutes';
+import usersRoutes from './routes/usersRoutes';
 
 const index = express.Router();
 
-//index.use('/user',userRoutes);
 index.use('/asset',assetRoutes);
+index.use('/user',usersRoutes);
 
 
 export default index;

@@ -1,5 +1,6 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "../utils/connection";
+
 class Person extends Model {}
 
 Person.init(
