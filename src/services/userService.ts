@@ -8,6 +8,23 @@ class UserService {
         console.log(User.findAll);
         return User.findAll();
     }
+    async loginUser(email: string, password: string) {
+        
+    const login =await  User.findOne({
+            where:{
+                email: email,
+                password: password
+            }
+        });
+        if (login==null){
+            throw new Error('Usuario o contraseña incorrectos');
+        }else{
+            console.log('Usuario logueado correctamente');
+            console.log(login instanceof User);
+            
+        }
+
+        }               
 }
 
 export default UserService;

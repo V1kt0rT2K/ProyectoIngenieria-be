@@ -1,8 +1,9 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "../utils/connection";
-class userDataHistoric extends Model {}
+import userModel from "./userModel";
+class UserDataHistoric extends Model {}
 
-userDataHistoric.init(
+UserDataHistoric.init(
     {
     idUserHistoric:{
         type: DataTypes.INTEGER,
@@ -13,7 +14,7 @@ userDataHistoric.init(
         type: DataTypes.INTEGER,
         allowNull:  false,
         references: {
-            model: 'tblUsers',
+            model: 'userModel',
             key: 'idUser'
         }
     },
@@ -43,11 +44,12 @@ userDataHistoric.init(
 {
     sequelize,
     timestamps: false,
-    modelName: 'userRolesHistoric',
-    tableName: 'tblUserDataHistoric ',
+    modelName: 'UserDataHistoric',
+    tableName: 'tblUserDataHistoric',
     schema: 'users'
 } 
 
 );
-userDataHistoric.sync();  
-export default userDataHistoric;
+UserDataHistoric.hasOne(userModel);
+UserDataHistoric.sync();  
+export default UserDataHistoric;

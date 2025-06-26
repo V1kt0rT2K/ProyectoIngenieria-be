@@ -1,6 +1,7 @@
 import {Sequelize, DataTypes, Model} from 'sequelize';
 import sequelize from '../utils/connection';
 import { MAX } from 'mssql';
+import personModel from './personModel';
 
 class User extends Model {}
 
@@ -61,6 +62,6 @@ User.init(
     ],
   }
 );
-
+User.hasOne(personModel);
 User.sync();
 export default User;
