@@ -1,7 +1,7 @@
 import  express, {Express, Request, Response} from 'express';
 import person from '../models/personModel';
 
-class personService {
+class PersonService {
     constructor(){}
 
     async getAll(){
@@ -10,4 +10,4 @@ class personService {
     }
 }
 
-export default personService;
+export default PersonService;
