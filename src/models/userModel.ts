@@ -33,7 +33,7 @@ User.init(
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'tblPersons', 
+        model: 'personModel', 
         key: 'idPerson',
       },
     },
@@ -41,7 +41,7 @@ User.init(
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'tblUserRoles', 
+        model: 'userRolModel', 
         key: 'idRole',
       },
     },
@@ -62,4 +62,5 @@ User.init(
   }
 );
 
+User.sync();
 export default User;
