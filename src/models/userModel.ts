@@ -1,0 +1,65 @@
+import {Sequelize, DataTypes, Model} from 'sequelize';
+import sequelize from '../utils/connection';
+import { MAX } from 'mssql';
+
+class User extends Model {}
+
+User.init(
+  {
+    idUser: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true,
+    },
+    email: {
+      type: DataTypes.STRING(255),
+      allowNull: false,
+      unique: true,
+    },
+    job: {
+      type: DataTypes.STRING(MAX),
+      allowNull: false,
+    },
+    password: {
+      type: DataTypes.STRING(MAX),
+      allowNull: false,
+    },
+    isEnabled: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+    },
+    idPerson: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'tblPersons', 
+        key: 'idPerson',
+      },
+    },
+    idRole: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'tblUserRoles', 
+        key: 'idRole',
+      },
+    },
+  },
+  {
+    sequelize,
+    modelName: 'User',
+    tableName: 'tblUsers',
+    schema: 'users',
+    timestamps: false,
+    indexes: [
+      {
+        name: 'ukUser_Person',
+        unique: true,
+        fields: ['idPerson', 'idUser'],
+      },
+    ],
+  }
+);
+
+export default User;
