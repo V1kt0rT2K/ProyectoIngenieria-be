@@ -2,9 +2,9 @@ import { Sequelize, DataType, Model, DataTypes } from "sequelize";
 import sequelize from "../utils/connection";
 import { MAX } from 'mssql';
 
-class userRequest extends Model {}
+class UserRequest extends Model {}
 
-userRequest.init(
+UserRequest.init(
     {
         idUserRequest: {
             type: DataTypes.INTEGER,
@@ -67,6 +67,6 @@ userRequest.init(
 
 );
 
-userRequest.sync();
+UserRequest.sync();
 
-export default userRequest;
+export default UserRequest;
