@@ -1,8 +1,8 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "../utils/connection";
-class userDataHistoric extends Model {}
+class UserDataHistoric extends Model {}
 
-userDataHistoric.init(
+UserDataHistoric.init(
     {
     idUserHistoric:{
         type: DataTypes.INTEGER,
@@ -43,11 +43,11 @@ userDataHistoric.init(
 {
     sequelize,
     timestamps: false,
-    modelName: 'userRolesHistoric',
-    tableName: 'tblUserDataHistoric ',
+    modelName: 'UserDataHistoric',
+    tableName: 'tblUserDataHistoric',
     schema: 'users'
 } 
 
 );
-userDataHistoric.sync();  
-export default userDataHistoric;
+UserDataHistoric.sync();  
+export default UserDataHistoric;
