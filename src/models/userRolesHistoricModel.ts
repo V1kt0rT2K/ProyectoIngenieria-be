@@ -38,7 +38,7 @@ userRolesHistoric.init(
     sequelize,
     timestamps: false,
     modelName: 'userRolesHistoric',
-    tableName: 'tbluserRolesHistorics',
+    tableName: 'tblUserRolesHistoric',
     schema: 'users'
 }
 );
