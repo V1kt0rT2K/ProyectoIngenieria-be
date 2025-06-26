@@ -1,5 +1,7 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "../utils/connection";
+import userModel from "./userModel";
+import userRolModel from "./userRolModel";
 class UserRolesHistoric extends Model {}
 
 UserRolesHistoric.init(
@@ -13,7 +15,7 @@ UserRolesHistoric.init(
         type: DataTypes.INTEGER,
         allowNull:  false,
         references: {
-            model: 'tblUsers',
+            model: 'userModel',
             key: 'idUser'
         }
     },
@@ -21,7 +23,7 @@ UserRolesHistoric.init(
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: 'tblUserRoles',
+            model: 'userRolModel',
             key: 'idRole'
         }
     },
@@ -42,5 +44,7 @@ UserRolesHistoric.init(
     schema: 'users'
 }
 );
+UserRolesHistoric.hasOne(userModel);
+UserRolesHistoric.hasOne(userRolModel);
 UserRolesHistoric.sync();  
 export default UserRolesHistoric;
