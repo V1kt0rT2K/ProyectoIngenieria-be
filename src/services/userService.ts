@@ -1,10 +1,9 @@
-import  express, {Express, Request, Response} from 'express';
 import User from '../models/userModel';
 var count =0;
 class UserService {
-    constructor(){}
+    constructor() { }
 
-    async getAll(){
+    async getAll() {
         console.log(User.findAll);
         return User.findAll();
     }
@@ -58,7 +57,11 @@ class UserService {
             
         }
 
-        }               
+    }
+
+    async createUser(user: {}) {
+        return await User.create(user);
+    }
 }
 
 export default UserService;

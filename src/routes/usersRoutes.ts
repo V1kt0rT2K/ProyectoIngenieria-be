@@ -4,7 +4,6 @@ const router = express.Router();
 
 import * as usersController from '../controllers/usersControllers';
 
-
 router.get('/get/all', usersController.getAllUsers);
 
 
@@ -12,6 +11,6 @@ router.get('/get/all', usersController.getAllUsers);
 
 router.post('/login', usersController.loginUser);
 
-
+router.post('/create', usersController.createUser);
 
 export default router;
