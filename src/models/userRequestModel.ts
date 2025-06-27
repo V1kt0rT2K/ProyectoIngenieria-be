@@ -1,8 +1,6 @@
-import { Sequelize, DataType, Model, DataTypes } from "sequelize";
+import { Model, DataTypes } from "sequelize";
 import sequelize from "../utils/connection";
 import { MAX } from 'mssql';
-import User from "./userModel";
-import Status from "./statusModel";
 import UserRol from "./userRolModel";
 
 class UserRequest extends Model {}
@@ -24,8 +22,6 @@ UserRequest.init(
         },
         generationDate: {
             type: DataTypes.DATE,
-            allowNull: false,
-            defaultValue: DataTypes.NOW,
         },
         idRole: {
             type: DataTypes.INTEGER,
@@ -70,7 +66,7 @@ UserRequest.init(
 
 );
 
-UserRequest.belongsTo(UserRol, { foreignKey: 'idRole' });
+UserRequest.belongsTo(UserRol, { foreignKey: 'idUserRequest' });
 UserRol.hasMany(UserRequest, { foreignKey: 'idRole' });
 
 UserRequest.sync();

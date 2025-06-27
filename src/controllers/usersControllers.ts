@@ -2,11 +2,9 @@ import express, { Express, Request, Response } from 'express';
 import { formatRequest, badRequestMessage } from '../utils/queryHandler';
 import UserService from '../services/userService';
 
-const userService = new UserService();
-
 export const getAllUsers = async (req: Request, res: Response) => {
     try {
-        const result = await userService.getAll();
+        const result = await UserService.getAll();
         //console.log(result);
         res.json(result);
     }
@@ -20,7 +18,7 @@ export const getAllUsers = async (req: Request, res: Response) => {
 export const loginUser = async (req: Request, res: Response) => {
 
     try {
-        const result = await userService.loginUser(req.body.email, req.body.password);
+        const result = await UserService.loginUser(req.body.email, req.body.password);
         res.json(result);
     } catch (error) {
         console.error('Error al ejecutar procedimiento:', error);
@@ -28,9 +26,9 @@ export const loginUser = async (req: Request, res: Response) => {
     }
 }
 
-export const createUser = async (req: Request, res: Response) => {
+export const registerUser = async (req: Request, res: Response) => {
     try {
-        const result = await userService.createUser(req.body.user, req.body.person);
+        const result = await UserService.registerUser(req.body.user, req.body.person);
         res.status(200).json(result);
     } catch (err) {
         res.status(500).send(`Error ${err}`);

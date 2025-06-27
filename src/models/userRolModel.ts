@@ -1,7 +1,5 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "../utils/connection";
-import { MAX } from 'mssql';
-import UserRequest from "./userRequestModel";
 
 class UserRol extends Model {}
 

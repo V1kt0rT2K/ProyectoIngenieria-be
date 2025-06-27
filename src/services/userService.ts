@@ -1,14 +1,20 @@
 import Person from '../models/personModel';
 import User from '../models/userModel';
-var count =0;
+import PersonService from './personService';
+import UserRequestService from './userRequestService';
+import type { UserProps, PersonProps } from '../interfaces/Interface';
+
+var count = 0;
+
 class UserService {
     constructor() {}
 
-    async getAll() {
+    static async getAll() {
         console.log(User.findAll);
         return User.findAll();
     }
-    async putisEnabled(idUser: number, isEnabled: boolean) {
+
+    static async putisEnabled(idUser: number, isEnabled: boolean) {
         const user = await User.findByPk(idUser);
         if (user instanceof User) {
             user.setDataValue('isEnabled', isEnabled);
@@ -19,8 +25,7 @@ class UserService {
         }
     }
     
-    async loginUser(email: string, password: string) {
-
+    static async loginUser(email: string, password: string) {
         const login = await User.findOne({
             where: {
                 email: email,
@@ -37,9 +42,20 @@ class UserService {
         }
     }
 
-    async createUser(user: {}, person: {}) {
-        const newPerson = await Person.create(person);
-        const newUser = await User.create({...user, ...{ personId: newPerson.idPerson }});
+    static async createUser(user: {}) {
+        return await User.create(user);
+    }
+
+    static async registerUser(user: UserProps, person: PersonProps) {
+        const newPerson = await PersonService.createPerson(person);
+
+        const userName = user.username ?? "";
+        delete user.username;
+
+        const newUser = await this.createUser({...user, ...{ idPerson: newPerson.idPerson }});
+
+        const newRequest = await UserRequestService.createRequest(newUser, userName);
+
         return newUser;
     }
 }

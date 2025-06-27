@@ -1,12 +1,14 @@
-import  express, {Express, Request, Response} from 'express';
-import person from '../models/personModel';
+import Person from '../models/personModel';
 
 class PersonService {
     constructor(){}
 
-    async getAll(){
-        console.log(person.findAll);
-        return person.findAll();
+    static async getAll(){
+        return Person.findAll();
+    }
+
+    static async createPerson(person: {}) {
+        return await Person.create(person);
     }
 }
 

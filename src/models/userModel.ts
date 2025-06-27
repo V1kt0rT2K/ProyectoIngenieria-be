@@ -1,10 +1,26 @@
-import { Sequelize, DataTypes, Model } from 'sequelize';
+import { DataTypes, Model } from 'sequelize';
 import sequelize from '../utils/connection';
 import { MAX } from 'mssql';
 import personModel from './personModel';
 import UserRequest from './userRequestModel';
 
-class User extends Model {}
+class User extends Model {
+  get idUser(): number {
+    return this.getDataValue("idUser");
+  }
+
+  get idRole(): number {
+    return this.getDataValue("idRole");
+  }
+
+  get email(): number {
+    return this.getDataValue("email");
+  }
+
+  get job(): number {
+    return this.getDataValue("job");
+  }
+}
 
 User.init(
   {
@@ -65,7 +81,7 @@ User.init(
 );
 
 User.belongsTo(UserRequest, { foreignKey: 'idUser' });
-UserRequest.hasMany(User, { foreignKey: 'idUserRequest' });
+UserRequest.hasMany(User, { foreignKey: 'idUser' });
 User.hasOne(personModel, { foreignKey: 'idPerson' });
 
 User.sync();

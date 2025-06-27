@@ -11,6 +11,6 @@ router.get('/get/all', usersController.getAllUsers);
 
 router.post('/login', usersController.loginUser);
 
-router.post('/create', usersController.createUser);
+router.post('/register', usersController.registerUser);
 
 export default router;

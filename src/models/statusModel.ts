@@ -1,6 +1,5 @@
-import {Sequelize, DataTypes, Model} from 'sequelize';
+import { DataTypes, Model } from 'sequelize';
 import sequelize from '../utils/connection';
-import { MAX } from 'mssql';
 import UserRequest from './userRequestModel';
 
 class Status extends Model {}
