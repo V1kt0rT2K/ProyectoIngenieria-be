@@ -31,8 +31,6 @@ UserRol.init(
   },
 );
 
-UserRol.hasMany(UserRequest, { foreignKey: 'idRole' });
-
 UserRol.sync();
 
 export default UserRol;
