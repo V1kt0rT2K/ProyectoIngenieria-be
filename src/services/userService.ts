@@ -1,5 +1,6 @@
 import Person from '../models/personModel';
 import User from '../models/userModel';
+import UserRequest from '../models/userRequestModel';
 var count =0;
 class UserService {
     constructor() {}
@@ -41,6 +42,23 @@ class UserService {
         const newPerson = await Person.create(person);
         const newUser = await User.create({...user, ...{ personId: newPerson.idPerson }});
         return newUser;
+    }
+
+    async getUserRequests(idUser: number){
+        const user = await User.findByPk(idUser);
+        if (!user) {
+            throw new Error('Usuario no encontrado');
+        }
+
+        const requests = await UserRequest.findAll({
+            where: {idUser: idUser}
+        });
+
+        if (requests.length === 0) {
+            console.warn('El usuario no tiene solicitudes');
+        }
+
+        return requests;
     }
 }
 

@@ -36,3 +36,13 @@ export const createUser = async (req: Request, res: Response) => {
         res.status(500).send(`Error ${err}`);
     }
 }
+
+export const getUserRequests = async (req: Request, res: Response) => {
+    try {
+        const idUser = parseInt(req.params.id);
+        const result = await userService.getUserRequests(idUser);
+        res.status(200).json(result);
+    } catch (err) {
+        res.status(500).send(`Error ${err}`);
+    }
+}
