@@ -1,13 +1,14 @@
-import  express, {Express, Request, Response,NextFunction} from 'express';
+import  express from 'express';
 import assetRoutes from './routes/assetRoutes';
 import usersRoutes from './routes/usersRoutes';
-import * as userRolesController from './controllers/userRolesController';
+import userRolesRoutes from './routes/userRolesRoutes';
 
 const index = express.Router();
 
-index.use('/asset',assetRoutes);
-index.use('/user',usersRoutes);
-index.use('/roles', express.Router().get("/get/all", userRolesController.getAllRoles));
+index.use('/asset', assetRoutes);
 
+index.use('/user', usersRoutes);
+
+index.use('/roles', userRolesRoutes);
 
 export default index;
