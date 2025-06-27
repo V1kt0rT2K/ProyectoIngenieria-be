@@ -2,6 +2,8 @@ import { DataTypes, Model } from "sequelize";
 import sequelize from "../utils/connection";
 import userModel from "./userModel";
 import userRolModel from "./userRolModel";
+import User from "./userModel";
+import UserRol from "./userRolModel";
 class UserRolesHistoric extends Model {}
 
 UserRolesHistoric.init(
@@ -19,7 +21,15 @@ UserRolesHistoric.init(
             key: 'idUser'
         }
     },
-    idRole:{
+    oldRoleId:{
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+            model: 'userRolModel',
+            key: 'idRole'
+        }
+    },
+    newRoleId:{
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
@@ -29,7 +39,8 @@ UserRolesHistoric.init(
     },
     generationDate:{
         type: DataTypes.DATE,
-        allowNull: true
+        allowNull: true,
+        defaultValue: DataTypes.NOW
     },
     description: {
         type: DataTypes.STRING('MAX'),
@@ -44,7 +55,13 @@ UserRolesHistoric.init(
     schema: 'users'
 }
 );
-UserRolesHistoric.hasOne(userModel);
-UserRolesHistoric.hasOne(userRolModel);
+//UserRolesHistoric.hasOne(userModel);
+//UserRolesHistoric.hasOne(userRolModel);
+
+UserRolesHistoric.belongsTo(User, { foreignKey: 'idUser' });
+UserRolesHistoric.belongsTo(UserRol, { as: 'OldRole', foreignKey: 'oldRoleId' });
+UserRolesHistoric.belongsTo(UserRol, { as: 'NewRole', foreignKey: 'newRoleId' });
+
+
 UserRolesHistoric.sync();  
 export default UserRolesHistoric;
