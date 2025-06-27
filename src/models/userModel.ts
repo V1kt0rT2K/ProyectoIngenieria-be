@@ -1,9 +1,9 @@
-import {Sequelize, DataTypes, Model} from 'sequelize';
+import { Sequelize, DataTypes, Model } from 'sequelize';
 import sequelize from '../utils/connection';
 import { MAX } from 'mssql';
 import personModel from './personModel';
 
-class User extends Model {}
+class User extends Model { }
 
 User.init(
   {
@@ -34,7 +34,7 @@ User.init(
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'personModel', 
+        model: 'personModel',
         key: 'idPerson',
       },
     },
@@ -42,7 +42,7 @@ User.init(
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'userRolModel', 
+        model: 'userRolModel',
         key: 'idRole',
       },
     },
@@ -62,6 +62,9 @@ User.init(
     ],
   }
 );
-User.hasOne(personModel);
+
+User.hasOne(personModel, { foreignKey: 'idPerson' });
+
 User.sync();
+
 export default User;
