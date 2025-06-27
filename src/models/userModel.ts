@@ -2,6 +2,7 @@ import { Sequelize, DataTypes, Model } from 'sequelize';
 import sequelize from '../utils/connection';
 import { MAX } from 'mssql';
 import personModel from './personModel';
+import UserRequest from './userRequestModel';
 
 class User extends Model { }
 
@@ -64,6 +65,7 @@ User.init(
 );
 
 User.hasOne(personModel, { foreignKey: 'idPerson' });
+User.hasMany(UserRequest, { foreignKey: 'idUser' });
 
 User.sync();
 

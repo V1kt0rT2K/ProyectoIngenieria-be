@@ -1,6 +1,7 @@
 import {Sequelize, DataTypes, Model} from 'sequelize';
 import sequelize from '../utils/connection';
 import { MAX } from 'mssql';
+import UserRequest from './userRequestModel';
 
 class Status extends Model {}
 
@@ -29,6 +30,8 @@ Status.init(
     schema : 'asset'
   },
 );
+
+Status.hasMany(UserRequest, { foreignKey: 'idStatus' });
 
 Status.sync();
 

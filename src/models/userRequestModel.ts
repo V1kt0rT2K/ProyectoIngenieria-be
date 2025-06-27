@@ -1,6 +1,9 @@
 import { Sequelize, DataType, Model, DataTypes } from "sequelize";
 import sequelize from "../utils/connection";
 import { MAX } from 'mssql';
+import User from "./userModel";
+import Status from "./statusModel";
+import UserRol from "./userRolModel";
 
 class UserRequest extends Model {}
 
@@ -66,6 +69,10 @@ UserRequest.init(
     },
 
 );
+
+UserRequest.belongsTo(User, { foreignKey: 'idUser' });
+UserRequest.belongsTo(Status, { foreignKey: 'idStatus' });
+UserRequest.belongsTo(UserRol, { foreignKey: 'idRole' });
 
 UserRequest.sync();
 

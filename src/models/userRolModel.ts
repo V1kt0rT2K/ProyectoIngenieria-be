@@ -1,6 +1,7 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "../utils/connection";
 import { MAX } from 'mssql';
+import UserRequest from "./userRequestModel";
 
 class UserRol extends Model {}
 
@@ -29,6 +30,8 @@ UserRol.init(
     schema : 'users'
   },
 );
+
+UserRol.hasMany(UserRequest, { foreignKey: 'idRole' });
 
 UserRol.sync();
 
