@@ -29,7 +29,7 @@ export const loginUser = async (req: Request, res: Response) => {
 
 export const registerUser = async (req: Request, res: Response) => {
     try {
-        const result = await UserService.registerUser(req.body.user, req.body.person);
+        const result = await UserService.registerUser(req.body);
         res.status(200).json(result);
     } catch (err) {
         res.status(500).send(`Error ${err}`);

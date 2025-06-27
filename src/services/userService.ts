@@ -1,9 +1,10 @@
-import { PersonProps, UserProps } from '../interfaces/Interface';
-import Person from '../models/personModel';
+import { RegisterFormProps } from '../interfaces/Interface';
 import User from '../models/userModel';
 import UserRequest from '../models/userRequestModel';
 import PersonService from './personService';
 import UserRequestService from './userRequestService';
+import sequelize from '../utils/connection';
+import { Transaction } from 'sequelize';
 
 var count =0;
 
@@ -39,25 +40,46 @@ class UserService {
             console.log('Usuario logueado correctamente');
             console.log(login.getDataValue('idUser'));
             console.log(login instanceof User);
-
         }
     }
 
-    static async createUser(user: {}) {
-        return await User.create(user);
+    static async createUser(user: {}, transaction: Transaction) {
+        return await User.create(user, { transaction });
     }
 
-    static async registerUser(user: UserProps, person: PersonProps) {
-        const newPerson = await PersonService.createPerson(person);
-
-        const userName = user.username ?? "";
-        delete user.username;
-
-        const newUser = await this.createUser({...user, ...{ idPerson: newPerson.idPerson }});
-
-        const newRequest = await UserRequestService.createRequest(newUser, userName);
-
-        return newUser;
+    static async registerUser(form: RegisterFormProps) {
+        try {
+            await sequelize.transaction(async (t) => {
+                const newPerson = await PersonService.createPerson({
+                    firstName: form.firstName,
+                    secondName: form.secondName,
+                    lastName: form.lastName,
+                    secondLastName: form.secondLastName,
+                    identityNumber: form.identityNumber
+                }, t);
+    
+                const newUser = await this.createUser({
+                    email: form.email,
+                    job: form.job,
+                    password: form.password,
+                    idPerson: newPerson.idPerson,
+                    idRole: form.idRole
+                }, t);
+    
+                const newRequest = await UserRequestService.createRequest({
+                    idUser: newUser.idUser,
+                    idRole: form.idRole,
+                    idStatus: 2,
+                    userName: form.username,
+                    email: form.email,
+                    job: form.job
+                }, t);
+    
+                return newUser;
+            });
+        } catch (err) {
+            throw err;
+        }
     }
 
     static async getUserRequests(idUser: number){

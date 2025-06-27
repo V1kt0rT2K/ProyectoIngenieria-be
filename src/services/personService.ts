@@ -1,3 +1,4 @@
+import { Transaction } from 'sequelize';
 import Person from '../models/personModel';
 
 class PersonService {
@@ -7,8 +8,8 @@ class PersonService {
         return Person.findAll();
     }
 
-    static async createPerson(person: {}) {
-        return await Person.create(person);
+    static async createPerson(person: {}, transaction: Transaction) {
+        return await Person.create(person, { transaction });
     }
 }
 
