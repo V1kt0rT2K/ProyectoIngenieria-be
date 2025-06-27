@@ -63,7 +63,7 @@ UserRequest.init(
     {
         sequelize, 
         timestamps: false,
-        modelName: 'Status', 
+        modelName: 'UserRequest', 
         tableName: 'tblUserRequests',
         schema : 'users'
     },
