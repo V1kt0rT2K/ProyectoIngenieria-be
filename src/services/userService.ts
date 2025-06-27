@@ -1,10 +1,11 @@
+import { PersonProps, UserProps } from '../interfaces/Interface';
 import Person from '../models/personModel';
 import User from '../models/userModel';
+import UserRequest from '../models/userRequestModel';
 import PersonService from './personService';
 import UserRequestService from './userRequestService';
-import type { UserProps, PersonProps } from '../interfaces/Interface';
 
-var count = 0;
+var count =0;
 
 class UserService {
     constructor() {}
@@ -57,6 +58,23 @@ class UserService {
         const newRequest = await UserRequestService.createRequest(newUser, userName);
 
         return newUser;
+    }
+
+    async getUserRequests(idUser: number){
+        const user = await User.findByPk(idUser);
+        if (!user) {
+            throw new Error('Usuario no encontrado');
+        }
+
+        const requests = await UserRequest.findAll({
+            where: {idUser: idUser}
+        });
+
+        if (requests.length === 0) {
+            console.warn('El usuario no tiene solicitudes');
+        }
+
+        return requests;
     }
 }
 
