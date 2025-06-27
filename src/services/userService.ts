@@ -60,7 +60,7 @@ class UserService {
         return newUser;
     }
 
-    async getUserRequests(idUser: number){
+    static async getUserRequests(idUser: number){
         const user = await User.findByPk(idUser);
         if (!user) {
             throw new Error('Usuario no encontrado');

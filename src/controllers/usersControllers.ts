@@ -1,6 +1,7 @@
 import express, { Express, Request, Response } from 'express';
 import { formatRequest, badRequestMessage } from '../utils/queryHandler';
 import UserService from '../services/userService';
+import UserRequestService from '../services/userRequestService';
 
 export const getAllUsers = async (req: Request, res: Response) => {
     try {
@@ -38,7 +39,7 @@ export const registerUser = async (req: Request, res: Response) => {
 export const getUserRequests = async (req: Request, res: Response) => {
     try {
         const idUser = parseInt(req.params.id);
-        const result = await userService.getUserRequests(idUser);
+        const result = await UserService.getUserRequests(idUser);
         res.status(200).json(result);
     } catch (err) {
         res.status(500).send(`Error ${err}`);
