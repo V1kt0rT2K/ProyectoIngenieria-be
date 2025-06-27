@@ -20,7 +20,7 @@ export const loginUser = async (req: Request, res: Response) => {
 
     try{
         const result= await userService.loginUser(req.body.email, req.body.password);
-        res.json(result);
+    return res.json(result);
     }catch (error) {
     console.error('Error al ejecutar procedimiento:', error);
     return res.status(500).send('Error Interno del Servidor');
