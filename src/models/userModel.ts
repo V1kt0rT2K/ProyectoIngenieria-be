@@ -4,7 +4,7 @@ import { MAX } from 'mssql';
 import personModel from './personModel';
 import UserRequest from './userRequestModel';
 
-class User extends Model { }
+class User extends Model {}
 
 User.init(
   {
@@ -64,8 +64,9 @@ User.init(
   }
 );
 
+User.belongsTo(UserRequest, { foreignKey: 'idUser' });
+UserRequest.hasMany(User, { foreignKey: 'idUserRequest' });
 User.hasOne(personModel, { foreignKey: 'idPerson' });
-User.hasMany(UserRequest, { foreignKey: 'idUser' });
 
 User.sync();
 

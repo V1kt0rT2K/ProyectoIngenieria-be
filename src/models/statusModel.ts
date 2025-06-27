@@ -31,6 +31,7 @@ Status.init(
   },
 );
 
+UserRequest.belongsTo(Status, { foreignKey: 'idStatus' });
 Status.hasMany(UserRequest, { foreignKey: 'idStatus' });
 
 Status.sync();

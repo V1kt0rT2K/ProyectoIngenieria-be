@@ -70,9 +70,8 @@ UserRequest.init(
 
 );
 
-UserRequest.belongsTo(User, { foreignKey: 'idUser' });
-UserRequest.belongsTo(Status, { foreignKey: 'idStatus' });
 UserRequest.belongsTo(UserRol, { foreignKey: 'idRole' });
+UserRol.hasMany(UserRequest, { foreignKey: 'idRole' });
 
 UserRequest.sync();
 
