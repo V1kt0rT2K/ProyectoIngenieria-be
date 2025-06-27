@@ -1,7 +1,8 @@
+import Person from '../models/personModel';
 import User from '../models/userModel';
 var count =0;
 class UserService {
-    constructor() { }
+    constructor() {}
 
     async getAll() {
         console.log(User.findAll);
@@ -19,48 +20,27 @@ class UserService {
     }
     
     async loginUser(email: string, password: string) {
-    
-    const login =await  User.findOne({
-            where:{
+
+        const login = await User.findOne({
+            where: {
                 email: email,
                 password: password
             }
         });
-        
-        if (login==null){
-        
-            const validemail=await User.findOne({
-                where:{
-                    email: email
-                }
-            });
-            if (validemail instanceof User){
-                if (count < 3){
-                    count++;
-                    console.log('Contraseña incorrecta, intentos restantes: ' + (3 - count)); }
-                    else{  
-                    this.putisEnabled(validemail.getDataValue('idUser'), false);
-                        console.log('Usuario bloqueado por demasiados intentos fallidos');
-                    }
-            }
-                else{
-                    count=0;
-                console.log('El email no existe');}
-            
-        }else{
-            
+        if (login == null) {
+            throw new Error('Usuario o contraseña incorrectos');
+        } else {
             console.log('Usuario logueado correctamente');
             console.log(login.getDataValue('idUser'));
             console.log(login instanceof User);
-            
-            return 'login exitoso';
-            
-        }
 
+        }
     }
 
-    async createUser(user: {}) {
-        return await User.create(user);
+    async createUser(user: {}, person: {}) {
+        const newPerson = await Person.create(person);
+        const newUser = await User.create({...user, ...{ personId: newPerson.idPerson }});
+        return newUser;
     }
 }
 
