@@ -1,6 +1,6 @@
 import { Request } from "express"
 
-export function formatRequest(request: Request | {[key : string] : any}) : { json : string} {
+export function formatRequest(request: Request | {[key : string] : any}) : any {
     let params : {[key:string] : any} = {}
 
     if('body' in request){
@@ -14,9 +14,7 @@ export function formatRequest(request: Request | {[key : string] : any}) : { jso
         }
     }
 
-    return {
-        json : JSON.stringify(params)
-    }
+    return params;
 }
 
 export function badRequestMessage(){
