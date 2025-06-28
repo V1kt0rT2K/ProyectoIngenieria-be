@@ -45,3 +45,21 @@ export const getUserRequests = async (req: Request, res: Response) => {
         res.status(500).send(`Error ${err}`);
     }
 }
+
+
+export const updateUserStatus = async (req: Request, res: Response) => {
+    try {
+        const { idUser } = req.params;  
+        const { isEnabled } = req.body; 
+
+        if (typeof isEnabled !== 'boolean') {
+            return res.status(400).json({ message: 'El campo isEnabled debe ser booleano' });
+        }
+
+        const user = await UserService.updateUserStatus(Number(idUser), isEnabled);
+
+        return res.status(200).json({ message: 'Estado actualizado correctamente', user });
+    } catch (err) {
+        res.status(500).send(`Error ${err}`);
+    }
+};

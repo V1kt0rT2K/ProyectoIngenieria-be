@@ -108,6 +108,26 @@ class UserService {
 
         return requests;
     }
+
+    static async updateUserStatus(idUser: number, isEnabled: boolean) {
+        try {
+            const user = await User.findByPk(idUser);
+
+            if (!user) {
+            throw new Error('Usuario no encontrado');
+            }
+
+        await user.update({ isEnabled });
+
+        //user.isEnabled = isEnabled;
+        //await user.save();
+
+        return user;
+        } catch (err) {
+        throw err;
+        }
+    }
+
 }
 
 export default UserService;
