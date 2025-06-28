@@ -1,29 +1,34 @@
-import express, { Express, Request, Response } from 'express';
-import { formatRequest, badRequestMessage } from '../utils/queryHandler';
+import { Request, Response } from 'express';
 import UserService from '../services/userService';
-import UserRequestService from '../services/userRequestService';
 
 export const getAllUsers = async (req: Request, res: Response) => {
     try {
         const result = await UserService.getAll();
-        //console.log(result);
-        res.json(result);
+        res.status(200).json(result);
     }
     catch (error) {
-        console.error('Error al ejecutar procedimiento:', error);
-        return res.status(500).send('Error Interno del Servidor');
+        res.status(500).send(error);
     }
-
 }
 
 export const loginUser = async (req: Request, res: Response) => {
 
     try {
         const result = await UserService.loginUser(req.body.email, req.body.password);
-        res.json(result);
+
+        if (result === null) {
+            res.status(400).send("Credenciales no validas");
+            return;
+        }
+
+        if (!result.isEnabled) {
+            res.status(401).send("Usuario no habilitado");
+            return;
+        }
+
+        res.status(200).json(result);
     } catch (error) {
-        console.error('Error al ejecutar procedimiento:', error);
-        return res.status(500).send('Error Interno del Servidor');
+        return res.status(500).send("Error de servidor");
     }
 }
 

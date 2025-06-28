@@ -3,6 +3,7 @@ import sequelize from '../utils/connection';
 import { MAX } from 'mssql';
 import personModel from './personModel';
 import UserRequest from './userRequestModel';
+import UserRol from './userRolModel';
 
 class User extends Model {
   get idUser(): number {
@@ -19,6 +20,10 @@ class User extends Model {
 
   get job(): number {
     return this.getDataValue("job");
+  }
+
+  get isEnabled(): boolean {
+    return this.dataValues("isEnabled");
   }
 }
 
@@ -80,9 +85,14 @@ User.init(
   }
 );
 
-User.belongsTo(UserRequest, { foreignKey: 'idUser' });
-UserRequest.hasMany(User, { foreignKey: 'idUser' });
-User.hasOne(personModel, { foreignKey: 'idPerson' });
+UserRol.belongsTo(User, { foreignKey: "idRole", targetKey: "idRole" });
+User.hasOne(UserRol, { foreignKey: "idRole", sourceKey: "idRole" });
+
+User.belongsTo(UserRequest, { foreignKey: 'idUser', targetKey: "idUser" });
+UserRequest.hasMany(User, { foreignKey: 'idUser', sourceKey: "idUser" });
+
+User.hasOne(personModel, { foreignKey: "idPerson", sourceKey: "idPerson" });
+personModel.belongsTo(User, { foreignKey: "idPerson", targetKey: "idPerson" });
 
 User.sync();
 

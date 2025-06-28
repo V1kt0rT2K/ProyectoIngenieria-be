@@ -3,7 +3,11 @@ import sequelize from "../utils/connection";
 import { MAX } from 'mssql';
 import UserRol from "./userRolModel";
 
-class UserRequest extends Model {}
+class UserRequest extends Model {
+    get idUser(): number {
+        return this.getDataValue("idUser");
+    }
+}
 
 UserRequest.init(
     {
