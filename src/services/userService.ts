@@ -8,6 +8,7 @@ import { Transaction } from 'sequelize';
 import UserRolesHistoric from '../models/userRolesHistoricModel';
 import Person from '../models/personModel';
 import UserRol from '../models/userRolModel';
+import JsonResponse from '../utils/jsonResponse';
 
 var count = 0;
 
@@ -49,12 +50,17 @@ class UserService {
     }
 
     static async loginUser(email: string, password: string) {
-        return await User.findOne({
+        const data = await User.findOne({
             where: {
                 email: email,
                 password: password
             }
         });
+
+        if(data && data.isEnabled){
+            return JsonResponse.success(data,'Autenticación Exitosa.');
+        }
+        return JsonResponse.error(400,'Las credenciales no son válidas.');
     }
 
     static async createUser(user: {}, transaction: Transaction) {
