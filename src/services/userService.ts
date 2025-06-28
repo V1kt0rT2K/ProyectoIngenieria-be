@@ -5,11 +5,12 @@ import PersonService from './personService';
 import UserRequestService from './userRequestService';
 import sequelize from '../utils/connection';
 import { Transaction } from 'sequelize';
+import UserRolesHistoric from '../models/userRolesHistoricModel';
 
-var count =0;
+var count = 0;
 
 class UserService {
-    constructor() {}
+    constructor() { }
 
     static async getAll() {
         console.log(User.findAll);
@@ -26,7 +27,7 @@ class UserService {
             throw new Error('Usuario no encontrado');
         }
     }
-    
+
     static async loginUser(email: string, password: string) {
         const login = await User.findOne({
             where: {
@@ -57,7 +58,7 @@ class UserService {
                     secondLastName: form.secondLastName,
                     identityNumber: form.identityNumber
                 }, t);
-    
+
                 const newUser = await this.createUser({
                     email: form.email,
                     job: form.job,
@@ -65,7 +66,7 @@ class UserService {
                     idPerson: newPerson.idPerson,
                     idRole: form.idRole
                 }, t);
-    
+
                 const newRequest = await UserRequestService.createRequest({
                     idUser: newUser.idUser,
                     idRole: form.idRole,
@@ -74,7 +75,7 @@ class UserService {
                     email: form.email,
                     job: form.job
                 }, t);
-    
+
                 return newUser;
             });
         } catch (err) {
@@ -82,14 +83,14 @@ class UserService {
         }
     }
 
-    static async getUserRequests(idUser: number){
+    static async getUserRequests(idUser: number) {
         const user = await User.findByPk(idUser);
         if (!user) {
             throw new Error('Usuario no encontrado');
         }
 
         const requests = await UserRequest.findAll({
-            where: {idUser: idUser}
+            where: { idUser: idUser }
         });
 
         if (requests.length === 0) {
@@ -104,19 +105,59 @@ class UserService {
             const user = await User.findByPk(idUser);
 
             if (!user) {
-            throw new Error('Usuario no encontrado');
+                throw new Error('Usuario no encontrado');
             }
 
-        await user.update({ isEnabled });
+            await user.update({ isEnabled });
 
-        //user.isEnabled = isEnabled;
-        //await user.save();
+            //user.isEnabled = isEnabled;
+            //await user.save();
 
-        return user;
+            return user;
         } catch (err) {
-        throw err;
+            throw err;
         }
     }
+
+    static async updateUserRole(idUser: number, newRoleId: number, description?: string): Promise<User> {
+        let transaction = await sequelize.transaction();
+        try {
+            const user = await User.findByPk(idUser, { transaction });
+            if (!user) throw new Error('Usuario no encontrado');
+
+            const oldRoleId = user.idRole;
+            if (oldRoleId === newRoleId) {
+                throw new Error('El usuario ya tiene este rol asignado');
+            }
+
+            user.setDataValue('idRole', newRoleId);
+            await user.save({ transaction });
+
+
+            //await user.update({ idRole: newRoleId }, { transaction });
+            await UserRolesHistoric.create({
+                idUser,
+                oldRoleId,
+                newRoleId,
+                description
+            }, { transaction });
+
+            await transaction.commit();
+            return user;
+
+        } catch (error) {
+            //if (transaction) await transaction.rollback();
+            if (transaction) {
+                try {
+                    await transaction.rollback();
+                } catch (rollbackError) {
+                    console.error('Error en rollback:', rollbackError);
+                }
+            }
+            throw error;
+        }
+    }
+
 
 }
 

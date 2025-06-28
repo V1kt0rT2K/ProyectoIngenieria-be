@@ -14,4 +14,6 @@ router.post('/register', usersController.registerUser);
 
 router.put('/:idUser/status', usersController.updateUserStatus);
 
+router.put('/:idUser/role', usersController.updateUserRole);
+
 export default router;
