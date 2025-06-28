@@ -4,7 +4,7 @@ import UserRequest from '../models/userRequestModel';
 import PersonService from './personService';
 import UserRequestService from './userRequestService';
 import sequelize from '../utils/connection';
-import { col, Op, Transaction } from 'sequelize';
+import { Transaction } from 'sequelize';
 import Person from '../models/personModel';
 import UserRol from '../models/userRolModel';
 
@@ -19,10 +19,13 @@ class UserService {
                 { model: Person, required: true },
                 { model: UserRol, required: true },
                 { model: UserRequest, required: true }
-            ]
+            ],
+            where: {
+                isEnabled: 1
+            }
         });
 
-        return users.map((user: User) => ({
+        return users.map((user: any) => ({
             id: user.dataValues.idUser,
             fullName: `${user.dataValues.Person.firstName} ${user.dataValues.Person.secondName} ${user.dataValues.Person.lastName} ${user.dataValues.Person.secondLastName}`,
             idNumber: user.dataValues.Person.identityNumber,

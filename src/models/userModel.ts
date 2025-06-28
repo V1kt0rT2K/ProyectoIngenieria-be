@@ -6,10 +6,6 @@ import UserRequest from './userRequestModel';
 import UserRol from './userRolModel';
 
 class User extends Model {
-  Person: any;
-  UserRol: any;
-  UserRequest: any;
-  
   get idUser(): number {
     return this.getDataValue("idUser");
   }
@@ -24,6 +20,10 @@ class User extends Model {
 
   get job(): number {
     return this.getDataValue("job");
+  }
+
+  get isEnabled(): boolean {
+    return this.dataValues("isEnabled");
   }
 }
 

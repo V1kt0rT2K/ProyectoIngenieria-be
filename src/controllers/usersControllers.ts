@@ -21,6 +21,11 @@ export const loginUser = async (req: Request, res: Response) => {
             return;
         }
 
+        if (!result.isEnabled) {
+            res.status(401).send("Usuario no habilitado");
+            return;
+        }
+
         res.status(200).json(result);
     } catch (error) {
         return res.status(500).send("Error de servidor");
