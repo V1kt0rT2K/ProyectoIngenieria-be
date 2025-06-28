@@ -38,13 +38,36 @@ class UserService {
         }));
     }
 
-    static async putisEnabled(id: number, enabled: boolean) {
-        const [changed] = await User.update(
-            { isEnabled: enabled },
-            { where: { idUser: id } }
-        );
+    static async putIsEnabled(id: number, enabled: boolean, status?: number) {
+        let affected;
 
-        return changed > 0;
+        try {
+            await sequelize.transaction(async (t) => {
+                [affected] = await User.update(
+                    { isEnabled: enabled },
+                    {
+                        where: { idUser: id },
+                        transaction: t
+                    }
+                );
+
+                if (status) {
+                    [affected] = await UserRequest.update(
+                        { idStatus: status },
+                        {
+                            where: { idUser: id },
+                            transaction: t
+                        }
+                    );
+                }
+            }
+        )} catch (err) {
+            throw err;
+        }
+
+        return affected  === 1
+            ? UserRequest.findOne({ where: { idUser: id } })
+            : JsonResponse.error(500, "No se actualizo ningun usuario");
     }
 
     static async loginUser(email: string, password: string) {

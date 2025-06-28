@@ -17,7 +17,7 @@ class UserRequestService {
             + 'on C.idPerson = B.idPerson '
             + 'inner join ProyectoIngenieria.users.tblUserRoles D '
             + 'on D.idRole = B.idRole '
-            + 'where B.isEnabled = 0'
+            + 'where A.idStatus = 2'
         );
 
         return results.map((request: any) => ({
