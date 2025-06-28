@@ -53,9 +53,9 @@ export const getUserRequests = async (req: Request, res: Response) => {
     }
 }
 
-
-export const updateUserStatus = async (req: Request, res: Response) => {
+export const putIsEnabled = async (req: Request, res: Response) => {
     try {
+
         const params = formatRequest(req);
 
         if (typeof params.isEnabled !== 'boolean') {
@@ -68,24 +68,4 @@ export const updateUserStatus = async (req: Request, res: Response) => {
     } catch (err) {
         res.status(500).send(`Error ${err}`);
     }
-};
-
-export const updateUserRole = async (req: Request, res: Response) => {
-    try {
-        const idUser = Number(req.params.idUser);
-        const { newRoleId, description } = req.body;
-
-        if (!newRoleId) {
-            return res.status(400).json({ message: 'newRoleId es requerido' });
-        }
-
-        const user = await UserService.updateUserRole(idUser, newRoleId, description);
-
-        res.status(200).json({
-            message: 'Rol actualizado correctamente',
-            user
-        });
-    } catch (err) {
-        res.status(500).send(`Error ${err}`);
-    }
-};
+}

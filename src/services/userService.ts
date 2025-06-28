@@ -38,15 +38,13 @@ class UserService {
         }));
     }
 
-    static async putisEnabled(idUser: number, isEnabled: boolean) {
-        const user = await User.findByPk(idUser);
-        if (user instanceof User) {
-            user.setDataValue('isEnabled', isEnabled);
-            await user.save();
-            return user;
-        } else {
-            throw new Error('Usuario no encontrado');
-        }
+    static async putisEnabled(id: number, enabled: boolean) {
+        const [changed] = await User.update(
+            { isEnabled: enabled },
+            { where: { idUser: id } }
+        );
+
+        return changed > 0;
     }
 
     static async loginUser(email: string, password: string) {
@@ -104,6 +102,7 @@ class UserService {
 
     static async getUserRequests(idUser: number) {
         const user = await User.findByPk(idUser);
+
         if (!user) {
             throw new Error('Usuario no encontrado');
         }
@@ -118,66 +117,6 @@ class UserService {
 
         return requests;
     }
-
-    static async updateUserStatus(idUser: number, isEnabled: boolean) {
-        try {
-            const user = await User.findByPk(idUser);
-
-            if (!user) {
-                throw new Error('Usuario no encontrado');
-            }
-
-            await user.update({ isEnabled });
-
-            //user.isEnabled = isEnabled;
-            //await user.save();
-
-            return user;
-        } catch (err) {
-            throw err;
-        }
-    }
-
-    static async updateUserRole(idUser: number, newRoleId: number, description?: string): Promise<User> {
-        let transaction = await sequelize.transaction();
-        try {
-            const user = await User.findByPk(idUser, { transaction });
-            if (!user) throw new Error('Usuario no encontrado');
-
-            const oldRoleId = user.idRole;
-            if (oldRoleId === newRoleId) {
-                throw new Error('El usuario ya tiene este rol asignado');
-            }
-
-            user.setDataValue('idRole', newRoleId);
-            await user.save({ transaction });
-
-
-            //await user.update({ idRole: newRoleId }, { transaction });
-            await UserRolesHistoric.create({
-                idUser,
-                oldRoleId,
-                newRoleId,
-                description
-            }, { transaction });
-
-            await transaction.commit();
-            return user;
-
-        } catch (error) {
-            //if (transaction) await transaction.rollback();
-            if (transaction) {
-                try {
-                    await transaction.rollback();
-                } catch (rollbackError) {
-                    console.error('Error en rollback:', rollbackError);
-                }
-            }
-            throw error;
-        }
-    }
-
-
 }
 
 export default UserService;
