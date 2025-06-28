@@ -53,19 +53,19 @@ export const getUserRequests = async (req: Request, res: Response) => {
     }
 }
 
-export const putIsEnabled = async (req: Request, res: Response) => {
-    try {
+// export const putIsEnabled = async (req: Request, res: Response) => {
+//     try {
 
-        const params = formatRequest(req);
+//         const params = formatRequest(req);
 
-        if (typeof params.isEnabled !== 'boolean') {
-            return res.status(400).json({ message: 'El campo isEnabled debe ser booleano' });
-        }
+//         if (typeof params.isEnabled !== 'boolean') {
+//             return res.status(400).json({ message: 'El campo isEnabled debe ser booleano' });
+//         }
 
-        const user = await UserService.updateUserStatus(params.idUser, params.isEnabled);
+//         const user = await UserService.updateUserStatus(params.idUser, params.isEnabled);
 
-        return res.status(200).json({ message: 'Estado actualizado correctamente', user });
-    } catch (err) {
-        res.status(500).send(`Error ${err}`);
-    }
-}
+//         return res.status(200).json({ message: 'Estado actualizado correctamente', user });
+//     } catch (err) {
+//         res.status(500).send(`Error ${err}`);
+//     }
+// }

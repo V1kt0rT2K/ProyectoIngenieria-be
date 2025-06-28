@@ -4,7 +4,7 @@ const router = express.Router();
 
 import * as usersController from '../controllers/usersControllers';
 
-router.put('/enable', usersController.putIsEnabled);
+//router.put('/enable', usersController.putIsEnabled);
 
 router.get('/get/all', usersController.getAllUsers);
 
