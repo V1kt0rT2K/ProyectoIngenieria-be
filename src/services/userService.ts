@@ -36,15 +36,13 @@ class UserService {
         }));
     }
 
-    static async putisEnabled(idUser: number, isEnabled: boolean) {
-        const user = await User.findByPk(idUser);
-        if (user instanceof User) {
-            user.setDataValue('isEnabled', isEnabled);
-            await user.save();
-            return user;
-        } else {
-            throw new Error('Usuario no encontrado');
-        }
+    static async putisEnabled(id: number, enabled: boolean) {
+        const changed = await User.update(
+            { isEnabled: enabled },
+            { where: { idUser: id } }
+        );
+
+        return changed.length === 0 ? false : true;
     }
     
     static async loginUser(email: string, password: string) {
@@ -97,6 +95,7 @@ class UserService {
 
     static async getUserRequests(idUser: number){
         const user = await User.findByPk(idUser);
+
         if (!user) {
             throw new Error('Usuario no encontrado');
         }
@@ -111,26 +110,6 @@ class UserService {
 
         return requests;
     }
-
-    static async updateUserStatus(idUser: number, isEnabled: boolean) {
-        try {
-            const user = await User.findByPk(idUser);
-
-            if (!user) {
-            throw new Error('Usuario no encontrado');
-            }
-
-        await user.update({ isEnabled });
-
-        //user.isEnabled = isEnabled;
-        //await user.save();
-
-        return user;
-        } catch (err) {
-        throw err;
-        }
-    }
-
 }
 
 export default UserService;

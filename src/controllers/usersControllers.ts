@@ -51,20 +51,20 @@ export const getUserRequests = async (req: Request, res: Response) => {
     }
 }
 
-
-export const updateUserStatus = async (req: Request, res: Response) => {
+export const putIsEnabled = async (req: Request, res: Response) => {
     try {
-        const { idUser } = req.params;  
-        const { isEnabled } = req.body; 
+        const id = parseInt(req.body.id);
+        const enabled = req.body.enabled;
 
-        if (typeof isEnabled !== 'boolean') {
-            return res.status(400).json({ message: 'El campo isEnabled debe ser booleano' });
+        const result = UserService.putisEnabled(id, enabled);
+
+        if (!result) {
+            res.status(500).json({ msg: 'Usuario no encontrado.' });
+            return;
         }
 
-        const user = await UserService.updateUserStatus(Number(idUser), isEnabled);
-
-        return res.status(200).json({ message: 'Estado actualizado correctamente', user });
+        res.status(200).json({ msg: 'Usuario habilitado' });
     } catch (err) {
         res.status(500).send(`Error ${err}`);
     }
-};
+}
