@@ -5,13 +5,14 @@ import PersonService from './personService';
 import UserRequestService from './userRequestService';
 import sequelize from '../utils/connection';
 import { Transaction } from 'sequelize';
+import UserRolesHistoric from '../models/userRolesHistoricModel';
 import Person from '../models/personModel';
 import UserRol from '../models/userRolModel';
 
 var count = 0;
 
 class UserService {
-    constructor() {}
+    constructor() { }
 
     static async getAll() {
         const users = await User.findAll({
@@ -44,7 +45,7 @@ class UserService {
 
         return changed > 0;
     }
-    
+
     static async loginUser(email: string, password: string) {
         return await User.findOne({
             where: {
@@ -68,7 +69,7 @@ class UserService {
                     secondLastName: form.secondLastName,
                     identityNumber: form.identityNumber
                 }, t);
-    
+
                 const newUser = await this.createUser({
                     email: form.email,
                     job: form.job,
@@ -76,7 +77,7 @@ class UserService {
                     idPerson: newPerson.idPerson,
                     idRole: form.idRole
                 }, t);
-    
+
                 const newRequest = await UserRequestService.createRequest({
                     idUser: newUser.idUser,
                     idRole: form.idRole,
@@ -85,7 +86,7 @@ class UserService {
                     email: form.email,
                     job: form.job
                 }, t);
-    
+
                 return newUser;
             });
         } catch (err) {
@@ -93,7 +94,7 @@ class UserService {
         }
     }
 
-    static async getUserRequests(idUser: number){
+    static async getUserRequests(idUser: number) {
         const user = await User.findByPk(idUser);
 
         if (!user) {
@@ -101,7 +102,7 @@ class UserService {
         }
 
         const requests = await UserRequest.findAll({
-            where: {idUser: idUser}
+            where: { idUser: idUser }
         });
 
         if (requests.length === 0) {

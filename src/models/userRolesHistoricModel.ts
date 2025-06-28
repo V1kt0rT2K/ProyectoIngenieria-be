@@ -4,56 +4,65 @@ import userModel from "./userModel";
 import userRolModel from "./userRolModel";
 import User from "./userModel";
 import UserRol from "./userRolModel";
-class UserRolesHistoric extends Model {}
+class UserRolesHistoric extends Model { }
 
 UserRolesHistoric.init(
     {
-    idUserHistoric:{
-        type: DataTypes.INTEGER,
-        autoIncrement: true,
-        primaryKey: true
-    },
-    idUser:{
-        type: DataTypes.INTEGER,
-        allowNull:  false,
-        references: {
-            model: 'userModel',
-            key: 'idUser'
+        idUserHistoric: {
+            type: DataTypes.INTEGER,
+            autoIncrement: true,
+            primaryKey: true
+        },
+        idUser: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            references: {
+                model: {
+                    tableName: 'tblUsers',
+                    schema: 'users'
+                },
+                key: 'idUser'
+            }
+        },
+        oldRoleId: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            references: {
+                model: {
+                    tableName: 'tblUserRoles',
+                    schema: 'users'
+                },
+                key: 'idRole'
+            }
+        },
+        newRoleId: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            references: {
+                model: {
+                    tableName: 'tblUserRoles',
+                    schema: 'users'
+                },
+                key: 'idRole'
+            }
+        },
+        generationDate: {
+            type: DataTypes.DATE,
+            allowNull: true,
+            defaultValue: DataTypes.NOW
+        },
+        description: {
+            type: DataTypes.STRING('MAX'),
+
         }
     },
-    oldRoleId:{
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-            model: 'userRolModel',
-            key: 'idRole'
-        }
-    },
-    newRoleId:{
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-            model: 'userRolModel',
-            key: 'idRole'
-        }
-    },
-    generationDate:{
-        type: DataTypes.DATE,
-        allowNull: true,
-        defaultValue: DataTypes.NOW
-    },
-    description: {
-        type: DataTypes.STRING('MAX'),
-        
+    {
+        sequelize,
+        timestamps: false,
+        modelName: 'UserRolesHistoric',
+        tableName: 'tblUserRolesHistoric',
+        schema: 'users'
     }
-},
-{
-    sequelize,
-    timestamps: false,
-    modelName: 'UserRolesHistoric',
-    tableName: 'tblUserRolesHistoric',
-    schema: 'users'
-}
 );
 //UserRolesHistoric.hasOne(userModel);
 //UserRolesHistoric.hasOne(userRolModel);
@@ -63,5 +72,5 @@ UserRolesHistoric.belongsTo(UserRol, { as: 'OldRole', foreignKey: 'oldRoleId' })
 UserRolesHistoric.belongsTo(UserRol, { as: 'NewRole', foreignKey: 'newRoleId' });
 
 
-UserRolesHistoric.sync();  
+UserRolesHistoric.sync();
 export default UserRolesHistoric;
