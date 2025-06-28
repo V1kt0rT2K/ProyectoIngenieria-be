@@ -21,28 +21,28 @@ class UserService {
                 { model: Person, required: true },
                 { model: UserRol, required: true },
                 {
-										model: UserRequest,
-										required: true,
-										where: {
-												idStatus: 1
-										}
-								}
+                    model: UserRequest,
+                    required: true,
+                    where: {
+                        idStatus: 1
+                    }
+                }
             ]
         });
 
         return users.map((user: any) => ({
             id: user.dataValues.idUser,
-						firstName: user.dataValues.Person.firstName,
-						secondName: user.dataValues.Person.secondName,
-						lastName: user.dataValues.Person.lastName,
-						secondLastName: user.dataValues.Person.secondLastName,
+            firstName: user.dataValues.Person.firstName,
+            secondName: user.dataValues.Person.secondName,
+            lastName: user.dataValues.Person.lastName,
+            secondLastName: user.dataValues.Person.secondLastName,
             idNumber: user.dataValues.Person.identityNumber,
             idRole: user.dataValues.idRole,
             roleName: user.dataValues.UserRol.roleName,
             date: user.dataValues.UserRequest.generationDate,
             email: user.dataValues.email,
             username: user.dataValues.UserRequest.userName,
-						enabled: user.dataValues.isEnabled
+            enabled: user.dataValues.isEnabled
         }));
     }
 
@@ -69,11 +69,12 @@ class UserService {
                     );
                 }
             }
-        )} catch (err) {
+            )
+        } catch (err) {
             throw err;
         }
 
-        return affected  === 1
+        return affected === 1
             ? UserRequest.findOne({ where: { idUser: id } })
             : JsonResponse.error(500, "No se actualizo ningun usuario");
     }
@@ -86,10 +87,10 @@ class UserService {
             }
         });
 
-        if(data && data.isEnabled){
-            return JsonResponse.success(data,'Autenticación Exitosa.');
+        if (data && data.isEnabled) {
+            return JsonResponse.success(data, 'Autenticación Exitosa.');
         }
-        return JsonResponse.error(400,'Las credenciales no son válidas.');
+        return JsonResponse.error(400, 'Las credenciales no son válidas.');
     }
 
     static async createUser(user: {}, transaction: Transaction) {
