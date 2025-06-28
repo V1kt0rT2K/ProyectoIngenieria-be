@@ -56,7 +56,7 @@ export const putIsEnabled = async (req: Request, res: Response) => {
         const id = parseInt(req.body.id);
         const enabled = req.body.enabled;
 
-        const result = UserService.putisEnabled(id, enabled);
+        const result = await UserService.putisEnabled(id, enabled);
 
         if (!result) {
             res.status(500).json({ msg: 'Usuario no encontrado.' });

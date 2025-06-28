@@ -37,12 +37,12 @@ class UserService {
     }
 
     static async putisEnabled(id: number, enabled: boolean) {
-        const changed = await User.update(
+        const [changed] = await User.update(
             { isEnabled: enabled },
             { where: { idUser: id } }
         );
 
-        return changed.length === 0 ? false : true;
+        return changed > 0;
     }
     
     static async loginUser(email: string, password: string) {
