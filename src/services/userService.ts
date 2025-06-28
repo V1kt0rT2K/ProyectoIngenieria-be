@@ -4,16 +4,33 @@ import UserRequest from '../models/userRequestModel';
 import PersonService from './personService';
 import UserRequestService from './userRequestService';
 import sequelize from '../utils/connection';
-import { Transaction } from 'sequelize';
+import { col, Op, Transaction } from 'sequelize';
+import Person from '../models/personModel';
+import UserRol from '../models/userRolModel';
 
-var count =0;
+var count = 0;
 
 class UserService {
     constructor() {}
 
     static async getAll() {
-        console.log(User.findAll);
-        return User.findAll();
+        const users = await User.findAll({
+            include: [
+                { model: Person, required: true },
+                { model: UserRol, required: true },
+                { model: UserRequest, required: true }
+            ]
+        });
+
+        return users.map((user: User) => ({
+            id: user.dataValues.idUser,
+            fullName: `${user.dataValues.Person.firstName} ${user.dataValues.Person.secondName} ${user.dataValues.Person.lastName} ${user.dataValues.Person.secondLastName}`,
+            idNumber: user.dataValues.Person.identityNumber,
+            role: user.dataValues.UserRol.roleName,
+            date: user.dataValues.UserRequest.generationDate,
+            email: user.dataValues.email,
+            username: user.dataValues.UserRequest.userName
+        }));
     }
 
     static async putisEnabled(idUser: number, isEnabled: boolean) {
@@ -28,19 +45,12 @@ class UserService {
     }
     
     static async loginUser(email: string, password: string) {
-        const login = await User.findOne({
+        return await User.findOne({
             where: {
                 email: email,
                 password: password
             }
         });
-        if (login == null) {
-            throw new Error('Usuario o contraseña incorrectos');
-        } else {
-            console.log('Usuario logueado correctamente');
-            console.log(login.getDataValue('idUser'));
-            console.log(login instanceof User);
-        }
     }
 
     static async createUser(user: {}, transaction: Transaction) {
