@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import UserService from '../services/userService';
 import { formatRequest } from '../utils/requestParams';
 import User from '../models/userModel';
+import JsonResponse from '../utils/jsonResponse';
 
 export const getAllUsers = async (req: Request, res: Response) => {
     try {
@@ -92,9 +93,9 @@ export const updateUser = async (req: Request, res: Response)  => {
         const params = formatRequest(req);
         const idUser = parseInt(params.id);
 
-        const result = UserService.updateUser(idUser, params);
+        const result = await UserService.updateUser(idUser, params);
         
-        res.status(200).json(result);
+        res.status(result.meta.status).json(result.data);
     } catch (err) {
         res.status(500).send(`Error ${err}`);
     }

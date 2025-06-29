@@ -23,9 +23,6 @@ class UserService {
                 {
                     model: UserRequest,
                     required: true,
-                    where: {
-                        idStatus: 1
-                    }
                 }
             ]
         });
@@ -127,7 +124,7 @@ class UserService {
                 return newUser;
             });
         } catch (err) {
-            throw err;
+            return JsonResponse.error(500, "Usuario no registrado");
         }
     }
 
@@ -150,8 +147,6 @@ class UserService {
     }
 
     static async updateUser(idUser: number, values: any) {
-        let affected;
-
         try {
             await sequelize.transaction(async (t) => {
                 const user = await User.findByPk(idUser);
@@ -160,7 +155,7 @@ class UserService {
                     throw new Error();
                 }
 
-                [affected] = await User.update(
+                await User.update(
                     {
                         email: values.email,
                         idRole: values.role,
@@ -174,7 +169,7 @@ class UserService {
 
                 const idPerson = user.idPerson;
 
-                [affected] = await Person.update(
+                await Person.update(
                     {
                         firstName: values.firstName,
                         secondName: values.secondName,
@@ -187,14 +182,23 @@ class UserService {
                         transaction: t
                     }
                 );
+
+                await UserRequest.update(
+                    {
+                        userName: values.username
+                    },
+                    {
+                        where: { idUser: idUser },
+                        transaction: t
+                    }
+                );
+
+                return JsonResponse.success(User.findByPk(idUser), "Usuario actualizado");
             });
         } catch (err) {
-            throw err;
         }
 
-        return affected === 1
-            ? JsonResponse.success(User.findByPk(idUser), "Usuario actualizado")
-            : JsonResponse.error(500, "No se actualizo ningun usuario");
+        return JsonResponse.error(500, "No se actualizo ningun usuario");
     }
 }
 
