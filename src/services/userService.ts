@@ -20,31 +20,63 @@ class UserService {
             include: [
                 { model: Person, required: true },
                 { model: UserRol, required: true },
-                { model: UserRequest, required: true }
-            ],
-            where: {
-                isEnabled: 1
-            }
+                {
+                    model: UserRequest,
+                    required: true,
+                    where: {
+                        idStatus: 1
+                    }
+                }
+            ]
         });
 
         return users.map((user: any) => ({
             id: user.dataValues.idUser,
-            fullName: `${user.dataValues.Person.firstName} ${user.dataValues.Person.secondName} ${user.dataValues.Person.lastName} ${user.dataValues.Person.secondLastName}`,
+            firstName: user.dataValues.Person.firstName,
+            secondName: user.dataValues.Person.secondName,
+            lastName: user.dataValues.Person.lastName,
+            secondLastName: user.dataValues.Person.secondLastName,
             idNumber: user.dataValues.Person.identityNumber,
-            role: user.dataValues.UserRol.roleName,
+            idRole: user.dataValues.idRole,
+            roleName: user.dataValues.UserRol.roleName,
             date: user.dataValues.UserRequest.generationDate,
             email: user.dataValues.email,
-            username: user.dataValues.UserRequest.userName
+            username: user.dataValues.UserRequest.userName,
+            enabled: user.dataValues.isEnabled
         }));
     }
 
-    static async putisEnabled(id: number, enabled: boolean) {
-        const [changed] = await User.update(
-            { isEnabled: enabled },
-            { where: { idUser: id } }
-        );
+    static async putIsEnabled(id: number, enabled: boolean, status?: number) {
+        let affected;
 
-        return changed > 0;
+        try {
+            await sequelize.transaction(async (t) => {
+                [affected] = await User.update(
+                    { isEnabled: enabled },
+                    {
+                        where: { idUser: id },
+                        transaction: t
+                    }
+                );
+
+                if (status) {
+                    [affected] = await UserRequest.update(
+                        { idStatus: status },
+                        {
+                            where: { idUser: id },
+                            transaction: t
+                        }
+                    );
+                }
+            }
+            )
+        } catch (err) {
+            throw err;
+        }
+
+        return affected === 1
+            ? UserRequest.findOne({ where: { idUser: id } })
+            : JsonResponse.error(500, "No se actualizo ningun usuario");
     }
 
     static async loginUser(email: string, password: string) {
@@ -55,10 +87,10 @@ class UserService {
             }
         });
 
-        if(data && data.isEnabled){
-            return JsonResponse.success(data,'Autenticación Exitosa.');
+        if (data && data.isEnabled) {
+            return JsonResponse.success(data, 'Autenticación Exitosa.');
         }
-        return JsonResponse.error(400,'Las credenciales no son válidas.');
+        return JsonResponse.error(400, 'Las credenciales no son válidas.');
     }
 
     static async createUser(user: {}, transaction: Transaction) {

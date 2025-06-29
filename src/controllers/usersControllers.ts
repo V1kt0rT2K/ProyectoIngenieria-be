@@ -53,6 +53,22 @@ export const getUserRequests = async (req: Request, res: Response) => {
     }
 }
 
+export const putIsEnabled = async (req: Request, res: Response)  => {
+    try {
+        const params = formatRequest(req);
+        
+        const idUser = parseInt(params.id);
+        const enabled = params.enabled;
+        const status = params.status;
+
+        const result = await UserService.putIsEnabled(idUser, enabled, status);
+
+        res.status(200).json(result);
+    } catch (err) {
+        res.status(500).send(`Error ${err}`);
+    }
+}
+
 // export const putIsEnabled = async (req: Request, res: Response) => {
 //     try {
 
