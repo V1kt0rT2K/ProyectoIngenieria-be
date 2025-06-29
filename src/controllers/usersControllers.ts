@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import UserService from '../services/userService';
 import { formatRequest } from '../utils/requestParams';
+import User from '../models/userModel';
 
 export const getAllUsers = async (req: Request, res: Response) => {
     try {
@@ -85,3 +86,16 @@ export const putIsEnabled = async (req: Request, res: Response)  => {
 //         res.status(500).send(`Error ${err}`);
 //     }
 // }
+
+export const updateUser = async (req: Request, res: Response)  => {
+    try {
+        const params = formatRequest(req);
+        const idUser = parseInt(params.id);
+
+        const result = UserService.updateUser(idUser, params);
+        
+        res.status(200).json(result);
+    } catch (err) {
+        res.status(500).send(`Error ${err}`);
+    }
+}

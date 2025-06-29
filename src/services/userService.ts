@@ -68,8 +68,7 @@ class UserService {
                         }
                     );
                 }
-            }
-            )
+            });
         } catch (err) {
             throw err;
         }
@@ -148,6 +147,54 @@ class UserService {
         }
 
         return requests;
+    }
+
+    static async updateUser(idUser: number, values: any) {
+        let affected;
+
+        try {
+            await sequelize.transaction(async (t) => {
+                const user = await User.findByPk(idUser);
+
+                if (!user) {
+                    throw new Error();
+                }
+
+                [affected] = await User.update(
+                    {
+                        email: values.email,
+                        idRole: values.role,
+                        isEnabled: values.enabled
+                    },
+                    {
+                        where: { idUser: idUser },
+                        transaction: t
+                    }
+                );
+
+                const idPerson = user.idPerson;
+
+                [affected] = await Person.update(
+                    {
+                        firstName: values.firstName,
+                        secondName: values.secondName,
+                        lastName: values.lastName,
+                        secondLastName: values.secondLastName,
+                        identityNumber: values.identityNumber
+                    },
+                    {
+                        where: { idPerson: idPerson },
+                        transaction: t
+                    }
+                );
+            });
+        } catch (err) {
+            throw err;
+        }
+
+        return affected === 1
+            ? JsonResponse.success(User.findByPk(idUser), "Usuario actualizado")
+            : JsonResponse.error(500, "No se actualizo ningun usuario");
     }
 }
 

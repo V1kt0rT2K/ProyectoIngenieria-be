@@ -25,6 +25,10 @@ class User extends Model {
   get isEnabled(): boolean {
     return this.dataValues("isEnabled");
   }
+
+  get idPerson(): number {
+    return this.dataValues("idPerson");
+  }
 }
 
 User.init(
