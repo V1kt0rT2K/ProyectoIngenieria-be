@@ -9,8 +9,11 @@ import UserRolesHistoric from '../models/userRolesHistoricModel';
 import Person from '../models/personModel';
 import UserRol from '../models/userRolModel';
 import JsonResponse from '../utils/jsonResponse';
+import e from 'express';
 
 var count = 0;
+const userlock = new Map<string, Date>(); 
+
 
 class UserService {
     constructor() { }
@@ -26,7 +29,6 @@ class UserService {
                 }
             ]
         });
-
         return users.map((user: any) => ({
             id: user.dataValues.idUser,
             firstName: user.dataValues.Person.firstName,
@@ -74,20 +76,66 @@ class UserService {
             ? UserRequest.findOne({ where: { idUser: id } })
             : JsonResponse.error(500, "No se actualizo ningun usuario");
     }
+    static async getUserbyemail(email: string) {
+        const userbyemail = await User.findOne({
+            where:{email: email} }) 
+            return userbyemail;
+        }
+    static async userunlock (hourblock: Date | undefined){
+        if(!hourblock) {
+            return 0;
+        }
+        const currentTime = new Date();
+        const direcenceMs = currentTime.getTime() - hourblock.getTime();
+        const differenceMin = direcenceMs / (1000 * 60); // Convert milliseconds to minutes
+        const result= 5-differenceMin;
 
+        return result>0? Math.ceil(result): 0;
+
+    }
     static async loginUser(email: string, password: string) {
+        
         const data = await User.findOne({
             where: {
                 email: email,
                 password: password
             }
         });
-
+        
         if (data && data.isEnabled) {
+            count = 0; // Reset the count on successful login
             return JsonResponse.success(data, 'Autenticación Exitosa.');
-        }
-        return JsonResponse.error(400, 'Las credenciales no son válidas.');
-    }
+        }else{
+        
+            const userbyemail = await this.getUserbyemail(email);
+            if(userbyemail?.getDataValue('isEnabled')==false){
+                const hourblock = userlock.get(email);
+                const locktime= await this.userunlock(hourblock);
+                if(locktime>0){
+                    return JsonResponse.error(403, 'El Usuario esta Bloqueado, intente nuevamente en '+locktime+' minutos');
+                }else{
+                    await this.putIsEnabled(userbyemail.getDataValue('idUser'),true,1);
+                     count = 0; // Reset the count on successful login
+                return JsonResponse.success(data, 'Autenticación Exitosa.');
+                }
+                
+            }
+            if(userbyemail instanceof User  && count < 3){
+                count++;
+                return JsonResponse.error(401, 'Las credenciales no son válidas. Intente nuevamente.'+
+                ' Intentos restantes: ' + (3 - count));
+            }else if(userbyemail && count >= 3){  
+                const iduser= userbyemail.getDataValue('idUser');
+                this.putIsEnabled(iduser,false,2);
+                userlock.set(email, new Date());
+                count=0;
+            return JsonResponse.error(400, 'Las credenciales no son válidas, se bloqueo el Usuario.');}
+            else if(userbyemail==null){
+                count=0;
+                return JsonResponse.error(404, 'El usuario no existe.'); }
+        
+    }}
+
 
     static async createUser(user: {}, transaction: Transaction) {
         return await User.create(user, { transaction });
