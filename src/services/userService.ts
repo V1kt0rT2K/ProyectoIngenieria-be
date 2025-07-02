@@ -103,8 +103,11 @@ class UserService {
                     await this.putIsEnabled(user.getDataValue('idUser'),true,1);
                     return JsonResponse.success(user, 'El Usuario ha sido desbloqueado, puede iniciar sesión nuevamente.');
                 }
+         }
 
-    } }
+         return JsonResponse.error(503,'Error Interno Servidor');
+
+    }
     static async loginUser(email: string, password: string) {
         
         const data = await User.findOne({
@@ -150,8 +153,6 @@ class UserService {
                 
 
             }
-            
-        
     }}
 
 

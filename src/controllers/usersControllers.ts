@@ -3,6 +3,7 @@ import UserService from '../services/userService';
 import { formatRequest } from '../utils/requestParams';
 import User from '../models/userModel';
 import JsonResponse from '../utils/jsonResponse';
+import { Json } from 'sequelize/types/utils';
 
 export const getAllUsers = async (req: Request, res: Response) => {
     try {
@@ -21,12 +22,15 @@ export const loginUser = async (req: Request, res: Response) => {
 
         const result = await UserService.loginUser(params.email, params.password);
 
+        if(!result){
+            return res.status(404).send("Error de Servidor");
+        }
         // if (!result.isEnabled) {
         //     res.status(401).send("Usuario no habilitado");
         //     return;
         // }
 
-        res.status(result.meta.status).send(result);
+        res.status(result.meta?.status).send(result);
     } catch (error) {
         return res.status(500).send("Error de servidor");
     }
