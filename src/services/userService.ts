@@ -153,6 +153,9 @@ class UserService {
             
                 
 
+            }else{
+                failedattempts.set(email, 0);
+                return JsonResponse.error(404, 'El usuario no existe.');
             }
             
         
