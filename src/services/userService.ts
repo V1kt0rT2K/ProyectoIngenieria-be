@@ -104,7 +104,7 @@ class UserService {
                     await this.putIsEnabled(user.getDataValue('idUser'),true,1);
                     userlock.delete(user.getDataValue('email'));
                     failedattempts.set(user.getDataValue('email'), 0)
-                    return JsonResponse.success(user, 'El Usuario ha sido desbloqueado, puede iniciar sesión nuevamente.');
+                    return ( 'El Usuario ha sido desbloqueado, puede iniciar sesión nuevamente, intente de nuevo por favor.');
                 }
 
     } }
@@ -218,6 +218,7 @@ class UserService {
 
         return requests;
     }
+    
 
     static async updateUser(idUser: number, values: any) {
         try {
