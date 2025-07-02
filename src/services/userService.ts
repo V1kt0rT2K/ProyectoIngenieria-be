@@ -11,7 +11,8 @@ import UserRol from '../models/userRolModel';
 import JsonResponse from '../utils/jsonResponse';
 import e from 'express';
 
-var count = 0;
+//var count = 0;
+const failedattempts= new Map<string, number>();
 const userlock = new Map<string, Date>(); 
 
 
@@ -101,6 +102,8 @@ class UserService {
                     return JsonResponse.error(403, 'El Usuario esta Bloqueado, intente nuevamente en '+locktime+' minutos');
                 }else {
                     await this.putIsEnabled(user.getDataValue('idUser'),true,1);
+                    userlock.delete(user.getDataValue('email'));
+                    failedattempts.set(user.getDataValue('email'), 0)
                     return JsonResponse.success(user, 'El Usuario ha sido desbloqueado, puede iniciar sesión nuevamente.');
                 }
 
@@ -115,7 +118,7 @@ class UserService {
         });
         
         if (data && data.isEnabled) {
-            count = 0; // Reset the count on successful login
+              failedattempts.set(email, 0); // Reset the count on successful login
             
             return JsonResponse.success(data, 'Autenticación Exitosa.');
             
@@ -123,20 +126,21 @@ class UserService {
             const userbyemail = await this.getUserbyemail(email);
             const enabled = userbyemail?.getDataValue('isEnabled');
             if(userbyemail instanceof User && enabled== true){
-                
+                const attempts  = failedattempts.get(email) || 0;
         
-            if(userbyemail instanceof User  && count < 3){
-                count++;
+            if(userbyemail instanceof User  && attempts  < 3){
+                
+                failedattempts.set(email, attempts  + 1);
                 return JsonResponse.error(401, 'Las credenciales no son válidas. Intente nuevamente.'+
-                ' Intentos restantes: ' + (3 - count));
-            }else if(userbyemail && count >= 3){  
+                ' attempts  restantes: ' + (3 - attempts ));
+            }else if(userbyemail && attempts  >= 3){  
                 const iduser= userbyemail.getDataValue('idUser');
                 this.putIsEnabled(iduser,false,2);
                 userlock.set(email, new Date());
-                count=0;
+                failedattempts.set(email, 0);
             return JsonResponse.error(400, 'Las credenciales no son válidas, se bloqueo el Usuario.');}
             else if(userbyemail==null){
-                count=0;
+                failedattempts.set(email, 0);
                 return JsonResponse.error(404, 'El usuario no existe.'); }
 
 
