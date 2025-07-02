@@ -29,6 +29,7 @@ class UserService {
                 }
             ]
         });
+        console.log(users[1].getDataValue('password'));
         return users.map((user: any) => ({
             id: user.dataValues.idUser,
             firstName: user.dataValues.Person.firstName,
@@ -88,11 +89,22 @@ class UserService {
         const currentTime = new Date();
         const direcenceMs = currentTime.getTime() - hourblock.getTime();
         const differenceMin = direcenceMs / (1000 * 60); // Convert milliseconds to minutes
-        const result= 5-differenceMin;
+        const result= 1-differenceMin;
 
         return result>0? Math.ceil(result): 0;
 
     }
+    static async activacion (user:User,hourblock: Date | undefined,){
+        if(user?.getDataValue('isEnabled')==false){
+                const locktime= await this.userunlock(hourblock);
+                if(locktime>0 ){
+                    return JsonResponse.error(403, 'El Usuario esta Bloqueado, intente nuevamente en '+locktime+' minutos');
+                }else {
+                    await this.putIsEnabled(user.getDataValue('idUser'),true,1);
+                    return JsonResponse.success(user, 'El Usuario ha sido desbloqueado, puede iniciar sesión nuevamente.');
+                }
+
+    } }
     static async loginUser(email: string, password: string) {
         
         const data = await User.findOne({
@@ -104,22 +116,15 @@ class UserService {
         
         if (data && data.isEnabled) {
             count = 0; // Reset the count on successful login
+            
             return JsonResponse.success(data, 'Autenticación Exitosa.');
+            
         }else{
-        
             const userbyemail = await this.getUserbyemail(email);
-            if(userbyemail?.getDataValue('isEnabled')==false){
-                const hourblock = userlock.get(email);
-                const locktime= await this.userunlock(hourblock);
-                if(locktime>0){
-                    return JsonResponse.error(403, 'El Usuario esta Bloqueado, intente nuevamente en '+locktime+' minutos');
-                }else{
-                    await this.putIsEnabled(userbyemail.getDataValue('idUser'),true,1);
-                     count = 0; // Reset the count on successful login
-                return JsonResponse.success(data, 'Autenticación Exitosa.');
-                }
+            const enabled = userbyemail?.getDataValue('isEnabled');
+            if(userbyemail instanceof User && enabled== true){
                 
-            }
+        
             if(userbyemail instanceof User  && count < 3){
                 count++;
                 return JsonResponse.error(401, 'Las credenciales no son válidas. Intente nuevamente.'+
@@ -133,6 +138,19 @@ class UserService {
             else if(userbyemail==null){
                 count=0;
                 return JsonResponse.error(404, 'El usuario no existe.'); }
+
+
+            }else if(userbyemail instanceof User && enabled== false){
+                
+                    const hourblock= userlock.get(email);
+                const activacion = await this.activacion(userbyemail,hourblock);
+                return activacion;
+            
+            
+                
+
+            }
+            
         
     }}
 
