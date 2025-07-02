@@ -106,8 +106,11 @@ class UserService {
                     failedattempts.set(user.getDataValue('email'), 0)
                     return ( 'El Usuario ha sido desbloqueado, puede iniciar sesión nuevamente, intente de nuevo por favor.');
                 }
+         }
 
-    } }
+         return JsonResponse.error(503,'Error Interno Servidor');
+
+    }
     static async loginUser(email: string, password: string) {
         
         const data = await User.findOne({
@@ -157,8 +160,6 @@ class UserService {
                 failedattempts.set(email, 0);
                 return JsonResponse.error(404, 'El usuario no existe.');
             }
-            
-        
     }}
 
 
