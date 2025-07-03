@@ -49,7 +49,6 @@ UserRolesHistoric.init(
         generationDate: {
             type: DataTypes.DATE,
             allowNull: true,
-            defaultValue: DataTypes.NOW
         },
         description: {
             type: DataTypes.STRING('MAX'),
