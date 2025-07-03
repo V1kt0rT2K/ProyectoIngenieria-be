@@ -4,7 +4,9 @@ const router = express.Router();
 
 import * as usersController from '../controllers/usersControllers';
 
-//router.put('/enable', usersController.putIsEnabled);
+router.put('/update/:id', usersController.updateUser);
+
+router.put('/put/status', usersController.putIsEnabled);
 
 router.get('/get/all', usersController.getAllUsers);
 

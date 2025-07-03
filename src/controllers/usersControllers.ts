@@ -1,6 +1,9 @@
 import { Request, Response } from 'express';
 import UserService from '../services/userService';
 import { formatRequest } from '../utils/requestParams';
+import User from '../models/userModel';
+import JsonResponse from '../utils/jsonResponse';
+import { Json } from 'sequelize/types/utils';
 
 export const getAllUsers = async (req: Request, res: Response) => {
     try {
@@ -19,12 +22,15 @@ export const loginUser = async (req: Request, res: Response) => {
 
         const result = await UserService.loginUser(params.email, params.password);
 
+        if(!result){
+            return res.status(404).send("Error de Servidor");
+        }
         // if (!result.isEnabled) {
         //     res.status(401).send("Usuario no habilitado");
         //     return;
         // }
 
-        res.status(result.meta.status).send(result);
+        res.status(result.meta?.status).send(result);
     } catch (error) {
         return res.status(500).send("Error de servidor");
     }
@@ -53,6 +59,22 @@ export const getUserRequests = async (req: Request, res: Response) => {
     }
 }
 
+export const putIsEnabled = async (req: Request, res: Response)  => {
+    try {
+        const params = formatRequest(req);
+        
+        const idUser = parseInt(params.id);
+        const enabled = params.enabled;
+        const status = params.status;
+
+        const result = await UserService.putIsEnabled(idUser, enabled, status);
+
+        res.status(200).json(result);
+    } catch (err) {
+        res.status(500).send(`Error ${err}`);
+    }
+}
+
 // export const putIsEnabled = async (req: Request, res: Response) => {
 //     try {
 
@@ -69,3 +91,16 @@ export const getUserRequests = async (req: Request, res: Response) => {
 //         res.status(500).send(`Error ${err}`);
 //     }
 // }
+
+export const updateUser = async (req: Request, res: Response)  => {
+    try {
+        const params = formatRequest(req);
+        const idUser = parseInt(params.id);
+
+        const result = await UserService.updateUser(idUser, params);
+        
+        res.status(result.meta.status).json(result.data);
+    } catch (err) {
+        res.status(500).send(`Error ${err}`);
+    }
+}
