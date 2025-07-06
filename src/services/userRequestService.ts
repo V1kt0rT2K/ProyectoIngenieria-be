@@ -1,18 +1,17 @@
 import { Transaction } from "sequelize";
 import UserRequest from "../models/userRequestModel";
-import sequelize from "../utils/connection";
 import User from "../models/userModel";
 import Status from "../models/statusModel";
 import JsonResponse from "../utils/jsonResponse";
+import sequelize from "../utils/connection";
+import UserService from "./userService";
 
 class UserRequestService {
-    constructor() {
-        
-    }
+    constructor() {}
 
     static async getAllRequests() {
 
-        const data = UserRequest.findAll({
+        const data = await UserRequest.findAll({
             include:[
                 {model: User, required: true},
                 {model: Status, required : true}
@@ -21,7 +20,10 @@ class UserRequestService {
                 idStatus: 2
             }
         });
-        //console.log("Ejecutado");
+
+        if(data.length === 0){
+            return JsonResponse.error(400,"No existen datos.");
+        }
 
         return JsonResponse.success(data, 'La petición ha sido un éxito.');
     }
@@ -42,6 +44,43 @@ class UserRequestService {
         }
 
         return JsonResponse.success(requests,"La petición ha sido un éxito.");
+    }
+
+    static async manageUserRequest(idUserRequest: number, idStatus: number) {
+
+        let status = await Status.findByPk(idStatus);
+        if(!status || idStatus == 2){
+            return JsonResponse.error(400, "El estado no es válido.");
+        }
+
+        const userRequest = await UserRequest.findByPk(idUserRequest);
+
+        if(!userRequest){
+            return JsonResponse.error(400, "La solicitud no existe.");
+        }
+        if(userRequest.idStatus != 2){
+            return JsonResponse.error(400, "La solicitud no se encuentra en revisión.");
+        }
+        
+        try{
+            await sequelize.transaction( async (t) => {
+                await UserRequest.update(
+                    {idStatus : idStatus},
+                    {
+                        where: {idUserRequest : idUserRequest}
+                    }
+                );
+
+                let enabled = idStatus === 1;
+                
+                await UserService.updateEnabledStatus(userRequest.idUser,enabled);
+            });
+
+            return JsonResponse.success({},"La petición ha sido un éxito.");
+        }catch(error){
+            console.log(error);
+            return JsonResponse.error(500, "No se ha podido completar la solicitud.");
+        }
     }
 
     static async createRequest(request: {}, transaction: Transaction) {

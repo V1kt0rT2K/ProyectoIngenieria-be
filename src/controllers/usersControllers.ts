@@ -1,85 +1,47 @@
 import { Request, Response } from 'express';
 import UserService from '../services/userService';
 import { formatRequest } from '../utils/requestParams';
-import User from '../models/userModel';
 import JsonResponse from '../utils/jsonResponse';
-import { Json } from 'sequelize/types/utils';
 
 export const getAllUsers = async (req: Request, res: Response) => {
     try {
         const result = await UserService.getAll();
-        res.status(200).json(result);
+        res.status(result.getStatus()).json(result);
     }
     catch (error) {
         console.log(error);
-        res.status(500).send("Error del Servidor");
+        res.status(500).json(JsonResponse.error(500,"Error Interno del Servidor."));
     }
 }
 
-export const loginUser = async (req: Request, res: Response) => {
 
-    try {
-        const params = formatRequest(req);
-
-        const result = await UserService.loginUser(params.email, params.password);
-
-        if(!result){
-            return res.status(404).send("Error de Servidor");
-        }
-        // if (!result.isEnabled) {
-        //     res.status(401).send("Usuario no habilitado");
-        //     return;
-        // }
-
-        res.status(result.meta?.status).send(result);
-    } catch (error) {
-        return res.status(500).send("Error de servidor");
-    }
-}
 
 export const registerUser = async (req: Request, res: Response) => {
     try {
         const params = formatRequest(req);
 
         const result = await UserService.registerUser(params);
-        res.status(200).json(result);
+        res.status(result.getStatus()).json(result);
     } catch (err) {
-        res.status(500).send(`Error ${err}`);
+        console.log(err);
+        res.status(500).json(JsonResponse.error(500,"Error Interno del Servidor."));
     }
 }
 
-export const putIsEnabled = async (req: Request, res: Response)  => {
+export const updateEnabledStatus = async (req: Request, res: Response)  => {
     try {
         const params = formatRequest(req);
-        
         const idUser = parseInt(params.id);
         const enabled = params.enabled;
-        const status = params.status;
 
-        const result = await UserService.putIsEnabled(idUser, enabled, status);
+        const result = await UserService.updateEnabledStatus(idUser, enabled);
 
-        res.status(200).json(result);
+        res.status(result.getStatus()).json(result);
     } catch (err) {
-        res.status(500).send(`Error ${err}`);
+        console.log(err);
+        res.status(500).json(JsonResponse.error(500,"Error Interno del Servidor."));
     }
 }
-
-// export const putIsEnabled = async (req: Request, res: Response) => {
-//     try {
-
-//         const params = formatRequest(req);
-
-//         if (typeof params.isEnabled !== 'boolean') {
-//             return res.status(400).json({ message: 'El campo isEnabled debe ser booleano' });
-//         }
-
-//         const user = await UserService.updateUserStatus(params.idUser, params.isEnabled);
-
-//         return res.status(200).json({ message: 'Estado actualizado correctamente', user });
-//     } catch (err) {
-//         res.status(500).send(`Error ${err}`);
-//     }
-// }
 
 export const updateUser = async (req: Request, res: Response)  => {
     try {
@@ -88,8 +50,9 @@ export const updateUser = async (req: Request, res: Response)  => {
 
         const result = await UserService.updateUser(idUser, params);
         
-        res.status(result.meta.status).json(result.data);
+        res.status(result.getStatus()).json(result.data);
     } catch (err) {
-        res.status(500).send(`Error ${err}`);
+        console.log(err);
+        res.status(500).json(JsonResponse.error(500,"Error Interno del Servidor."));
     }
 }

@@ -6,5 +6,6 @@ import * as usersRequestsController from "../controllers/usersRequestsController
 
 router.get('/get/all', usersRequestsController.getAllRequests);
 router.get('/get/user/:idUser', usersRequestsController.getUserRequestsByIdUser);
+router.put('/manage',usersRequestsController.manageUserRequest);
 
 export default router;

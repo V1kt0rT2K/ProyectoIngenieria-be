@@ -5,15 +5,9 @@ import PersonService from './personService';
 import UserRequestService from './userRequestService';
 import sequelize from '../utils/connection';
 import { Transaction } from 'sequelize';
-import UserRolesHistoric from '../models/userRolesHistoricModel';
 import Person from '../models/personModel';
 import UserRole from '../models/userRoleModel';
 import JsonResponse from '../utils/jsonResponse';
-
-//var count = 0;
-const failedattempts= new Map<string, number>();
-const userlock = new Map<string, Date>(); 
-
 
 class UserService {
     constructor() { }
@@ -30,121 +24,42 @@ class UserService {
         return JsonResponse.success(users,'La petición se ha respondido con éxito.');
     }
 
-    static async putIsEnabled(id: number, enabled: boolean, status?: number) {
-        let affected;
+    static async updateEnabledStatus(idUser: number, enabled: boolean) {
+
+        let user = await User.findByPk(idUser);
+        if(!user){
+            return JsonResponse.error(400,"El usuario no existe.");
+        }
 
         try {
             await sequelize.transaction(async (t) => {
-                [affected] = await User.update(
+                await User.update(
                     { isEnabled: enabled },
                     {
-                        where: { idUser: id },
+                        where: { idUser: idUser },
                         transaction: t
                     }
                 );
-
-                if (status) {
-                    [affected] = await UserRequest.update(
-                        { idStatus: status },
-                        {
-                            where: { idUser: id },
-                            transaction: t
-                        }
-                    );
-                }
             });
+
+            return JsonResponse.success({},"El usuario ha sido modificado con éxito.");
         } catch (err) {
-            throw err;
+            console.log(err);
+            return JsonResponse.error(500, "Ha ocurrido un error.");
         }
-
-        return affected === 1
-            ? UserRequest.findOne({ where: { idUser: id } })
-            : JsonResponse.error(500, "No se actualizo ningun usuario");
     }
-    static async getUserbyemail(email: string) {
-        const userbyemail = await User.findOne({
-            where:{email: email} }) 
-            return userbyemail;
-        }
-    static async userunlock (hourblock: Date | undefined){
-        if(!hourblock) {
-            return 0;
-        }
-        const currentTime = new Date();
-        const direcenceMs = currentTime.getTime() - hourblock.getTime();
-        const differenceMin = direcenceMs / (1000 * 60); // Convert milliseconds to minutes
-        const result= 1-differenceMin;
+    static async getUserByEmail(email: string) {
 
-        return result>0? Math.ceil(result): 0;
-
-    }
-    static async activacion (user:User,hourblock: Date | undefined,){
-        if(user?.getDataValue('isEnabled')==false){
-                const locktime= await this.userunlock(hourblock);
-                if(locktime>0 ){
-                    return JsonResponse.error(403, 'El Usuario esta Bloqueado, intente nuevamente en '+locktime+' minutos');
-                }else {
-                    await this.putIsEnabled(user.getDataValue('idUser'),true,1);
-                    userlock.delete(user.getDataValue('email'));
-                    failedattempts.set(user.getDataValue('email'), 0)
-                    return JsonResponse.success( null,'El Usuario ha sido desbloqueado, puede iniciar sesión nuevamente, intente de nuevo por favor.');
-                }
-         }
-
-         return JsonResponse.error(503,'Error Interno Servidor');
-
-    }
-    static async loginUser(email: string, password: string) {
-        
         const data = await User.findOne({
-            where: {
-                email: email,
-                password: password
-            }
-        });
-        
-        if (data && data.isEnabled) {
-              failedattempts.set(email, 0); // Reset the count on successful login
-            
-            return JsonResponse.success(data, 'Autenticación Exitosa.');
-            
-        }else{
-            const userbyemail = await this.getUserbyemail(email);
-            const enabled = userbyemail?.getDataValue('isEnabled');
-            if(userbyemail instanceof User && enabled== true){
-                const attempts  = failedattempts.get(email) || 0;
-        
-            if(userbyemail instanceof User  && attempts  < 3){
-                
-                failedattempts.set(email, attempts  + 1);
-                return JsonResponse.error(401, 'Las credenciales no son válidas. Intente nuevamente.'+
-                ' attempts  restantes: ' + (3 - attempts ));
-            }else if(userbyemail && attempts  >= 3){  
-                const iduser= userbyemail.getDataValue('idUser');
-                this.putIsEnabled(iduser,false,2);
-                userlock.set(email, new Date());
-                failedattempts.set(email, 0);
-            return JsonResponse.error(400, 'Las credenciales no son válidas, se bloqueo el Usuario.');}
-            else if(userbyemail==null){
-                failedattempts.set(email, 0);
-                return JsonResponse.error(404, 'El usuario no existe.'); }
+            where:{email: email} 
+        }); 
 
+        if(!data){
+            return JsonResponse.error(400,"El usuario no existe.");
+        }
 
-            }else if(userbyemail instanceof User && enabled== false){
-                
-                    const hourblock= userlock.get(email);
-                const activacion = await this.activacion(userbyemail,hourblock);
-                return activacion;
-            
-            
-                
-
-            }else{
-                failedattempts.set(email, 0);
-                return JsonResponse.error(404, 'El usuario no existe.');
-            }
-    }}
-
+        return JsonResponse.success(data,"La petición ha sido un éxito.");
+    }
 
     static async createUser(user: {}, transaction: Transaction) {
         return await User.create(user, { transaction });
@@ -177,10 +92,8 @@ class UserService {
                     email: form.email,
                     job: form.job
                 }, t);
-
-                return JsonResponse.success(newUser,"Usuario registrado con éxito.");
-
             });
+            return JsonResponse.success({},"Usuario registrado con éxito.");
         } catch (err) {
             return JsonResponse.error(500, "Usuario no registrado.");
         }
@@ -188,14 +101,16 @@ class UserService {
     
 
     static async updateUser(idUser: number, values: any) {
+
+        const user = await User.findByPk(idUser);
+
+        if (!user) {
+            return JsonResponse.error(400,"El usuario no existe.");
+        }
+
         try {
             await sequelize.transaction(async (t) => {
-                const user = await User.findByPk(idUser);
-
-                if (!user) {
-                    throw new Error();
-                }
-
+            
                 await User.update(
                     {
                         email: values.email,
@@ -223,23 +138,22 @@ class UserService {
                         transaction: t
                     }
                 );
-
-                await UserRequest.update(
-                    {
-                        userName: values.username
-                    },
-                    {
-                        where: { idUser: idUser },
-                        transaction: t
-                    }
-                );
-
-                return JsonResponse.success(User.findByPk(idUser), "Usuario actualizado");
+                // await UserRequest.update(
+                //     {
+                //         userName: values.username
+                //     },
+                //     {
+                //         where: { idUser: idUser },
+                //         transaction: t
+                //     }
+                // );
             });
-        } catch (err) {
-        }
 
-        return JsonResponse.error(500, "No se actualizo ningun usuario");
+            return JsonResponse.success({}, "Usuario actualizado con éxito.");
+        } catch (err) {
+            console.log(err);
+            return JsonResponse.error(500, "No se actualizo ningun usuario");
+        }
     }
 }
 

@@ -11,11 +11,11 @@ class User extends Model {
     return this.getDataValue("idRole");
   }
 
-  get email(): number {
+  get email(): string {
     return this.getDataValue("email");
   }
 
-  get job(): number {
+  get job(): string {
     return this.getDataValue("job");
   }
 

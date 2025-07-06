@@ -5,6 +5,10 @@ class UserRequest extends Model {
     get idUser(): number {
         return this.getDataValue("idUser");
     }
+
+    get idStatus(): number {
+        return this.getDataValue("idStatus");
+    }
 }
 
 UserRequest.init(
