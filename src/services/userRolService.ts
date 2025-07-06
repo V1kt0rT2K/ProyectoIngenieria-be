@@ -1,12 +1,14 @@
 import User from '../models/userModel';
 import UserRolesHistoric from '../models/userRolesHistoricModel';
-import UserRol from '../models/userRolModel';
+import UserRol from '../models/userRoleModel';
 import sequelize from '../utils/connection';
 import JsonResponse from '../utils/jsonResponse';
 
 class UserRolService {
     static async getUserRoles() {
-        return UserRol.findAll();
+        const data = await UserRol.findAll();
+
+        return JsonResponse.success(data, "La petición ha sido un éxito.");
     }
 
     static async updateUserRole(idUser: number, newRoleId: number, description?: string) {

@@ -1,4 +1,4 @@
-import { RegisterFormProps } from '../interfaces/Interface';
+import { RegisterFormProps } from '../utils/interfaces/Interface';
 import User from '../models/userModel';
 import UserRequest from '../models/userRequestModel';
 import PersonService from './personService';
@@ -7,10 +7,8 @@ import sequelize from '../utils/connection';
 import { Transaction } from 'sequelize';
 import UserRolesHistoric from '../models/userRolesHistoricModel';
 import Person from '../models/personModel';
-import UserRol from '../models/userRolModel';
+import UserRole from '../models/userRoleModel';
 import JsonResponse from '../utils/jsonResponse';
-import e from 'express';
-import { Json } from 'sequelize/types/utils';
 
 //var count = 0;
 const failedattempts= new Map<string, number>();
@@ -23,29 +21,13 @@ class UserService {
     static async getAll() {
         const users = await User.findAll({
             include: [
-                { model: Person, required: true },
-                { model: UserRol, required: true },
-                {
-                    model: UserRequest,
-                    required: true,
-                }
+                {model: Person  , required : true},
+                {model : UserRole, required : true},
+                {model: UserRequest}
             ]
         });
-        console.log(users[1].getDataValue('password'));
-        return users.map((user: any) => ({
-            id: user.dataValues.idUser,
-            firstName: user.dataValues.Person.firstName,
-            secondName: user.dataValues.Person.secondName,
-            lastName: user.dataValues.Person.lastName,
-            secondLastName: user.dataValues.Person.secondLastName,
-            idNumber: user.dataValues.Person.identityNumber,
-            idRole: user.dataValues.idRole,
-            roleName: user.dataValues.UserRol.roleName,
-            date: user.dataValues.UserRequest.generationDate,
-            email: user.dataValues.email,
-            username: user.dataValues.UserRequest.userName,
-            enabled: user.dataValues.isEnabled
-        }));
+
+        return JsonResponse.success(users,'La petición se ha respondido con éxito.');
     }
 
     static async putIsEnabled(id: number, enabled: boolean, status?: number) {
@@ -196,29 +178,12 @@ class UserService {
                     job: form.job
                 }, t);
 
-                return newUser;
+                return JsonResponse.success(newUser,"Usuario registrado con éxito.");
+
             });
         } catch (err) {
-            return JsonResponse.error(500, "Usuario no registrado");
+            return JsonResponse.error(500, "Usuario no registrado.");
         }
-    }
-
-    static async getUserRequests(idUser: number) {
-        const user = await User.findByPk(idUser);
-
-        if (!user) {
-            throw new Error('Usuario no encontrado');
-        }
-
-        const requests = await UserRequest.findAll({
-            where: { idUser: idUser }
-        });
-
-        if (requests.length === 0) {
-            console.warn('El usuario no tiene solicitudes');
-        }
-
-        return requests;
     }
     
 

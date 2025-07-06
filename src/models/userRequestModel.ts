@@ -1,7 +1,5 @@
 import { Model, DataTypes } from "sequelize";
 import sequelize from "../utils/connection";
-import { MAX } from 'mssql';
-import UserRol from "./userRolModel";
 
 class UserRequest extends Model {
     get idUser(): number {
@@ -31,7 +29,7 @@ UserRequest.init(
             type: DataTypes.INTEGER,
             allowNull: false,
             references: {
-                model: 'userRol',
+                model: 'UserRole',
                 key: 'idRole',
             }
         },
@@ -39,23 +37,20 @@ UserRequest.init(
             type: DataTypes.INTEGER,
             allowNull: false,
             references: {
-                model: {
-                    tableName: 'tblStatus',
-                    schema: 'asset',
-                },
+                model: "Status",
                 key: 'idStatus'
             }
         },
         userName: {
-            type: DataTypes.STRING(MAX),
+            type: DataTypes.STRING('MAX'),
             allowNull: false,
         },
         email: {
-            type: DataTypes.STRING(MAX),
+            type: DataTypes.STRING('MAX'),
             allowNull: false,
         },
         job: {
-            type: DataTypes.STRING(MAX),
+            type: DataTypes.STRING('MAX'),
             allowNull: false,
         }
     },
@@ -69,9 +64,6 @@ UserRequest.init(
     },
 
 );
-
-UserRequest.belongsTo(UserRol, { foreignKey: 'idUserRequest' });
-UserRol.hasMany(UserRequest, { foreignKey: 'idRole' });
 
 UserRequest.sync();
 

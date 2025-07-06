@@ -1,6 +1,9 @@
 import { Transaction } from "sequelize";
 import UserRequest from "../models/userRequestModel";
 import sequelize from "../utils/connection";
+import User from "../models/userModel";
+import Status from "../models/statusModel";
+import JsonResponse from "../utils/jsonResponse";
 
 class UserRequestService {
     constructor() {
@@ -8,26 +11,37 @@ class UserRequestService {
     }
 
     static async getAllRequests() {
-        const [results, _] = await sequelize.query(
-            'select * '
-            + 'from ProyectoIngenieria.users.tblUserRequests A '
-            + 'inner join ProyectoIngenieria.users.tblUsers B '
-            + 'on A.idUser = B.idUser '
-            + 'inner join ProyectoIngenieria.users.tblPersons C '
-            + 'on C.idPerson = B.idPerson '
-            + 'inner join ProyectoIngenieria.users.tblUserRoles D '
-            + 'on D.idRole = B.idRole '
-            + 'where A.idStatus = 2'
-        );
 
-        return results.map((request: any) => ({
-            id: request.idUser,
-            fullName: `${request.firstName} ${request.secondName} ${request.lastName} ${request.secondLastName}`,
-            idNumber: request.identityNumber,
-            role: request.roleName,
-            date: request.generationDate,
-            email: request.email
-        }));
+        const data = UserRequest.findAll({
+            include:[
+                {model: User, required: true},
+                {model: Status, required : true}
+            ],
+            where: {
+                idStatus: 2
+            }
+        });
+        //console.log("Ejecutado");
+
+        return JsonResponse.success(data, 'La petición ha sido un éxito.');
+    }
+
+    static async getUserRequestsByIdUser(idUser: number) {
+        const user = await User.findByPk(idUser);
+
+        if (!user) {
+            return JsonResponse.error(404,'El usuario no existe.');
+        }
+
+        const requests = await UserRequest.findAll({
+            where: { idUser: idUser }
+        });
+
+        if (requests.length === 0) {
+            return JsonResponse.error(404, "El usuario no tiene solicitudes.");
+        }
+
+        return JsonResponse.success(requests,"La petición ha sido un éxito.");
     }
 
     static async createRequest(request: {}, transaction: Transaction) {

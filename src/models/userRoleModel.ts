@@ -1,9 +1,9 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "../utils/connection";
 
-class UserRol extends Model {}
+class UserRole extends Model {}
 
-UserRol.init(
+UserRole.init(
   {
     idRole: {
       type: DataTypes.INTEGER,
@@ -23,12 +23,12 @@ UserRol.init(
     // Other model options go here
     sequelize, 
     timestamps: false,
-    modelName: 'UserRol', 
+    modelName: 'UserRole', 
     tableName: 'tblUserRoles',
     schema : 'users'
   },
 );
 
-UserRol.sync();
+UserRole.sync();
 
-export default UserRol;
+export default UserRole;

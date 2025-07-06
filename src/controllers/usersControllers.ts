@@ -11,7 +11,8 @@ export const getAllUsers = async (req: Request, res: Response) => {
         res.status(200).json(result);
     }
     catch (error) {
-        res.status(500).send(error);
+        console.log(error);
+        res.status(500).send("Error del Servidor");
     }
 }
 
@@ -41,18 +42,6 @@ export const registerUser = async (req: Request, res: Response) => {
         const params = formatRequest(req);
 
         const result = await UserService.registerUser(params);
-        res.status(200).json(result);
-    } catch (err) {
-        res.status(500).send(`Error ${err}`);
-    }
-}
-
-export const getUserRequests = async (req: Request, res: Response) => {
-    try {
-        const params = formatRequest(req);
-
-        const idUser = parseInt(params.id);
-        const result = await UserService.getUserRequests(idUser);
         res.status(200).json(result);
     } catch (err) {
         res.status(500).send(`Error ${err}`);

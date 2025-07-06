@@ -20,9 +20,9 @@ class JsonResponse {
         this.hasError = hasError;
     }
 
-    // static getStatus() : number{
-    //     return this.meta.status;
-    // }
+    getStatus() : number{
+        return this.meta.status;
+    }
 
     static success(data : any, message : string){
         return new JsonResponse(data, 200,message, false);

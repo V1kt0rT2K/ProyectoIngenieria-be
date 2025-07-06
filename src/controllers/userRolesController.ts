@@ -6,7 +6,8 @@ import userRolService from '../services/userRolService';
 export const getAllRoles = async (req: Request, res: Response) => {
     try {
         const result = await UserRolService.getUserRoles();
-        res.status(200).json(result);
+        
+        res.status(result.getStatus()).json(result);
     } catch (err) {
         res.status(500).send("ERR");
     }
@@ -21,7 +22,7 @@ export const updateUserRole = async (req: Request, res: Response) => {
 
         console.log('result',result);
 
-        res.status(200).json(result);
+        res.status(result.getStatus()).json(result);
     } catch (err) {
         res.status(500).send(`Error ${err}`);
     }
