@@ -5,7 +5,12 @@ import JsonResponse from '../utils/jsonResponse';
 
 export const getAllRequests = async (req: Request, res: Response) => {
     try {
-        const result = await UserRequestService.getAllRequests();
+        const params = formatRequest(req);
+        let page = parseInt(params.page);
+        let size = parseInt(params.size);
+        let sort = parseInt(params.sort);
+
+        const result = await UserRequestService.getAllRequests(page,size,sort);
 
         res.status(result.getStatus()).json(result);
     } catch (error) {
@@ -17,8 +22,25 @@ export const getAllRequests = async (req: Request, res: Response) => {
 export const getUserRequestsByIdUser = async (req: Request, res: Response) => {
     try {
         const params = formatRequest(req);
+        let idUser = parseInt(params.idUser);
 
-        const result = await UserRequestService.getUserRequestsByIdUser(parseInt(params.idUser));
+        const result = await UserRequestService.getUserRequestsByIdUser(idUser);
+        res.status(result.getStatus()).json(result);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json(JsonResponse.error(500,"Error Interno del Servidor."));
+    }
+}
+
+export const getUserRequestsByIdStatus = async (req: Request, res: Response) => {
+    try {
+        const params = formatRequest(req);
+        let idStatus = parseInt(params.idStatus);
+        let page = parseInt(params.page);
+        let size = parseInt(params.size);
+        let sort = parseInt(params.sort);
+
+        const result = await UserRequestService.getUserRequestsByIdStatus(idStatus,page,size,sort);
         res.status(result.getStatus()).json(result);
     } catch (error) {
         console.log(error);

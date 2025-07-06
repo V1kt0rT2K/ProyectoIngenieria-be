@@ -12,13 +12,31 @@ import JsonResponse from '../utils/jsonResponse';
 class UserService {
     constructor() { }
 
-    static async getAll() {
+    static async getAll(page: number, size:number, sort: number) {
+
+        if(page <=0 ){
+            page = 1;
+        }
+        if(size <= 0){
+            size = 15;
+        }
+        if(sort != 0 && sort != 1){
+            sort = 0;
+        }
+
         const users = await User.findAll({
             include: [
                 {model: Person  , required : true},
-                {model : UserRole, required : true},
-                {model: UserRequest}
-            ]
+                {model : UserRole, required : true}
+            ],
+            order:[
+                [Person,"firstName", sort == 0 ? "DESC" : "ASC"],
+                [Person,"secondName", sort == 0 ? "DESC" : "ASC"],
+                [Person,"lastName", sort == 0 ? "DESC" : "ASC"],
+                [Person,"secondLastName", sort == 0 ? "DESC" : "ASC"]
+            ],
+            offset: (page-1) * size,
+            limit: size
         });
 
         return JsonResponse.success(users,'La petición se ha respondido con éxito.');
