@@ -6,6 +6,7 @@ import JsonResponse from "../utils/jsonResponse";
 import sequelize from "../utils/connection";
 import UserService from "./userService";
 import Person from "../models/personModel";
+import UserRole from "../models/userRoleModel";
 
 class UserRequestService {
     constructor() {}
@@ -74,7 +75,8 @@ class UserRequestService {
                         {model: Person, required : true}
                     ]
                 },
-                {model: Status, required : true}
+                {model: Status, required : true},
+                {model: UserRole,required:true}
             ],
             order:[
                 [User,Person,"firstName", sort == 0 ? "DESC" : "ASC"],

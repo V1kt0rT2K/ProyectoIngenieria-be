@@ -1,6 +1,6 @@
 import { RegisterFormProps } from '../utils/interfaces/Interface';
 import User from '../models/userModel';
-import UserRequest from '../models/userRequestModel';
+import {Op} from 'sequelize';
 import PersonService from './personService';
 import UserRequestService from './userRequestService';
 import sequelize from '../utils/connection';
@@ -9,12 +9,13 @@ import Person from '../models/personModel';
 import UserRole from '../models/userRoleModel';
 import JsonResponse from '../utils/jsonResponse';
 
+
 class UserService {
     constructor() { }
 
     static async getAll(page: number, size:number, sort: number) {
 
-        if(page <=0 ){
+        if(page <=0){
             page = 1;
         }
         if(size <= 0){
@@ -24,10 +25,17 @@ class UserService {
             sort = 0;
         }
 
+        const totalItems =  await User.count({
+            include:[
+                {model: Person  , required : true},
+                {model : UserRole, required : true},
+            ]
+        });
+
         const users = await User.findAll({
             include: [
                 {model: Person  , required : true},
-                {model : UserRole, required : true}
+                {model : UserRole, required : true} 
             ],
             order:[
                 [Person,"firstName", sort == 0 ? "DESC" : "ASC"],
@@ -37,7 +45,38 @@ class UserService {
             ],
             offset: (page-1) * size,
             limit: size
+        }); 
+
+        if(users.length == 0){
+            return JsonResponse.error(400,"No se han encontrado usuarios.");
+        }
+
+        return JsonResponse.success({data: users, totalItems: totalItems},'La petición se ha respondido con éxito.');
+    }
+
+    static async searchUsers(searchParam : string) {
+
+        const users = await User.findAll({
+            include: [
+                {model: Person  , required : true},
+                {model : UserRole, required : true}
+            ],
+            where:{
+                [Op.or]: [
+                    {'$Person.firstName$' : {[Op.like] : searchParam + "%"}},
+                    sequelize.where(
+                        sequelize.fn("CONCAT", sequelize.col("Person.firstName"),sequelize.col("Person.secondName")), 
+                        Op.like , 
+                        searchParam + "%"
+                    ),
+                    {"email" : {[Op.like] : searchParam+"%"}}
+                ]
+            }
         });
+
+        if(users.length == 0){
+            return JsonResponse.error(400,"No se han encontrado usuarios.");
+        }
 
         return JsonResponse.success(users,'La petición se ha respondido con éxito.');
     }

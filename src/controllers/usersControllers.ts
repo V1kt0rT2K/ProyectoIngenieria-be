@@ -19,6 +19,19 @@ export const getAllUsers = async (req: Request, res: Response) => {
     }
 }
 
+export const searchUsers = async (req: Request, res: Response) => {
+    try {
+        const params = formatRequest(req);
+
+        const result = await UserService.searchUsers(params.searchParam);
+        res.status(result.getStatus()).json(result);
+    }
+    catch (error) {
+        console.log(error);
+        res.status(500).json(JsonResponse.error(500,"Error Interno del Servidor."));
+    }
+}
+
 export const registerUser = async (req: Request, res: Response) => {
     try {
         const params = formatRequest(req);

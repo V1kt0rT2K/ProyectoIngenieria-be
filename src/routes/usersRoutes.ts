@@ -6,6 +6,7 @@ const router = express.Router();
 router.put('/update', usersController.updateUser);
 router.put('/update/status', usersController.updateEnabledStatus);
 router.get('/get/all/:page/:size/:sort', usersController.getAllUsers);
+router.get('/search/:searchParam', usersController.searchUsers);
 router.post('/register', usersController.registerUser);
 
 export default router;
