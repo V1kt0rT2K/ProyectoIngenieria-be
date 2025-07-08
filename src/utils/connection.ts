@@ -1,6 +1,5 @@
 import { Sequelize } from 'sequelize';
 import { config } from '../config';
-import { Request } from 'express';
 
 const sequelize = new Sequelize(
     config.DB_NAME,

@@ -1,6 +1,5 @@
 import { DataTypes, Model } from 'sequelize';
 import sequelize from '../utils/connection';
-import UserRequest from './userRequestModel';
 
 class Status extends Model {}
 
@@ -21,7 +20,6 @@ Status.init(
     },
   },
   {
-    // Other model options go here
     sequelize, 
     timestamps: false,
     modelName: 'Status', 
@@ -29,9 +27,6 @@ Status.init(
     schema : 'asset'
   },
 );
-
-UserRequest.belongsTo(Status, { foreignKey: 'idStatus' });
-Status.hasMany(UserRequest, { foreignKey: 'idStatus' });
 
 Status.sync();
 

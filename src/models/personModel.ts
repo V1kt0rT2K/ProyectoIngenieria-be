@@ -1,10 +1,24 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "../utils/connection";
-import User from "./userModel";
 
 class Person extends Model {
     get idPerson(): number {
         return this.getDataValue("idPerson");
+    }
+    get firstName(): string {
+        return this.getDataValue("firstName");
+    }
+    get secondName(): string {
+        return this.getDataValue("secondName");
+    }
+    get lastName(): string {
+        return this.getDataValue("lastName");
+    }
+    get secondLastName(): string {
+        return this.getDataValue("secondLastName");
+    }
+    get fullName(): string {
+        return [this.firstName,this.secondName,this.lastName,this.secondLastName].join(' ');
     }
 }
 
@@ -35,6 +49,12 @@ Person.init(
         secondLastName: {
             type: DataTypes.STRING('MAX'),
             allowNull: false
+        },
+        fullName: {
+        type: DataTypes.VIRTUAL,
+            get() {
+                return `${this.firstName} ${this.secondName} ${this.lastName} ${this.secondLastName}`;
+            }
         }
     },
     {

@@ -1,9 +1,6 @@
 import { DataTypes, Model } from 'sequelize';
 import sequelize from '../utils/connection';
 import { MAX } from 'mssql';
-import personModel from './personModel';
-import UserRequest from './userRequestModel';
-import UserRol from './userRolModel';
 
 class User extends Model {
   get idUser(): number {
@@ -14,11 +11,11 @@ class User extends Model {
     return this.getDataValue("idRole");
   }
 
-  get email(): number {
+  get email(): string {
     return this.getDataValue("email");
   }
 
-  get job(): number {
+  get job(): string {
     return this.getDataValue("job");
   }
 
@@ -60,7 +57,7 @@ User.init(
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'personModel',
+        model: "Person",
         key: 'idPerson',
       },
     },
@@ -68,7 +65,7 @@ User.init(
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'userRolModel',
+        model: "UserRole",
         key: 'idRole',
       },
     },
@@ -88,15 +85,6 @@ User.init(
     ],
   }
 );
-
-UserRol.belongsTo(User, { foreignKey: "idRole", targetKey: "idRole" });
-User.hasOne(UserRol, { foreignKey: "idRole", sourceKey: "idRole" });
-
-User.belongsTo(UserRequest, { foreignKey: 'idUser', targetKey: "idUser" });
-UserRequest.hasMany(User, { foreignKey: 'idUser', sourceKey: "idUser" });
-
-User.hasOne(personModel, { foreignKey: "idPerson", sourceKey: "idPerson" });
-personModel.belongsTo(User, { foreignKey: "idPerson", targetKey: "idPerson" });
 
 User.sync();
 

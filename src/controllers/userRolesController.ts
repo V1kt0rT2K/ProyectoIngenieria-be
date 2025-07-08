@@ -1,11 +1,29 @@
 import  express, {Express, Request, Response} from 'express';
-import UserRolService from "../services/userRolService"
+import UserRoleService from "../services/userRoleService"
+import { formatRequest } from '../utils/requestParams';
+import userRolService from '../services/userRoleService';
+import JsonResponse from '../utils/jsonResponse';
 
 export const getAllRoles = async (req: Request, res: Response) => {
     try {
-        const result = await UserRolService.getUserRoles();
-        res.status(200).json(result);
+        const result = await UserRoleService.getUserRoles();
+        
+        res.status(result.getStatus()).json(result);
     } catch (err) {
-        res.status(500).send("ERR");
+        res.status(500).json(JsonResponse.error(500,"Error Interno del Servidor."));
     }
 }
+
+export const updateUserRole = async (req: Request, res: Response) => {
+    try {
+        const params = formatRequest(req);
+        const idUser = parseInt(params.id);
+
+        const result = await userRolService.updateUserRole(idUser, params.newRoleId, params.description);
+
+        res.status(result.getStatus()).json(result);
+    } catch (err) {
+        res.status(500).json(JsonResponse.error(500,"Error Interno del Servidor."));
+    }
+}
+

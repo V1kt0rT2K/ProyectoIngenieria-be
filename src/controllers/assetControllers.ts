@@ -7,7 +7,7 @@ const statusService = new StatusService();
 export const getAllStatus = async (req: Request, res: Response) => {
     try {
         const result = await statusService.getAll();
-        //console.log(result);
+
         res.status(result.meta.status).send(result);
     } 
     catch (error) {

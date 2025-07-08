@@ -1,9 +1,5 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "../utils/connection";
-import userModel from "./userModel";
-import userRolModel from "./userRolModel";
-import User from "./userModel";
-import UserRol from "./userRolModel";
 class UserRolesHistoric extends Model { }
 
 UserRolesHistoric.init(
@@ -17,10 +13,7 @@ UserRolesHistoric.init(
             type: DataTypes.INTEGER,
             allowNull: false,
             references: {
-                model: {
-                    tableName: 'tblUsers',
-                    schema: 'users'
-                },
+                model: "User",
                 key: 'idUser'
             }
         },
@@ -28,10 +21,7 @@ UserRolesHistoric.init(
             type: DataTypes.INTEGER,
             allowNull: false,
             references: {
-                model: {
-                    tableName: 'tblUserRoles',
-                    schema: 'users'
-                },
+                model: "UserRole",
                 key: 'idRole'
             }
         },
@@ -39,17 +29,13 @@ UserRolesHistoric.init(
             type: DataTypes.INTEGER,
             allowNull: false,
             references: {
-                model: {
-                    tableName: 'tblUserRoles',
-                    schema: 'users'
-                },
+                model: "UserRole",
                 key: 'idRole'
             }
         },
         generationDate: {
             type: DataTypes.DATE,
             allowNull: true,
-            defaultValue: DataTypes.NOW
         },
         description: {
             type: DataTypes.STRING('MAX'),
@@ -64,13 +50,7 @@ UserRolesHistoric.init(
         schema: 'users'
     }
 );
-//UserRolesHistoric.hasOne(userModel);
-//UserRolesHistoric.hasOne(userRolModel);
-
-UserRolesHistoric.belongsTo(User, { foreignKey: 'idUser' });
-UserRolesHistoric.belongsTo(UserRol, { as: 'OldRole', foreignKey: 'oldRoleId' });
-UserRolesHistoric.belongsTo(UserRol, { as: 'NewRole', foreignKey: 'newRoleId' });
-
 
 UserRolesHistoric.sync();
+
 export default UserRolesHistoric;

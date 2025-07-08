@@ -5,7 +5,7 @@ const router = express.Router();
 import * as assetController from '../controllers/assetControllers';
 
 
-router.get('/get/all', assetController.getAllStatus);
+router.get('/status/get/all', assetController.getAllStatus);
 
 
 

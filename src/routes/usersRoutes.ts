@@ -1,19 +1,12 @@
 import express from "express";
+import * as usersController from '../controllers/usersControllers';
 
 const router = express.Router();
 
-import * as usersController from '../controllers/usersControllers';
-
-router.put('/update/:id', usersController.updateUser);
-
-router.put('/put/status', usersController.putIsEnabled);
-
-router.get('/get/all', usersController.getAllUsers);
-
-router.get('/:id/requests', usersController.getUserRequests);
-
-router.post('/login', usersController.loginUser);
-
+router.put('/update', usersController.updateUser);
+router.put('/update/status', usersController.updateEnabledStatus);
+router.get('/get/all/:page/:size/:sort', usersController.getAllUsers);
+router.get('/search/:searchParam', usersController.searchUsers);
 router.post('/register', usersController.registerUser);
 
 export default router;

@@ -1,6 +1,5 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "../utils/connection";
-import userModel from "./userModel";
 class UserDataHistoric extends Model {}
 
 UserDataHistoric.init(
@@ -40,16 +39,16 @@ UserDataHistoric.init(
     modificationDate: {
         type: DataTypes.DATE }
 
-},
-{
-    sequelize,
-    timestamps: false,
-    modelName: 'UserDataHistoric',
-    tableName: 'tblUserDataHistoric',
-    schema: 'users'
-} 
-
+    },
+    {
+        sequelize,
+        timestamps: false,
+        modelName: 'UserDataHistoric',
+        tableName: 'tblUserDataHistoric',
+        schema: 'users'
+    }
 );
-UserDataHistoric.hasOne(userModel);
+
 UserDataHistoric.sync();  
+
 export default UserDataHistoric;
