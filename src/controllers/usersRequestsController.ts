@@ -32,6 +32,19 @@ export const getUserRequestsByIdUser = async (req: Request, res: Response) => {
     }
 }
 
+export const getUserRequestById = async (req: Request, res: Response) => {
+    try {
+        const params = formatRequest(req);
+        let idUserRequest = parseInt(params.idUserRequest);
+
+        const result = await UserRequestService.getUserRequestById(idUserRequest);
+        res.status(result.getStatus()).json(result);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json(JsonResponse.error(500,"Error Interno del Servidor."));
+    }
+}
+
 export const getUserRequestsByIdStatus = async (req: Request, res: Response) => {
     try {
         const params = formatRequest(req);

@@ -114,6 +114,27 @@ class UserRequestService {
         return JsonResponse.success(requests,"La petición ha sido un éxito.");
     }
 
+    static async getUserRequestById(idUserRequest: number) {
+        const data = await UserRequest.findByPk(idUserRequest,{
+             include:[
+                {
+                    model: User, required: true,
+                    include:[
+                        {model: Person, required : true}
+                    ]
+                },
+                {model: Status, required : true},
+                {model: UserRole,required:true}
+            ]
+        });
+
+        if(!data){
+            return JsonResponse.error(400,"No existen datos.");
+        }
+
+        return JsonResponse.success(data,"La petición ha sido un éxito.");
+    }
+
     static async manageUserRequest(idUserRequest: number, idStatus: number) {
 
         let status = await Status.findByPk(idStatus);
