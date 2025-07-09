@@ -56,3 +56,5 @@ Stage.init(
         ],
     },
 );
+Stage.sync();
+export default Stage;

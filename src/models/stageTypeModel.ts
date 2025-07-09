@@ -24,7 +24,7 @@ StageType.init(
     modelName: 'StageType', 
     tableName: 'tblStageTypes',
     schema : 'asset'
-  },
+},
 )
 
 StageType.sync();

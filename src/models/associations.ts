@@ -5,7 +5,8 @@ import UserRequest from "./userRequestModel";
 import Status from "./statusModel";
 import UserDataHistoric from "./userDataHistoricModel";
 import UserRolesHistoric from "./userRolesHistoricModel";
-
+import Stage from "./stageModel";
+import StageType from "./stageTypeModel";
 //User
 
 User.belongsTo(Person, {foreignKey : "idPerson", targetKey : "idPerson"}); 
@@ -36,4 +37,6 @@ UserDataHistoric.belongsTo(User, {foreignKey: "idUser", targetKey : "idUser"});
 //UserRoleHistoric
 UserRolesHistoric.belongsTo(UserRole, {foreignKey: "oldRoleId", targetKey:"idRole"});
 UserRolesHistoric.belongsTo(UserRole, {foreignKey: "newRoleId", targetKey:"idRole"});
+//Stages
 
+Stage.belongsTo(StageType, {foreignKey: "idStageType", targetKey: "idStageType"});
