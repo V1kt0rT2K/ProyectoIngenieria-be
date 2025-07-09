@@ -26,7 +26,7 @@ VaccineType.init(
             primaryKey: true,
         },
         vaccineName: {
-            type: DataTypes.STRING(255),
+            type: DataTypes.STRING(MAX),
             allowNull: false,
         },
         description: {
@@ -38,14 +38,9 @@ VaccineType.init(
         sequelize,
         timestamps: false,
         modelName: 'VaccineType',
-        tableName: 'tblVaccineType',
-        schema: 'asset',
-        indexes: [
-            {
-                unique: true,
-                fields: ['vaccineName'],
-            },
-        ],
+        tableName: 'tblVaccineTypes',
+        schema: 'supply',
+    
     },
 );
 VaccineType.sync();
