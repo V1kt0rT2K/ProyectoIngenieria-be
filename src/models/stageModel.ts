@@ -26,7 +26,7 @@ Stage.init(
             primaryKey: true,
         },
         stageName: {
-            type: DataTypes.STRING(255),
+            type: DataTypes.STRING(MAX),
             allowNull: false,
         },
         stageDescription: {
@@ -48,11 +48,8 @@ Stage.init(
         modelName: 'Stage',
         tableName: 'tblStage',
         schema: 'asset',
-        indexes: [
-            {
-                unique: true,
-                fields: ['stageName', 'idStageType'],
-            },
-        ],
+        
     },
 );
+Stage.sync();
+export default Stage;
