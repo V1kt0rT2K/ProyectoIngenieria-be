@@ -18,7 +18,7 @@ VaccineBatch.init(
             type: DataTypes.INTEGER,
             allowNull: false,
             references:{
-                model: "VaccineBatch",
+                model: "Vaccine",
                 key: "idVaccine"
             }
         },
