@@ -19,12 +19,12 @@ StageType.init(
         }
     },
     {
-    sequelize, 
-    timestamps: false,
-    modelName: 'StageType', 
-    tableName: 'tblStageTypes',
-    schema : 'asset'
-  },
+        sequelize,
+        timestamps: false,
+        modelName: 'StageType',
+        tableName: 'tblStageTypes',
+        schema: 'asset'
+    }
 )
 
 StageType.sync();
