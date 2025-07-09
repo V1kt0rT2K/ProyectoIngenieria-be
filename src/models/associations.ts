@@ -7,6 +7,8 @@ import UserDataHistoric from "./userDataHistoricModel";
 import UserRolesHistoric from "./userRolesHistoricModel";
 import Stage from "./stageModel";
 import StageType from "./stageTypeModel";
+import Vaccine from "./vaccineModel";
+import VaccineType from "./vaccineTypeModel";
 //User
 
 User.belongsTo(Person, {foreignKey : "idPerson", targetKey : "idPerson"}); 
@@ -40,3 +42,7 @@ UserRolesHistoric.belongsTo(UserRole, {foreignKey: "newRoleId", targetKey:"idRol
 //Stages
 
 Stage.belongsTo(StageType, {foreignKey: "idStageType", targetKey: "idStageType"});
+
+//Vaccine 
+Vaccine.belongsTo(Stage, {foreignKey: "idStage", targetKey: "idStage" });
+Vaccine.belongsTo(VaccineType, {foreignKey: "idVaccineType", targetKey: "idVaccineType"});
