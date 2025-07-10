@@ -1,5 +1,5 @@
 import UserService from './userService';
-import User from '../models/userModel';
+import User from '../models/users/userModel';
 import JsonResponse from '../utils/jsonResponse';
 
 const failedAttempts= new Map<string, number>();

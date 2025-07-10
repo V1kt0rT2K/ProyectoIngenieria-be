@@ -1,12 +1,12 @@
 import { Transaction } from "sequelize";
-import UserRequest from "../models/userRequestModel";
-import User from "../models/userModel";
-import Status from "../models/statusModel";
+import UserRequest from "../models/users/userRequestModel";
+import User from "../models/users/userModel";
+import Status from "../models/assets/statusModel";
 import JsonResponse from "../utils/jsonResponse";
 import sequelize from "../utils/connection";
 import UserService from "./userService";
-import Person from "../models/personModel";
-import UserRole from "../models/userRoleModel";
+import Person from "../models/users/personModel";
+import UserRole from "../models/users/userRoleModel";
 
 class UserRequestService {
     constructor() {}

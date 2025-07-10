@@ -1,12 +1,12 @@
 import { RegisterFormProps } from '../utils/interfaces/Interface';
-import User from '../models/userModel';
+import User from '../models/users/userModel';
 import {Op} from 'sequelize';
 import PersonService from './personService';
 import UserRequestService from './userRequestService';
 import sequelize from '../utils/connection';
 import { Transaction } from 'sequelize';
-import Person from '../models/personModel';
-import UserRole from '../models/userRoleModel';
+import Person from '../models/users/personModel';
+import UserRole from '../models/users/userRoleModel';
 import JsonResponse from '../utils/jsonResponse';
 
 

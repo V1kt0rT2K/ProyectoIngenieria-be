@@ -1,6 +1,6 @@
-import User from '../models/userModel';
-import UserRolesHistoric from '../models/userRolesHistoricModel';
-import UserRole from '../models/userRoleModel';
+import User from '../models/users/userModel';
+import UserRolesHistoric from '../models/users/userRolesHistoricModel';
+import UserRole from '../models/users/userRoleModel';
 import sequelize from '../utils/connection';
 import JsonResponse from '../utils/jsonResponse';
 
