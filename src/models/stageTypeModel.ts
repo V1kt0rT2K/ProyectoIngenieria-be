@@ -1,5 +1,6 @@
 import { DataTypes, Model } from 'sequelize';
 import sequelize from '../utils/connection';
+import { MAX } from 'mssql';
 
 class StageType extends Model{};
 
@@ -11,11 +12,11 @@ StageType.init(
             primaryKey: true
         },
         stageTypeName:{
-            type: DataTypes.STRING('MAX'),
+            type: DataTypes.STRING(MAX),
             allowNull: false
         },
         description:{
-            type: DataTypes.STRING('MAX'),
+            type: DataTypes.STRING(MAX),
         }
     },
     {
