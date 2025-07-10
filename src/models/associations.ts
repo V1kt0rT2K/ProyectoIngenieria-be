@@ -19,6 +19,13 @@ import SwineVaccine from "./swineVaccineModel";
 import SwineBatch from "./swineBatchModel";
 import FeedBatche from "./feedBatcheModel";
 import SwineFeed from "./swineFeedModel";
+import StockPrice from "./stockPriceModel";
+import SalesCheck from "./salesCheckModel";
+import Client from "./clientModel";
+import SalesChecksDetail from "./salesChecksDetailModel";
+import CaiCodeRange from "./caiCodeRangeModel";
+import CaiCode from "./caiCodeModel";
+import CaiCodeCheck from "./caiCodeCheckModel";
 //User
 
 User.belongsTo(Person, {foreignKey : "idPerson", targetKey : "idPerson"}); 
@@ -82,3 +89,21 @@ FeedBatche.belongsTo(Feed, {foreignKey: "idFeed", targetKey: "idFeed"});
 SwineFeed.belongsTo(SwineBatch, {foreignKey: "idSwineBatch", targetKey: "idSwineBatch"});
 SwineFeed.belongsTo(FeedBatche, {foreignKey: "idFeedBatch", targetKey: "idFeedBatch"});
 SwineFeed.belongsTo(User, {foreignKey: "idUser", targetKey: "idUser"});
+
+//stockPrice
+StockPrice.belongsTo(SwineCutType, {foreignKey: "idSwinecutType", targetKey: "idSwinecutType"});
+
+//SaleCheck
+SalesCheck.belongsTo(User, {foreignKey: "idUser", targetKey: "idUser"});
+SalesCheck.belongsTo(Client, {foreignKey: "idClient", targetKey: "idClient"});
+
+//SalesChecksDetail
+SalesChecksDetail.belongsTo(SalesCheck, {foreignKey: "idSalesCheck", targetKey: "idSalesCheck"});
+SalesChecksDetail.belongsTo(SwineCutType, {foreignKey: "idSwinecutType", targetKey: "idSwinecutType"});
+
+//CaiCodeRange
+CaiCodeRange.belongsTo(CaiCode, {foreignKey: "idCodeCai", targetKey: "idCodeCai"});
+
+//CaiCodeCheck
+CaiCodeCheck.belongsTo(CaiCode, {foreignKey: "idCodeCai", targetKey: "idCodeCai"});
+CaiCodeCheck.belongsTo(SalesCheck, {foreignKey: "idSalesCheck", targetKey: "idSalesCheck"});
