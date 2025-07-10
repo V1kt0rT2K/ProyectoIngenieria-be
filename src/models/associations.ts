@@ -9,6 +9,11 @@ import Stage from "./stageModel";
 import StageType from "./stageTypeModel";
 import Vaccine from "./vaccineModel";
 import VaccineType from "./vaccineTypeModel";
+import SwineCutBatches from "./swineCutBatchesModel";
+import SwineCutType from "./swinecutTypeModel";
+import SwineCutProduction from "./swineCutProductionModel";
+import Swine from "./swineModel";
+import Feed from "./feedModel";
 //User
 
 User.belongsTo(Person, {foreignKey : "idPerson", targetKey : "idPerson"}); 
@@ -46,3 +51,13 @@ Stage.belongsTo(StageType, {foreignKey: "idStageType", targetKey: "idStageType"}
 //Vaccine 
 Vaccine.belongsTo(Stage, {foreignKey: "idStage", targetKey: "idStage" });
 Vaccine.belongsTo(VaccineType, {foreignKey: "idVaccineType", targetKey: "idVaccineType"});
+
+//SwineCutBatches
+SwineCutBatches.belongsTo(SwineCutType, {foreignKey: "idSwinecutType", targetKey: "idSwinecutType"});
+
+//SwineCutProduction
+SwineCutProduction.belongsTo(SwineCutType, {foreignKey: "idSwinecutType", targetKey: "idSwinecutType"});
+SwineCutProduction.belongsTo(Swine, {foreignKey: "idSwine", targetKey: "idSwine"});
+
+//Feed
+Feed.belongsTo(Stage, {foreignKey: "idStage", targetKey: "idStage"});
