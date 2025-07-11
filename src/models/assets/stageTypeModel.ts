@@ -12,11 +12,11 @@ StageType.init(
             primaryKey: true
         },
         stageTypeName:{
-            type: DataTypes.STRING(MAX),
+            type: DataTypes.STRING(255),
             allowNull: false
         },
         description:{
-            type: DataTypes.STRING(MAX),
+            type: DataTypes.STRING(255),
         }
     },
     {

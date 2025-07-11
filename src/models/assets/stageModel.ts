@@ -26,18 +26,18 @@ Stage.init(
             primaryKey: true,
         },
         stageName: {
-            type: DataTypes.STRING(MAX),
+            type: DataTypes.STRING(255),
             allowNull: false,
         },
         stageDescription: {
-            type: DataTypes.STRING(MAX),
+            type: DataTypes.TEXT,
             allowNull: false,
         },
         idStageType: {
             type: DataTypes.INTEGER,
             allowNull: false,
             references: {
-                model: "StageTypes",
+                model: "StageType",
                 key: "idStageType",
             },
         },
@@ -46,7 +46,7 @@ Stage.init(
         sequelize,
         timestamps: false,
         modelName: 'Stage',
-        tableName: 'tblStage',
+        tableName: 'tblStages',
         schema: 'asset',
         
     },

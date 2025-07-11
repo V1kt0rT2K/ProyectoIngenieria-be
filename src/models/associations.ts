@@ -102,8 +102,8 @@ SalesChecksDetail.belongsTo(SalesCheck, {foreignKey: "idSalesCheck", targetKey: 
 SalesChecksDetail.belongsTo(SwineCutType, {foreignKey: "idSwinecutType", targetKey: "idSwinecutType"});
 
 //CaiCodeRange
-CaiCodeRange.belongsTo(CaiCode, {foreignKey: "idCodeCai", targetKey: "idCodeCai"});
+CaiCodeRange.belongsTo(CaiCode, {foreignKey: "idCaiCode", targetKey: "idCaiCode"});
 
 //CaiCodeCheck
-CaiCodeCheck.belongsTo(CaiCode, {foreignKey: "idCodeCai", targetKey: "idCodeCai"});
+CaiCodeCheck.belongsTo(CaiCode, {foreignKey: "idCaiCode", targetKey: "idCaiCode"});
 CaiCodeCheck.belongsTo(SalesCheck, {foreignKey: "idSalesCheck", targetKey: "idSalesCheck"});

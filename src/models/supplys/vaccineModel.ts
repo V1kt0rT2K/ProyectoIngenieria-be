@@ -12,7 +12,7 @@ Vaccine.init(
             primaryKey: true
         },
         vaccineName:{
-            type: DataTypes.STRING(MAX),
+            type: DataTypes.STRING(255),
             allowNull: false
         },
         idVaccineType:{
