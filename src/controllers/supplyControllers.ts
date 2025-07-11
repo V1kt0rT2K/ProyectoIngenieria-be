@@ -1,10 +1,11 @@
 import { Request, Response } from 'express';
 import JsonResponse from '../utils/jsonResponse';
-import SupplyService from '../services/supplyService';
+
+import supplyService from '../services/supplyService';
 
 export const getAllFeedBatches = async (req: Request, res: Response) => {
     try {
-        const supplyService = new SupplyService();
+    
         const result = await supplyService.getAllFeed();
         
         res.status(result.getStatus()).json(result);
@@ -14,7 +15,7 @@ export const getAllFeedBatches = async (req: Request, res: Response) => {
 }
 export const getAllVaccineBatches = async (req: Request, res: Response) => {
     try {
-        const supplyService = new SupplyService();
+    
         const result = await supplyService.getAllVaccine();
         
         res.status(result.getStatus()).json(result);
@@ -26,7 +27,7 @@ export const getBatchesByType = async (req: Request, res: Response) => {
     try {
         const { type } = req.params;
 
-        const supplyService = new SupplyService();
+    
         const result = await supplyService.getByType(type);
 
         res.status(result.getStatus()).json(result);

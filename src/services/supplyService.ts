@@ -7,15 +7,15 @@ import e from 'express';
 class supplyService {
     constructor(){}
 
-    async getAllFeed(){
+    static async getAllFeed(){
         const data =  await FeedBatches.findAll();
         return JsonResponse.success(data,'La petición fue exitosa.');
     }
-    async getAllVaccine(){
+    static async getAllVaccine(){
         const data =  await VaccineBatch.findAll();
         return JsonResponse.success(data,'La petición fue exitosa.');
     }
-    async getByType(type: string) {
+    static async getByType(type: string) {
     let data;
 
     switch (type.toLowerCase()) {
