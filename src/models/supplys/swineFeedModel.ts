@@ -1,5 +1,6 @@
 import { DataTypes, Model } from 'sequelize';
 import sequelize from '../../utils/connection';
+import User from '../users/userModel';
 
 class SwineFeed extends Model {
 
@@ -52,7 +53,7 @@ SwineFeed.init(
             type: DataTypes.INTEGER,
             allowNull: false,
             references: {
-                model: 'FeedBatche',
+                model: 'FeedBatch',
                 key: 'idFeedBatch',
             },
         },
@@ -60,7 +61,7 @@ SwineFeed.init(
             type: DataTypes.INTEGER,
             allowNull: false,
             references: {
-                model: 'User',
+                model: "User",
                 key: 'idUser',
             },
         },

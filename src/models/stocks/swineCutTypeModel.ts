@@ -1,6 +1,5 @@
 import { DataTypes, Model } from 'sequelize';
 import sequelize from '../../utils/connection';
-import { MAX } from 'mssql';
 
 class SwineCutType extends Model {
 
@@ -18,17 +17,17 @@ class SwineCutType extends Model {
 }
 SwineCutType.init(
     {
-        idSwinecutType: {
+        idSwineCutType: {
             type: DataTypes.INTEGER,
             autoIncrement: true,
             primaryKey: true,
         },
         swineCutTypeName: {
-            type: DataTypes.STRING(MAX),
+            type: DataTypes.STRING('MAX'),
             allowNull: false,
         },
         description: {
-            type: DataTypes.STRING(MAX),
+            type: DataTypes.STRING('MAX'),
             allowNull: true,
         },
     },

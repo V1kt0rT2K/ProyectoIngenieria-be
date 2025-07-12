@@ -1,6 +1,5 @@
 import { DataTypes, Model } from 'sequelize';
 import sequelize from '../../utils/connection';
-import { MAX } from 'mssql';
 
 class VaccineType extends Model {
 
@@ -26,11 +25,11 @@ VaccineType.init(
             primaryKey: true,
         },
         vaccineName: {
-            type: DataTypes.STRING(MAX),
+            type: DataTypes.STRING('MAX'),
             allowNull: false,
         },
         description: {
-            type: DataTypes.STRING(MAX),
+            type: DataTypes.STRING('MAX'),
             allowNull: false,
         },
     },

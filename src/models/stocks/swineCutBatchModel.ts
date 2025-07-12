@@ -2,10 +2,10 @@ import { DataTypes, Model } from 'sequelize';
 import sequelize from '../../utils/connection';
 
 
-class SwineCutBatches extends Model {
+class SwineCutBatch extends Model {
 
-    get idAvaliableSwineCut(): number {
-        return this.getDataValue("idAvaliableSwineCut");
+    get idSwineCutBatch(): number {
+        return this.getDataValue("idSwineCutBatch");
     }
 
     get quantity(): number {
@@ -22,9 +22,9 @@ class SwineCutBatches extends Model {
     }
 
 }
-SwineCutBatches.init(
+SwineCutBatch.init(
     {
-        idAvaliableSwineCut: {
+        idSwineCutBatch: {
             type: DataTypes.INTEGER,
             autoIncrement: true,
             primaryKey: true,
@@ -54,10 +54,10 @@ SwineCutBatches.init(
     {
         sequelize,
         timestamps: false,
-        modelName: 'SwineCutBatches',
+        modelName: 'SwineCutBatch',
         tableName: 'tblSwineCutBatches',
         schema: 'stock',
     },
 );
-SwineCutBatches.sync();
-export default SwineCutBatches;
+SwineCutBatch.sync();
+export default SwineCutBatch;

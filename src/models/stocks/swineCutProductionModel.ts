@@ -1,5 +1,6 @@
 import { DataTypes, Model } from 'sequelize';
 import sequelize from '../../utils/connection';
+import SwineCutType from './swineCutTypeModel';
 
 class SwineCutProduction extends Model {
 
@@ -44,7 +45,7 @@ SwineCutProduction.init(
             type: DataTypes.INTEGER,
             allowNull: false,
             references: {
-                model: 'SwineCutType', 
+                model: "SwineCutType", 
                 key: 'idSwinecutType', 
             },
         },

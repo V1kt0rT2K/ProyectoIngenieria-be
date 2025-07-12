@@ -1,5 +1,5 @@
 import  express, {Express, Request, Response} from 'express';
-import FeedBatches from'../models/supplys/feedBatcheModel';
+import FeedBatches from'../models/supplys/feedBatchModel';
 import VaccineBatch from '../models/supplys/vaccineBatchModel';
 import JsonResponse from '../utils/jsonResponse';
 import e from 'express';

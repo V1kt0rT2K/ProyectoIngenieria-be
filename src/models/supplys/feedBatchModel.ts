@@ -1,7 +1,7 @@
 import { DataTypes, Model } from 'sequelize';
 import sequelize from '../../utils/connection';
 
-class FeedBatche extends Model {
+class FeedBatch extends Model {
 
     get idFeedBatch(): number {
         return this.getDataValue("idFeedBatch");
@@ -16,7 +16,7 @@ class FeedBatche extends Model {
         return this.getDataValue("expirationDate");
     }
 }
-FeedBatche.init(
+FeedBatch.init(
     {
         idFeedBatch: {
             type: DataTypes.INTEGER,
@@ -43,11 +43,11 @@ FeedBatche.init(
     {
         sequelize,
         timestamps: false,
-        modelName: 'FeedBatche',
+        modelName: 'FeedBatch',
         tableName: 'tblFeedBatches',
         schema: 'supply',
     },
 );
 
-FeedBatche.sync();
-export default FeedBatche;
+FeedBatch.sync();
+export default FeedBatch;

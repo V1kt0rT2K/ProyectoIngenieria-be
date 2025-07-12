@@ -2,6 +2,7 @@ import { DataTypes, Model } from 'sequelize';
 import sequelize from '../../utils/connection';
 
 
+
 class SwineVaccine extends Model {
 
     get idSwineVaccine(): number {
@@ -43,7 +44,7 @@ SwineVaccine.init(
             references: {
                 model: 'SwineBatch',
                 key: 'idSwineBatch',
-            },
+            }
         },
         quantityUsed: {
             type: DataTypes.INTEGER,
@@ -55,7 +56,7 @@ SwineVaccine.init(
             references: {
                 model: 'VaccineBatch',
                 key: 'idVaccineBatch',
-            },
+            }
         },
         idUser: {
             type: DataTypes.INTEGER,

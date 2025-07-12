@@ -1,6 +1,5 @@
 import { DataTypes, INTEGER, Model } from 'sequelize';
 import sequelize from '../../utils/connection';
-import { MAX } from 'mssql';
 
 class Swine extends Model{};
 
@@ -12,7 +11,7 @@ Swine.init(
             primaryKey: true
         },
         numberAssigned:{
-            type: DataTypes.STRING(MAX),
+            type: DataTypes.STRING('MAX'),
             allowNull: false
         },
         idSwineBatch:{

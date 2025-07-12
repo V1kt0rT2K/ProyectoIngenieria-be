@@ -1,6 +1,5 @@
 import { DataTypes, Model } from 'sequelize';
 import sequelize from '../../utils/connection';
-import { MAX } from 'mssql';
 
 class Feed extends Model {
     get idFeed(): number {
@@ -23,13 +22,13 @@ Feed.init(
             primaryKey: true,
         },
         feedName: {
-            type: DataTypes.STRING(MAX),
+            type: DataTypes.STRING('MAX'),
             allowNull: false,
         },
         idStage: {
             type: DataTypes.INTEGER,
             allowNull: false,
-            references: {
+            references: {  
                 model: "Stage",
                 key: "idStage",
             },

@@ -34,12 +34,12 @@ SalesChecksDetail.init(
                 key: 'idSalesCheck',
             },
         },
-        idSwineCutType: {
+        idSwineCutBatch: {
             type: DataTypes.INTEGER,
             allowNull: false,
             references: {
-                model: 'SwineCutType',
-                key: 'idSwinecutType',
+                model: 'SwineCutBatch',
+                key: 'idSwineCutBatch',
             },
         },
         quantity: {
