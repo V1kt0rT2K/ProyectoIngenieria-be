@@ -1,5 +1,5 @@
 import { DataTypes, Model } from "sequelize";
-import sequelize from "../utils/connection";
+import sequelize from "../../utils/connection";
 class UserRolesHistoric extends Model { }
 
 UserRolesHistoric.init(

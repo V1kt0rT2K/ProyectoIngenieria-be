@@ -1,5 +1,5 @@
 import { Model, DataTypes } from "sequelize";
-import sequelize from "../utils/connection";
+import sequelize from "../../utils/connection";
 
 class UserRequest extends Model {
     get idUser(): number {

@@ -1,6 +1,5 @@
 import { DataTypes, Model } from 'sequelize';
-import sequelize from '../utils/connection';
-import { MAX } from 'mssql';
+import sequelize from '../../utils/connection';
 
 class User extends Model {
   get idUser(): number {
@@ -41,11 +40,11 @@ User.init(
       unique: true,
     },
     job: {
-      type: DataTypes.STRING(MAX),
+      type: DataTypes.STRING('MAX'),
       allowNull: false,
     },
     password: {
-      type: DataTypes.STRING(MAX),
+      type: DataTypes.STRING('MAX'),
       allowNull: false,
     },
     isEnabled: {

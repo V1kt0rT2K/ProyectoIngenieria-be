@@ -1,5 +1,5 @@
 import { DataTypes, Model } from 'sequelize';
-import sequelize from '../utils/connection';
+import sequelize from '../../utils/connection';
 
 class Status extends Model {}
 
@@ -18,6 +18,14 @@ Status.init(
       type: DataTypes.STRING('MAX'),
       allowNull: false,
     },
+    idStatusType:{
+      type: DataTypes.INTEGER,
+      allowNull:false,
+      references: {
+        model:"StatusType",
+        key:"idStatusType"
+      }
+    }
   },
   {
     sequelize, 

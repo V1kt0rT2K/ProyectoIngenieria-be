@@ -1,5 +1,5 @@
 import  express, {Express, Request, Response} from 'express';
-import Status from '../models/statusModel';
+import Status from '../models/assets/statusModel';
 import JsonResponse from '../utils/jsonResponse';
 
 class StatusService {

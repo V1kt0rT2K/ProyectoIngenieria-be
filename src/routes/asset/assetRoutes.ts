@@ -1,8 +1,8 @@
-import express,{ Express } from "express";
+import express from "express";
 
 const router = express.Router();
 
-import * as assetController from '../controllers/assetControllers';
+import * as assetController from '../../controllers/assetControllers';
 
 
 router.get('/status/get/all', assetController.getAllStatus);

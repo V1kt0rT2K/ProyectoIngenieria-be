@@ -1,10 +1,10 @@
 import  express from 'express';
 import './models/associations';
-import assetRoutes from './routes/assetRoutes';
-import usersRoutes from './routes/usersRoutes';
-import userRolesRoutes from './routes/userRolesRoutes';
-import userRequestsRoutes from './routes/userRequestsRoutes';
-import authRoutes from './routes/authRoutes';
+import assetRoutes from './routes/asset/assetRoutes';
+import usersRoutes from './routes/users/usersRoutes';
+import userRolesRoutes from './routes/users/userRolesRoutes';
+import userRequestsRoutes from './routes/users/userRequestsRoutes';
+import authRoutes from './routes/users/authRoutes';
 
 const index = express.Router();
 
