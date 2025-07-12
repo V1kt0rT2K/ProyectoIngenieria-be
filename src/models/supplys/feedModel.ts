@@ -38,8 +38,8 @@ Feed.init(
         sequelize,
         timestamps: false,
         modelName: 'Feed',
-        tableName: 'tblFeed',
-        schema: 'stock',
+        tableName: 'tblFeeds',
+        schema: 'supply',
     },
 );
 Feed.sync();

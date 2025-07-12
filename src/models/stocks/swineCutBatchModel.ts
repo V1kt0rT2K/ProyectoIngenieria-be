@@ -11,8 +11,8 @@ class SwineCutBatch extends Model {
     get quantity(): number {
         return this.getDataValue("quantity");
     }
-    get idSwinecutType(): number {
-        return this.getDataValue("idSwinecutType");
+    get idSwineCutType(): number {
+        return this.getDataValue("idSwineCutType");
     }
     get expirationDate(): Date {
         return this.getDataValue("expirationDate");
@@ -30,10 +30,10 @@ SwineCutBatch.init(
             primaryKey: true,
         },
         quantity: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.DECIMAL(8,2),
             allowNull: false,
         },
-        idSwinecutType: {
+        idSwineCutType: {
             type: DataTypes.INTEGER,
             allowNull: false,
             references: {

@@ -7,8 +7,8 @@ class VaccineType extends Model {
         return this.getDataValue("idVaccineType");
     }
 
-    get vaccineName(): string {
-        return this.getDataValue("vaccineName");
+    get vaccineTypeName(): string {
+        return this.getDataValue("vaccineTypeName");
     }
 
     get description(): string {
@@ -24,7 +24,7 @@ VaccineType.init(
             autoIncrement: true,
             primaryKey: true,
         },
-        vaccineName: {
+        vaccineTypeName: {
             type: DataTypes.STRING('MAX'),
             allowNull: false,
         },

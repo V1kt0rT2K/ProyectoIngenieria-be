@@ -15,8 +15,8 @@ class SwineCutProduction extends Model {
     get quantity(): number {
         return this.getDataValue("quantity");
     }
-    get idSwinecutType(): number {
-        return this.getDataValue("idSwinecutType");
+    get idSwineCutType(): number {
+        return this.getDataValue("idSwineCutType");
     }
     get processDate(): Date {
         return this.getDataValue("processDate");
@@ -38,10 +38,10 @@ SwineCutProduction.init(
             }
         },
         quantity: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.DECIMAL(8,2),
             allowNull: false,
         },
-        idSwinecutType: {
+        idSwineCutType: {
             type: DataTypes.INTEGER,
             allowNull: false,
             references: {
@@ -50,8 +50,7 @@ SwineCutProduction.init(
             },
         },
         processDate: {
-            type: DataTypes.DATE,
-            allowNull: false,
+            type: DataTypes.DATE
         },
     },
     {

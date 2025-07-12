@@ -71,7 +71,7 @@ SwineVaccine.init(
         sequelize,
         timestamps: false,
         modelName: 'SwineVaccine',
-        tableName: 'tblSwineVaccine',
+        tableName: 'tblSwineVaccines',
         schema: 'supply',
     },
 );

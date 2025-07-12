@@ -30,7 +30,7 @@ StockPrice.init(
             },
         },
         priceUnit: {
-            type: DataTypes.FLOAT,
+            type: DataTypes.DECIMAL(8,2),
             allowNull: false,
         },
     },

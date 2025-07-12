@@ -15,7 +15,7 @@ SwineBatch.init(
             allowNull: false,
         },
         estimatedWeight:{
-            type: DataTypes.DECIMAL(4,2),
+            type: DataTypes.DECIMAL(10,2),
             allowNull: false
         },
         generationDate:{

@@ -38,7 +38,7 @@ SwineFeed.init(
             allowNull: false,
         },
         quantityUsed: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.DECIMAL(8,2),
             allowNull: false,
         },
         idSwineBatch: {
@@ -70,7 +70,7 @@ SwineFeed.init(
         sequelize,
         timestamps: false,
         modelName: 'SwineFeed',
-        tableName: 'tblSwineFeed',
+        tableName: 'tblSwineFeeds',
         schema: 'supply',
     },
 );

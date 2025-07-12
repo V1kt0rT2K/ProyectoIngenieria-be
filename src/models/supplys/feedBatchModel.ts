@@ -32,7 +32,7 @@ FeedBatch.init(
             },
         },
         quantity: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.DECIMAL(8,2),
             allowNull: false,
         },
         expirationDate: {

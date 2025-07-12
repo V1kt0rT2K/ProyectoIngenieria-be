@@ -28,7 +28,7 @@ Client.init(
         sequelize,
         timestamps: false,
         modelName: 'Client',
-        tableName: 'tblClient',
+        tableName: 'tblClients',
         schema: 'sales',
         indexes: [
             {   unique: true, fields: ['identitynumber'] }

@@ -46,7 +46,7 @@ SalesCheck.init(
             allowNull: false,
         },
         ISV: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.DECIMAL(8,2),
             allowNull: false,
         },
         idClient: {
@@ -62,7 +62,7 @@ SalesCheck.init(
         sequelize,
         timestamps: false,
         modelName: 'SalesCheck',
-        tableName: 'tblSalesCheck',
+        tableName: 'tblSalesChecks',
         schema: 'sales',
     }
 );

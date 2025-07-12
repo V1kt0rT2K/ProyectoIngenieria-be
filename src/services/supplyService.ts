@@ -4,7 +4,7 @@ import VaccineBatch from '../models/supplys/vaccineBatchModel';
 import JsonResponse from '../utils/jsonResponse';
 import e from 'express';
 
-class supplyService {
+class SupplyService {
     constructor(){}
 
     static async getAllFeed(){

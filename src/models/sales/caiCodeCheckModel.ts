@@ -1,6 +1,5 @@
 import { DataTypes, Model } from 'sequelize';
 import sequelize from '../../utils/connection';
-import {MAX} from 'mssql';
 class CaiCodeCheck extends Model {
 
     get idCaiCodeCheck(): number {
@@ -41,7 +40,7 @@ CaiCodeCheck.init(
             },
         },
         saleCheckCode: {
-            type: DataTypes.STRING(MAX),
+            type: DataTypes.STRING('MAX'),
             allowNull: false,
         },
     },
@@ -49,7 +48,7 @@ CaiCodeCheck.init(
         sequelize,
         timestamps: false,
         modelName: 'CaiCodeCheck',
-        tableName: 'tblCaiCodeCheck',
+        tableName: 'tblCaiCodeChecks',
         schema: 'sales',
     },
 );

@@ -10,11 +10,11 @@ class CaiCodeRange extends Model {
         return this.getDataValue("idCaiCode");
     }
 
-    get startRange(): number {
+    get startRange(): string {
         return this.getDataValue("startRange");
     }
 
-    get endRange(): number {
+    get endRange(): string {
         return this.getDataValue("endRange");
     }
     get expirationDate(): Date {
@@ -40,11 +40,11 @@ CaiCodeRange.init(
             },
         },
         startRange: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.STRING('MAX'),
             allowNull: false,
         },
         endRange: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.STRING('MAX'),
             allowNull: false,
         },
         expirationDate: {
