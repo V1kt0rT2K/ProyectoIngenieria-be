@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
-import UserService from '../services/userService';
-import { formatRequest } from '../utils/requestParams';
-import JsonResponse from '../utils/jsonResponse';
+import UserService from '../../services/users/userService';
+import { formatRequest } from '../../utils/requestParams';
+import JsonResponse from '../../utils/jsonResponse';
 
 export const getAllUsers = async (req: Request, res: Response) => {
     try {

@@ -57,6 +57,18 @@ SalesCheck.init(
                 key: 'idClient',
             },
         },
+        idCaiCodeRange:{
+            type : DataTypes.INTEGER,
+            allowNull: false,
+            references: {
+                model: "CaiCodeRange",
+                key: "idCaiCodeRange"
+            }
+        },
+        saleCheckCode : {
+            type: DataTypes.STRING('MAX'),
+            allowNull: false
+        }
     },
     {
         sequelize,

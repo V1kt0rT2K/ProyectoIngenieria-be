@@ -1,5 +1,5 @@
 import { Transaction } from 'sequelize';
-import Person from '../models/users/personModel';
+import Person from '../../models/users/personModel';
 
 class PersonService {
     constructor(){}

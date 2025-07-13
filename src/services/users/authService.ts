@@ -1,6 +1,6 @@
-import UserService from './userService';
-import User from '../models/users/userModel';
-import JsonResponse from '../utils/jsonResponse';
+import UserService from '../users/userService';
+import User from '../../models/users/userModel';
+import JsonResponse from '../../utils/jsonResponse';
 
 const failedAttempts= new Map<string, number>();
 const lockedUsers = new Map<string, Date>(); 

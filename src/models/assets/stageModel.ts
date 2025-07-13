@@ -11,7 +11,7 @@ class Stage extends Model {
     }
     
     get description(): string {
-        return this.getDataValue("stageDescription");
+        return this.getDataValue("description");
     }
     get idStageType(): number {
         return this.getDataValue("idStageType");
@@ -28,7 +28,7 @@ Stage.init(
             type: DataTypes.STRING('MAX'),
             allowNull: false,
         },
-        stageDescription: {
+        description: {
             type: DataTypes.STRING('MAX'),
             allowNull: false,
         },

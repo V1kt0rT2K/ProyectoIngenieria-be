@@ -25,7 +25,6 @@ import Client from "./sales/clientModel";
 import SalesChecksDetail from "./sales/salesChecksDetailModel";
 import CaiCodeRange from "./sales/caiCodeRangeModel";
 import CaiCode from "./sales/caiCodeModel";
-import CaiCodeCheck from "./sales/caiCodeCheckModel";
 import StatusType from "./assets/statusTypeModel";
 
 /********** USERS SCHEMA *********/  
@@ -36,6 +35,7 @@ User.hasMany(UserRequest, {foreignKey: "idUser", sourceKey : "idUser"});
 User.hasMany(UserDataHistoric, {foreignKey: "idUser", sourceKey:"idUser"});
 User.hasMany(SwineVaccine,{foreignKey:"idUser", sourceKey:"idUser"});
 User.hasMany(SwineFeed,{foreignKey:"idUser", sourceKey:"idUser"});
+User.hasMany(SalesCheck, {foreignKey:"idUser", sourceKey:"idUser"});
 
 //Person
 Person.hasOne(User, {foreignKey: "idPerson", sourceKey:"idPerson"});
@@ -117,9 +117,29 @@ FeedBatch.belongsToMany(SwineBatch, {through:SwineFeed, foreignKey:"idFeedBatch"
 //SwineCutTypes
 SwineCutType.hasMany(SwineCutBatch, {foreignKey:"idSwineCutType", sourceKey:"idSwineCutType"});
 SwineCutType.belongsToMany(Swine, {through:SwineCutProduction, foreignKey:"idSwineCutType", otherKey:"idSwine", uniqueKey:"ukSwine_SwineCutType"});
+SwineCutType.hasOne(StockPrice, {foreignKey:"idSwineCutType", sourceKey:"idSwineCutType"});
 
 //SwineCutBatches
 SwineCutBatch.belongsTo(SwineCutType, {foreignKey:"idSwineCutType" , targetKey:"idSwineCutType"});
+SwineCutBatch.belongsToMany(SalesCheck, {through:SalesChecksDetail, foreignKey:"idSwineCutBatch", otherKey:"idSalesCheck", uniqueKey:"ukSalesCheck_SwineCutBatch"});
 
+//StockPrices
+StockPrice.belongsTo(SwineCutType, {foreignKey:"idSwineCutType", targetKey:"idSwineCutType"});
+
+//Clients
+Client.hasMany(SalesCheck, {foreignKey:"idClient", sourceKey:"idClient"});
+
+//SalesChecks
+SalesCheck.belongsTo(User, {foreignKey:"idUser", targetKey:"idUser"});
+SalesCheck.belongsTo(Client, {foreignKey:"idClient", targetKey:"idClient"});
+SalesCheck.belongsToMany(SwineCutBatch, {through:SalesChecksDetail, foreignKey:"idSalesCheck", otherKey:"idSwineCutBatch", uniqueKey:"ukSalesCheck_SwineCutBatch"});
+SalesCheck.belongsTo(CaiCodeRange, {foreignKey:"idCaiCodeRange", targetKey:"idCaiCodeRange"});
+
+//CaiCodes
+CaiCode.hasMany(CaiCodeRange, {foreignKey:"idCaiCode", sourceKey:"idCaiCode"});
+
+//CaiCodeRange
+CaiCodeRange.belongsTo(CaiCode, {foreignKey:"idCaiCode", targetKey:"idCaiCode"});
+CaiCodeRange.hasMany(SalesCheck, {foreignKey:"idCaiCodeRange",sourceKey:"idCaiCodeRange"});
 
 

@@ -1,8 +1,8 @@
-import User from '../models/users/userModel';
-import UserRolesHistoric from '../models/users/userRolesHistoricModel';
-import UserRole from '../models/users/userRoleModel';
-import sequelize from '../utils/connection';
-import JsonResponse from '../utils/jsonResponse';
+import User from '../../models/users/userModel';
+import UserRolesHistoric from '../../models/users/userRolesHistoricModel';
+import UserRole from '../../models/users/userRoleModel';
+import sequelize from '../../utils/connection';
+import JsonResponse from '../../utils/jsonResponse';
 
 class UserRoleService {
     static async getUserRoles() {
