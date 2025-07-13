@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
-import AuthService from '../services/authService';
-import { formatRequest } from '../utils/requestParams';
-import JsonResponse from '../utils/jsonResponse';
+import AuthService from '../../services/users/authService';
+import { formatRequest } from '../../utils/requestParams';
+import JsonResponse from '../../utils/jsonResponse';
 
 export const loginUser = async (req: Request, res: Response) => {
     try {

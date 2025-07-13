@@ -1,8 +1,8 @@
 import  express, {Express, Request, Response} from 'express';
-import UserRoleService from "../services/userRoleService"
-import { formatRequest } from '../utils/requestParams';
-import userRolService from '../services/userRoleService';
-import JsonResponse from '../utils/jsonResponse';
+import UserRoleService from "../../services/users/userRoleService"
+import { formatRequest } from '../../utils/requestParams';
+import userRolService from '../../services/users/userRoleService';
+import JsonResponse from '../../utils/jsonResponse';
 
 export const getAllRoles = async (req: Request, res: Response) => {
     try {
