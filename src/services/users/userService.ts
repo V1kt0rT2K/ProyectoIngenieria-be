@@ -54,6 +54,21 @@ class UserService {
         return JsonResponse.success({data: users, totalItems: totalItems},'La petición se ha respondido con éxito.');
     }
 
+    static async getUserById (idUser: number){
+        const data = await User.findByPk(idUser,{
+            include: [
+                {model: Person, required:true},
+                {model: UserRole, required : true}
+            ]
+        });
+
+        if(!data){
+            return JsonResponse.error(400,"El usuario no existe.");
+        }
+
+        return JsonResponse.success(data, "La petición ha sido un éxito.");
+    }
+
     static async searchUsers(searchParam : string) {
 
         const users = await User.findAll({

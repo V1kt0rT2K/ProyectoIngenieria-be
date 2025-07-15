@@ -10,6 +10,7 @@ import swineBatchRoutes from './routes/stocks/swineBatchRoutes';
 import feedBatchRoutes from './routes/supplys/feedBatchRoutes';
 import vaccineBatchRoutes from './routes/supplys/vaccineBatchRoutes';
 //import swineVaccineRoutes from './routes/supplys/swineVaccineRoutes';
+import salesCheckRoutes from './routes/sales/salesCheckRoutes';
 
 const index = express.Router();
 
@@ -28,6 +29,11 @@ index.use('/stock', swineBatchRoutes);
 
 index.use('/supply', 
     feedBatchRoutes, vaccineBatchRoutes
-)
+);
+
+
+index.use('/sales', 
+    salesCheckRoutes
+);
 
 export default index;

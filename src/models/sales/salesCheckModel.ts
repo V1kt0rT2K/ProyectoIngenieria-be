@@ -31,7 +31,7 @@ SalesCheck.init(
         },
         generationDate: {
             type: DataTypes.DATE,
-            allowNull: false,
+            allowNull: true,
         },
         idUser: {
             type: DataTypes.INTEGER,
@@ -41,7 +41,7 @@ SalesCheck.init(
                 key: 'idUser',
             },
         },
-        subtotal: {
+        subTotal: {
             type: DataTypes.DECIMAL(8, 2),
             allowNull: false,
         },
@@ -51,7 +51,7 @@ SalesCheck.init(
         },
         idClient: {
             type: DataTypes.INTEGER,
-            allowNull: false,
+            allowNull: true,
             references: {
                 model: 'Client',
                 key: 'idClient',
