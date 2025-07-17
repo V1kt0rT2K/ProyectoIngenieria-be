@@ -6,13 +6,23 @@ import Vaccine from "../../models/supplys/vaccineModel";
 import { IncomingBatchProp } from "../../utils/interfaces/Interface";
 import sequelize from "../../utils/connection";
 import Stage from "../../models/assets/stageModel";
+import { Op } from "sequelize";
 
 class SwineBatchService {
 
     static async getAll() {
         try {
         
-            const data = await SwineBatch.findAll();
+            const data = await SwineBatch.findAll({
+                include:[
+                    {model : Stage, required: true}
+                ],
+                where: {
+                    swineQuantityRemaining :{
+                        [Op.gt] : 0
+                    }
+                },
+            });
 
             if(data.length == 0){
                 return JsonResponse.error(400, "No existen datos.");
