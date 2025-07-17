@@ -10,6 +10,7 @@ router.get(`${path}/get/all`, swineBatchController.getAll);
 router.get(`${path}/get/stage/:idStage`, swineBatchController.getSwineBatchByIdStage);
 router.get(`${path}/get/:idSwineBatch`, swineBatchController.getSwineBatchById);
 router.get(`${path}/medicalrecord/get/:idSwineBatch`, swineBatchController.getMedicalRecordById);
+router.post(`${path}/create`, swineBatchController.createSwineBatch);
 
 
 export default router;

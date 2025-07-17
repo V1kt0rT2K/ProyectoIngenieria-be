@@ -1,7 +1,11 @@
 import { DataTypes, Model } from 'sequelize';
 import sequelize from '../../utils/connection';
 
-class SwineBatch extends Model{};
+class SwineBatch extends Model{
+    get idSwineBatch(): number {
+        return this.getDataValue("idSwineBatch");
+    }
+};
 
 SwineBatch.init(
     {
