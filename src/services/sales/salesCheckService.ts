@@ -126,7 +126,6 @@ class SalesCheckService{
             }, { 
                 transaction : t
             });
-
             
             const salesCheckDetails = await SalesChecksDetail.bulkCreate(
                 salesCheckProp.SwineCutBatchConsumption.map(e=>{
