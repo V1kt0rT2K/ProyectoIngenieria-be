@@ -7,8 +7,7 @@ import userRequestsRoutes from './routes/users/userRequestsRoutes';
 import authRoutes from './routes/users/authRoutes';
 import stageRoutes from './routes/asset/stageRoutes';
 import swineBatchRoutes from './routes/stocks/swineBatchRoutes';
-import feedBatchRoutes from './routes/supplys/feedBatchRoutes';
-import vaccineBatchRoutes from './routes/supplys/vaccineBatchRoutes';
+import supplyRouter from './routes/supplys/supplyRouter';
 //import swineVaccineRoutes from './routes/supplys/swineVaccineRoutes';
 import salesCheckRoutes from './routes/sales/salesCheckRoutes';
 
@@ -27,9 +26,7 @@ index.use('/auth', authRoutes);
 
 index.use('/stock', swineBatchRoutes);
 
-index.use('/supply', 
-    feedBatchRoutes, vaccineBatchRoutes
-);
+index.use('/supply', supplyRouter);
 
 
 index.use('/sales', 
