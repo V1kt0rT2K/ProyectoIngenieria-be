@@ -27,7 +27,8 @@ SwineBatch.init(
             allowNull: false
         },
         generationDate:{
-            type: DataTypes.DATE
+            type: DataTypes.DATE,
+            allowNull: true, 
         },
         idStage:{
             type: DataTypes.INTEGER,

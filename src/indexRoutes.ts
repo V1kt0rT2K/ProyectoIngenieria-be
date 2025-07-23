@@ -8,7 +8,7 @@ import authRoutes from './routes/users/authRoutes';
 import stageRoutes from './routes/asset/stageRoutes';
 import swineBatchRoutes from './routes/stocks/swineBatchRoutes';
 import supplyRouter from './routes/supplys/supplyRouter';
-//import swineVaccineRoutes from './routes/supplys/swineVaccineRoutes';
+
 import salesCheckRoutes from './routes/sales/salesCheckRoutes';
 
 const index = express.Router();

@@ -4,6 +4,7 @@ import SwineBatchService from '../../services/stock/swineBatchService';
 
 
 export const getAll = async (req: Request, res: Response) => {
+   
     try {
         const result = await SwineBatchService.getAll();
 
@@ -38,22 +39,6 @@ export const getSwineBatchById = async (req: Request, res: Response) => {
         let idSwineBatch = parseInt(params.idSwineBatch);
 
         const result = await SwineBatchService.getSwineBatchById(idSwineBatch);
-
-        res.status(result.getStatus()).json(result);
-    } 
-    catch (error) {
-        console.error('Error al ejecutar procedimiento:', error);
-        return res.status(500).send('Error Interno del Servidor');
-    } 
-
-}
-
-export const getMedicalRecordById = async (req: Request, res: Response) => {
-    try {
-        const params = formatRequest(req);
-        let idSwineBatch = parseInt(params.idSwineBatch);
-
-        const result = await SwineBatchService.getMedicalRecordById(idSwineBatch);
 
         res.status(result.getStatus()).json(result);
     } 
