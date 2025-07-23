@@ -140,6 +140,8 @@ class UserService {
     static async registerUser(form: RegisterFormProps) {
         try {
             await sequelize.transaction(async (t) => {
+                const roleName = (await UserRole.findByPk(form.idRole))!.roleName;
+
                 const newPerson = await PersonService.createPerson({
                     firstName: form.firstName,
                     secondName: form.secondName,
@@ -150,7 +152,7 @@ class UserService {
 
                 const newUser = await this.createUser({
                     email: form.email,
-                    job: form.job,
+                    job: form.job ?? roleName,
                     password: form.password,
                     idPerson: newPerson.idPerson,
                     idRole: form.idRole
@@ -162,11 +164,13 @@ class UserService {
                     idStatus: 2,
                     userName: form.username,
                     email: form.email,
-                    job: form.job
+                    //job: form.job ?? "CCCCC"
+                    job: form.job ?? roleName
                 }, t);
             });
             return JsonResponse.success({},"Usuario registrado con éxito.");
         } catch (err) {
+            console.log(err);
             return JsonResponse.error(500, "Usuario no registrado.");
         }
     }
