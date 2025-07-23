@@ -1,30 +1,21 @@
 import SalesCheck from "../../models/sales/salesCheckModel";
 import SalesChecksDetail from "../../models/sales/salesChecksDetailModel";
-import SwineCutBatch from "../../models/stocks/swineCutBatchModel";
-import SwineCutType from "../../models/stocks/swineCutTypeModel";
 import { SalesCheckProp } from "../../utils/interfaces/Interface";
 import UserService from "../users/userService";
 import User from "../../models/users/userModel";
 import JsonResponse from "../../utils/jsonResponse";
 import sequelize from "../../utils/connection";
-import StockPrice from "../../models/sales/stockPriceModel";
 import CaiCodeRange from "../../models/sales/caiCodeRangeModel";
 import CaiCode from "../../models/sales/caiCodeModel";
+import ProductBatch from "../../models/stocks/productBatchModel";
+import Product from "../../models/stocks/productModel";
 
 
 
 class SalesCheckService{
 
     static async getAll(){
-        const data =  await SalesCheck.findAll({
-            include: [
-                { model : SwineCutBatch, required : true,
-                    include:[
-                        {model : SwineCutType, required : true}
-                    ]
-                }
-            ]
-        });
+        const data =  await SalesCheck.findAll();
 
         if(data.length == 0){
             return JsonResponse.error(400,"No se han encontrado datos.");
@@ -32,6 +23,7 @@ class SalesCheckService{
 
         return JsonResponse.success(data,"La petición ha sido un éxito.");
     }
+    
 
     static async generateSalesCheck(salesCheckProp : SalesCheckProp){
         
@@ -80,21 +72,21 @@ class SalesCheckService{
             let subTotal = 0;
 
             for(let batchConsumption of salesCheckProp.SwineCutBatchConsumption){
-                let b = await SwineCutBatch.findByPk(batchConsumption.idSwineCutBatch,{
+                let b = await ProductBatch.findByPk(batchConsumption.idProduct,{
                     transaction: t
                 });
                 if(!b){
                     await t.rollback();
                     return JsonResponse.error(400,"El lote es inválido.");
                 }
-                if(b.isEmpty || b.quantity < batchConsumption.quantity){
+                if(b.stockQuantity < batchConsumption.quantity){
                     await t.rollback();
                     return JsonResponse.error(400,"No hay suficientes existencias.");
                 }
 
-                let price = await StockPrice.findOne({
+                let price = await Product.findOne({
                     where:{
-                        idSwineCutType : b.idSwineCutType
+                        idProduct : b.idProduct
                     },
                     transaction: t
                 });
@@ -104,12 +96,12 @@ class SalesCheckService{
                     return JsonResponse.error(400,"Datos para venta inválidos.");
                 }
 
-                subTotal += batchConsumption.quantity * price.priceUnit;
+                subTotal += batchConsumption.quantity * price.price;
 
-                await SwineCutBatch.decrement("quantity", {
+                await ProductBatch.decrement("stockQuantity", {
                     by: batchConsumption.quantity,
                     where: {
-                        idSwineCutBatch : batchConsumption.idSwineCutBatch
+                        idProduct : batchConsumption.idProduct
                     },
                     transaction : t
                 })
@@ -131,7 +123,7 @@ class SalesCheckService{
                 salesCheckProp.SwineCutBatchConsumption.map(e=>{
                     return {
                         idSalesCheck: salesCheck.idSalesCheck, 
-                        idSwineCutBatch: e.idSwineCutBatch, 
+                        idProduct: e.idProduct, 
                         quantity: e.quantity
                     }
                 }),{
@@ -148,6 +140,7 @@ class SalesCheckService{
             return JsonResponse.error(500, "Ha ocurrido un error.");
         }
     }
+        
 }
 
 export default SalesCheckService;

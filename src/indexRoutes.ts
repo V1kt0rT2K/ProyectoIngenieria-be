@@ -29,8 +29,6 @@ index.use('/stock', swineBatchRoutes);
 index.use('/supply', supplyRouter);
 
 
-index.use('/sales', 
-    salesCheckRoutes
-);
+index.use('/sales', salesCheckRoutes);
 
 export default index;

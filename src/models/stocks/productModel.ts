@@ -5,6 +5,9 @@ class Product extends Model{
     get idProduct(): number {
         return this.getDataValue("idProduct");
     }
+    get price(): number {
+        return this.getDataValue("price");
+    }
 
 
 };

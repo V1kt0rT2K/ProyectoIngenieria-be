@@ -27,5 +27,4 @@ export const generateSalesCheck = async (req: Request, res: Response) => {
         console.error('Error al ejecutar procedimiento:', error);
         return res.status(500).send('Error Interno del Servidor');
     } 
-
 }

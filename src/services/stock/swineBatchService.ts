@@ -16,7 +16,7 @@ class SwineBatchService {
                     {model : Stage, required: true}
                 ],
                 where: {
-                    swineQuantityRemaining :{
+                    stockQuantity :{
                         [Op.gt] : 0
                     }
                 },

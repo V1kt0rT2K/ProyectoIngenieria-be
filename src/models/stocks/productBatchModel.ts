@@ -5,6 +5,9 @@ class ProductBatch extends Model{
     get idProduct(): number {
         return this.getDataValue("idProduct");
     }
+    get stockQuantity(): number {
+        return this.getDataValue("stockQuantity");
+    }
 
 };
 
