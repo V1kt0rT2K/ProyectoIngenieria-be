@@ -1,7 +1,15 @@
 import { DataTypes, Model } from 'sequelize';
 import sequelize from '../../utils/connection';
 
-class Status extends Model {}
+class Status extends Model {
+    get idStatus(): number {
+        return this.getDataValue("idStatus");
+    }
+    
+    get statusName(): string {
+        return this.getDataValue("statusName");
+    }
+}
 
 Status.init(
   {

@@ -5,6 +5,10 @@ class SwineBatch extends Model{
     get idSwineBatch(): number {
         return this.getDataValue("idSwineBatch");
     }
+
+     get quantity(): number {
+        return this.getDataValue("quantity");
+    }
 };
 
 SwineBatch.init(
@@ -14,7 +18,7 @@ SwineBatch.init(
             autoIncrement: true,
             primaryKey: true
         },
-        swineQuantityRemaining:{
+        quantity:{
             type:DataTypes.INTEGER,
             allowNull: false,
         },
@@ -32,6 +36,10 @@ SwineBatch.init(
                 model:"Stage",
                 key:"idStage"
             }
+        },
+        stockQuantity:{
+            type:DataTypes.INTEGER,
+            allowNull: false,
         }
     },
     {

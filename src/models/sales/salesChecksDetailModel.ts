@@ -11,8 +11,8 @@ class SalesChecksDetail extends Model {
         return this.getDataValue("idSalesCheck");
     }
 
-    get idSwineCutType(): number {
-        return this.getDataValue("idSwineCutType");
+    get idProduct(): number {
+        return this.getDataValue("idProduct");
     }
 
     get quantity(): number {
@@ -34,12 +34,12 @@ SalesChecksDetail.init(
                 key: 'idSalesCheck',
             },
         },
-        idSwineCutBatch: {
+        idProduct: {
             type: DataTypes.INTEGER,
             allowNull: false,
             references: {
-                model: 'SwineCutBatch',
-                key: 'idSwineCutBatch',
+                model: 'Product',
+                key: 'idProduct',
             },
         },
         quantity: {

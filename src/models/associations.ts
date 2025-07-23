@@ -7,25 +7,23 @@ import UserDataHistoric from "./users/userDataHistoricModel";
 import UserRolesHistoric from "./users/userRolesHistoricModel";
 import StageType from "./assets/stageTypeModel";
 import Stage from "./assets/stageModel";
-import VaccineType from "./supplys/vaccineTypeModel";
-import Vaccine from "./supplys/vaccineModel";
-import Swine from "./stocks/swineModel";
-import SwineCutBatch from "./stocks/swineCutBatchModel";
-import SwineCutType from "./stocks/swineCutTypeModel";
-import SwineCutProduction from "./stocks/swineCutProductionModel";
-import Feed from "./supplys/feedModel";
-import VaccineBatch from "./supplys/vaccineBatchModel";
-import SwineVaccine from "./supplys/swineVaccineModel";
-import SwineBatch from "./stocks/swineBatchModel";
-import FeedBatch from "./supplys/feedBatchModel";
-import SwineFeed from "./supplys/swineFeedModel";
-import StockPrice from "./sales/stockPriceModel";
 import SalesCheck from "./sales/salesCheckModel";
 import Client from "./sales/clientModel";
 import SalesChecksDetail from "./sales/salesChecksDetailModel";
 import CaiCodeRange from "./sales/caiCodeRangeModel";
 import CaiCode from "./sales/caiCodeModel";
 import StatusType from "./assets/statusTypeModel";
+import SwineSupply from "./supplys/swineSupplyModel";
+import Supply from "./supplys/supplyModel";
+import SupplyType from "./supplys/supplyTypeModel";
+import SupplyBatch from "./supplys/supplyBatchModel";
+import SwineBatch from "./stocks/swineBatchModel";
+import Product from "./stocks/productModel";
+import ProductBatch from "./stocks/productBatchModel";
+import Production from "./stocks/productionModel";
+import SupplyPurcharse from "./orders/supplyPurcharseModel";
+import Provider from "./orders/providerModel";
+import SupplyPurcharseDetail from "./orders/supplyPurcharseDetailModel";
 
 /********** USERS SCHEMA *********/  
 //User
@@ -33,9 +31,9 @@ User.belongsTo(Person, {foreignKey : "idPerson", targetKey : "idPerson"});
 User.belongsTo(UserRole, {foreignKey : "idRole", targetKey: "idRole"});
 User.hasMany(UserRequest, {foreignKey: "idUser", sourceKey : "idUser"});
 User.hasMany(UserDataHistoric, {foreignKey: "idUser", sourceKey:"idUser"});
-User.hasMany(SwineVaccine,{foreignKey:"idUser", sourceKey:"idUser"});
-User.hasMany(SwineFeed,{foreignKey:"idUser", sourceKey:"idUser"});
+User.hasMany(SwineSupply,{foreignKey:"idUser", sourceKey:"idUser"});
 User.hasMany(SalesCheck, {foreignKey:"idUser", sourceKey:"idUser"});
+User.hasMany(SupplyPurcharse, {foreignKey:"idUser", sourceKey:"idUser"});
 
 //Person
 Person.hasOne(User, {foreignKey: "idPerson", sourceKey:"idPerson"});
@@ -66,65 +64,51 @@ StatusType.hasMany(Status, {foreignKey: "idStatusType", sourceKey:"idStatusType"
 //Status
 Status.hasMany(UserRequest, { foreignKey: "idStatus" ,sourceKey:"idStatus"});
 Status.belongsTo(StatusType, { foreignKey: "idStatusType", targetKey: "idStatusType"});
+Status.hasMany(SupplyPurcharse, {foreignKey:"idStatus", sourceKey:"idStatus"});
 
 //StageType
 StageType.hasMany(Stage, {foreignKey:"idStageType", sourceKey:"idStageType"});
 
 //Stages
 Stage.belongsTo(StageType, {foreignKey: "idStageType", targetKey: "idStageType"});
-Stage.hasMany(Vaccine, {foreignKey:"idStage", sourceKey:"idStage"});
-Stage.hasMany(SwineBatch, {foreignKey:"idStage", sourceKey:"idStage"});
-Stage.hasMany(Feed, {foreignKey:"idStage", sourceKey:"idStage"});
+Stage.hasMany(Supply, {foreignKey:"idStage", sourceKey:"idStage"});
+Stage.hasMany(SwineBatch, { foreignKey:"idStage", sourceKey:"idStage"});
 
-/********** SUPPLY SCHEMA *********/  
+/********** SUPPLY SCHEMA *********/ 
 
-//VaccineType
-VaccineType.hasMany(Vaccine, {foreignKey:"idVaccineType", sourceKey:"idVaccineType"});
+//SupplyType
+SupplyType.hasMany(Supply, {foreignKey:"idSupplyType", sourceKey:"idSupplyType"});
 
-//Vaccine
-Vaccine.belongsTo(Stage, {foreignKey:"idStage", targetKey:"idStage"});
-Vaccine.belongsTo(VaccineType, {foreignKey:"idVaccineType", targetKey:"idVaccineType"});
-Vaccine.hasMany(VaccineBatch, {foreignKey:"idVaccine", sourceKey:"idVaccine"});
+//Supply 
+Supply.belongsTo(Stage, {foreignKey:"idStage", targetKey:"idStage"});
+Supply.belongsTo(SupplyType, {foreignKey:"idSupplyType", targetKey:"idSupplyType"});
+Supply.hasMany(SupplyBatch, {foreignKey:"idSupply", sourceKey:"idSupply"});
+Supply.belongsToMany(SwineBatch, {through: {model: SwineSupply, unique:false} , foreignKey:"idSupply", otherKey:"idSwineBatch"});
+Supply.belongsToMany(SupplyPurcharse , {through: SupplyPurcharseDetail , foreignKey:"idSupply", otherKey:"idSupplyPurcharse", uniqueKey:"ukSupplyPurcharse_Supply"});
 
-//VaccineBatches
-VaccineBatch.belongsTo(Vaccine, {foreignKey:"idVaccine", targetKey:"idVaccine"});
-VaccineBatch.belongsToMany(SwineBatch,{through: SwineVaccine , foreignKey:"idVaccineBatch", otherKey:"idSwineBatch", uniqueKey:"ukVaccineBatch_SwineBatch"});
+//SupplyBatch
+SupplyBatch.belongsTo(Supply, {foreignKey:"idSupply", targetKey:"idSupply"});
 
-//Swine
-Swine.belongsTo(SwineBatch, {foreignKey:"idSwineBatch", targetKey:"idSwineBatch"});
-Swine.belongsToMany(SwineCutType, {through: SwineCutProduction, foreignKey:"idSwine", otherKey:"idSwineCutType", uniqueKey:"ukSwine_SwineCutType"});
+//SwineSupply
+SwineSupply.belongsTo(User, {foreignKey:"idUser", targetKey:"idUser"});
 
-//SwineBatches
-SwineBatch.hasMany(Swine, {foreignKey:"idSwineBatch", sourceKey:"idSwineBatch"});
+/*********** STOCK SCHEMA *********/
+
+//SwineBatch
+SwineBatch.belongsToMany(Supply, { through : {model:SwineSupply, unique:false} , foreignKey:"idSwineBatch", otherKey:"idSupply"});
 SwineBatch.belongsTo(Stage, {foreignKey:"idStage", targetKey:"idStage"});
-SwineBatch.belongsToMany(VaccineBatch,{through: SwineVaccine , foreignKey: "idSwineBatch",otherKey:"idVaccineBatch", uniqueKey:"ukVaccineBatch_SwineBatch"});
-SwineBatch.belongsToMany(FeedBatch, {through: SwineFeed, foreignKey:"idSwineBatch", otherKey:"idFeedBatch", uniqueKey:"ukSwineBatch_FeedBatch"});
+SwineBatch.belongsToMany(Product , {through: {model:Production, unique:false}, foreignKey:"idSwineBatch", otherKey:"idProduct", uniqueKey:"ukSwineBatch_Product"})
 
-//SwineVaccines
-SwineVaccine.belongsTo(User, {foreignKey:"idUser", targetKey:"idUser"});
+//Product
+Product.belongsToMany(SalesCheck, { through: SalesChecksDetail , foreignKey:"idProduct", otherKey:"idSalesCheck", uniqueKey:"ukSalesCheck_Product"});
+Product.hasMany(ProductBatch, { foreignKey:"idProduct", sourceKey:"idProduct"});
+Product.belongsToMany(SwineBatch , { through: {model:Production, unique:false} , foreignKey:"idProduct", otherKey:"idSwineBatch", uniqueKey:"ukSwineBatch_Product"});
 
-//SwineFeeds
-SwineFeed.belongsTo(User, {foreignKey:"idUser", targetKey:"idUser"});
+//ProductBatch
+ProductBatch.belongsTo(Product, {foreignKey:"idProduct", targetKey:"idProduct"});
 
-//Feeds
-Feed.belongsTo(Stage, {foreignKey:"idStage", targetKey:"idStage"});
-Feed.hasMany(FeedBatch, {foreignKey:"idFeed", sourceKey:"idFeed"});
 
-//FeedBatches
-FeedBatch.belongsTo(Feed, {foreignKey:"idFeed", targetKey:"idFeed"});
-FeedBatch.belongsToMany(SwineBatch, {through:SwineFeed, foreignKey:"idFeedBatch", otherKey:"idSwineBatch", uniqueKey:"ukSwineBatch_FeedBatch"});
-
-//SwineCutTypes
-SwineCutType.hasMany(SwineCutBatch, {foreignKey:"idSwineCutType", sourceKey:"idSwineCutType"});
-SwineCutType.belongsToMany(Swine, {through:SwineCutProduction, foreignKey:"idSwineCutType", otherKey:"idSwine", uniqueKey:"ukSwine_SwineCutType"});
-SwineCutType.hasOne(StockPrice, {foreignKey:"idSwineCutType", sourceKey:"idSwineCutType"});
-
-//SwineCutBatches
-SwineCutBatch.belongsTo(SwineCutType, {foreignKey:"idSwineCutType" , targetKey:"idSwineCutType"});
-SwineCutBatch.belongsToMany(SalesCheck, {through:SalesChecksDetail, foreignKey:"idSwineCutBatch", otherKey:"idSalesCheck", uniqueKey:"ukSalesCheck_SwineCutBatch"});
-
-//StockPrices
-StockPrice.belongsTo(SwineCutType, {foreignKey:"idSwineCutType", targetKey:"idSwineCutType"});
+/********* SALES SCHEMA **********/
 
 //Clients
 Client.hasMany(SalesCheck, {foreignKey:"idClient", sourceKey:"idClient"});
@@ -132,7 +116,7 @@ Client.hasMany(SalesCheck, {foreignKey:"idClient", sourceKey:"idClient"});
 //SalesChecks
 SalesCheck.belongsTo(User, {foreignKey:"idUser", targetKey:"idUser"});
 SalesCheck.belongsTo(Client, {foreignKey:"idClient", targetKey:"idClient"});
-SalesCheck.belongsToMany(SwineCutBatch, {through:SalesChecksDetail, foreignKey:"idSalesCheck", otherKey:"idSwineCutBatch", uniqueKey:"ukSalesCheck_SwineCutBatch"});
+SalesCheck.belongsToMany(Product, {through:SalesChecksDetail, foreignKey:"idSalesCheck", otherKey:"idProduct", uniqueKey:"ukSalesCheck_Product"});
 SalesCheck.belongsTo(CaiCodeRange, {foreignKey:"idCaiCodeRange", targetKey:"idCaiCodeRange"});
 
 //CaiCodes
@@ -141,5 +125,16 @@ CaiCode.hasMany(CaiCodeRange, {foreignKey:"idCaiCode", sourceKey:"idCaiCode"});
 //CaiCodeRange
 CaiCodeRange.belongsTo(CaiCode, {foreignKey:"idCaiCode", targetKey:"idCaiCode"});
 CaiCodeRange.hasMany(SalesCheck, {foreignKey:"idCaiCodeRange",sourceKey:"idCaiCodeRange"});
+
+/********** ORDERS SCHEMA  ***************/
+
+//Provider
+Provider.hasMany(SupplyPurcharse, {foreignKey:"idProvider", sourceKey:"idProvider"});
+
+//SupplyPurcharse
+SupplyPurcharse.belongsTo(Provider , {foreignKey:"idProvider", targetKey:"idProvider"});
+SupplyPurcharse.belongsTo(User, {foreignKey:"idUser", targetKey:"idUser"});
+SupplyPurcharse.belongsTo(Status, {foreignKey:"idStatus", targetKey:"idStatus"});
+SupplyPurcharse.belongsToMany(Supply ,{ through: SupplyPurcharseDetail, foreignKey:"idSupplyPurcharse", otherKey:"idSupply", uniqueKey:"ukSupplyPurcharse_Supply"});
 
 
