@@ -17,12 +17,14 @@ export interface SalesCheckProp {
     idUser : number,
     idClient : number | null,
     SwineCutBatchConsumption: {
-        idSwineCutBatch : number,
+        idProduct : number,
         quantity : number
     }[]
 }
 
 export interface IncomingBatchProp {
     swineQuantityRemaining : number,
-    estimatedWeight : number
+    estimatedWeight : number,
+    quantity : number,
+
 }
