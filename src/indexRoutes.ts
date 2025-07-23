@@ -7,6 +7,7 @@ import userRequestsRoutes from './routes/users/userRequestsRoutes';
 import authRoutes from './routes/users/authRoutes';
 import stageRoutes from './routes/asset/stageRoutes';
 import swineBatchRoutes from './routes/stocks/swineBatchRoutes';
+import productRoutes from './routes/stocks/productRoutes';
 import supplyRouter from './routes/supplys/supplyRouter';
 
 import salesCheckRoutes from './routes/sales/salesCheckRoutes';
@@ -24,10 +25,10 @@ index.use('/requests', userRequestsRoutes);
 
 index.use('/auth', authRoutes);
 
-index.use('/stock', swineBatchRoutes);
+index.use('/stock', 
+    swineBatchRoutes, productRoutes);
 
 index.use('/supply', supplyRouter);
-
 
 index.use('/sales', salesCheckRoutes);
 
