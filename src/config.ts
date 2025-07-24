@@ -9,6 +9,7 @@ export const config = {
 };
 
 export const SECRET_KEY = 'viktorhernandez';
+export const TIME_OUT = "2000s";
 
 
 

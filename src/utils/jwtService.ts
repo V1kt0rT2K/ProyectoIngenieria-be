@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { SECRET_KEY } from '../config';
+import { SECRET_KEY, TIME_OUT } from '../config';
 import { Request, Response, NextFunction } from "express";
 import JsonResponse from './jsonResponse';
 
@@ -9,7 +9,7 @@ export const generateToken = (payload:any) =>{
             idUser: payload.idUser ,
             email: payload.email
         }, SECRET_KEY, {
-            expiresIn:"2400s"
+            expiresIn: TIME_OUT
         });
             
     return token;

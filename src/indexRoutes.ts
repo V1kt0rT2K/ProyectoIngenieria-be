@@ -13,6 +13,7 @@ import swineSuppliesRoutes from './routes/supplys/swineSuppliesRouter';
 import salesCheckRoutes from './routes/sales/salesCheckRoutes';
 
 import { verifyToken } from './utils/jwtService';
+import { checkUserAction } from './utils/permissionService';
 
 const index = express.Router();
 
@@ -21,6 +22,7 @@ index.use('/auth', authRoutes);
 index.use('/roles', userRolesRoutes);
 
 index.use(verifyToken);
+//index.use(checkUserAction);
 
 index.use('/users', usersRoutes);
 

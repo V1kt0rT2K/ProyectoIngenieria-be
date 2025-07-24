@@ -8,8 +8,8 @@ app.use(express.json());
 
 app.use(cors({
   origin: "*",
-  // allowedHeaders: ["Authorization"],
-  // exposedHeaders: ["Authorization"]
+  allowedHeaders: ["Authorization", "Content-Type"],
+  exposedHeaders: ["Authorization"]
 }));
 
 
