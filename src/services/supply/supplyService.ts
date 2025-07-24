@@ -1,5 +1,6 @@
 import JsonResponse from "../../utils/jsonResponse";
 import Supply from "../../models/supplys/supplyModel";
+import SwineSupply from "../../models/supplys/swineSupplyModel";
 
 class SupplyService {
     constructor() {}
@@ -37,5 +38,15 @@ class SupplyService {
         return JsonResponse.success(data, "La petición ha sido un éxito.");
 
     }
+    static async getAllSwineSupply(){
+
+        const data = await SwineSupply.findAll();
+
+        if (!data || data.length === 0) {
+            return JsonResponse.error(400, "No existen suministros de cerdos.");
+        }
+        return JsonResponse.success(data, "La petición ha sido un éxito.");
+    }
 }
+
 export default SupplyService;

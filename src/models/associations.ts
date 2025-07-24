@@ -83,7 +83,7 @@ SupplyType.hasMany(Supply, {foreignKey:"idSupplyType", sourceKey:"idSupplyType"}
 Supply.belongsTo(Stage, {foreignKey:"idStage", targetKey:"idStage"});
 Supply.belongsTo(SupplyType, {foreignKey:"idSupplyType", targetKey:"idSupplyType"});
 Supply.hasMany(SupplyBatch, {foreignKey:"idSupply", sourceKey:"idSupply"});
-Supply.belongsToMany(SwineBatch, {through: {model: SwineSupply, unique:false} , foreignKey:"idSupply", otherKey:"idSwineBatch"});
+Supply.belongsToMany(SwineBatch, {through: SwineSupply , foreignKey:"idSupply", otherKey:"idSwineBatch"});
 Supply.belongsToMany(SupplyPurcharse , {through: SupplyPurcharseDetail , foreignKey:"idSupply", otherKey:"idSupplyPurcharse", uniqueKey:"ukSupplyPurcharse_Supply"});
 
 //SupplyBatch
@@ -95,7 +95,7 @@ SwineSupply.belongsTo(User, {foreignKey:"idUser", targetKey:"idUser"});
 /*********** STOCK SCHEMA *********/
 
 //SwineBatch
-SwineBatch.belongsToMany(Supply, { through : {model:SwineSupply, unique:false} , foreignKey:"idSwineBatch", otherKey:"idSupply"});
+SwineBatch.belongsToMany(Supply, { through : SwineSupply , foreignKey:"idSwineBatch", otherKey:"idSupply"});
 SwineBatch.belongsTo(Stage, {foreignKey:"idStage", targetKey:"idStage"});
 SwineBatch.belongsToMany(Product , {through: {model:Production, unique:false}, foreignKey:"idSwineBatch", otherKey:"idProduct", uniqueKey:"ukSwineBatch_Product"})
 

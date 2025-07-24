@@ -3,11 +3,14 @@ import sequelize from '../../utils/connection';
 
 class SwineSupply extends Model{
     get idSwineSupply(): number {
-        return this.getDataValue("idSupplyBatch");
+        return this.getDataValue("idSwineSupply");
     }
 
     get quantity(): number {
         return this.getDataValue("quantity");
+    }
+    get idSwineBatch(): number {
+        return this.getDataValue("idSwineBatch");
     }
 
 };
