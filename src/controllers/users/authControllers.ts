@@ -16,6 +16,7 @@ export const loginUser = async (req: Request, res: Response) => {
             const token = generateToken(result.data);
             
             res.setHeader("Authorization", `Bearer ${token}`);
+						res.setHeader('Access-Control-Expose-Headers', 'Authorization');
         }
 
         res.status(result.getStatus()).json(result);
