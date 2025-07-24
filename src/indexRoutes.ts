@@ -10,21 +10,24 @@ import swineBatchRoutes from './routes/stocks/swineBatchRoutes';
 import productRoutes from './routes/stocks/productRoutes';
 import supplyRouter from './routes/supplys/supplyRouter';
 import swineSuppliesRoutes from './routes/supplys/swineSuppliesRouter';
-
 import salesCheckRoutes from './routes/sales/salesCheckRoutes';
 
+import { verifyToken } from './utils/jwtService';
+
 const index = express.Router();
+
+index.use('/auth', authRoutes);
+
+index.use('/roles', userRolesRoutes);
+
+index.use(verifyToken);
+
+index.use('/users', usersRoutes);
 
 index.use('/asset', 
     statusRoutes, stageRoutes);
 
-index.use('/users', usersRoutes);
-
-index.use('/roles', userRolesRoutes);
-
 index.use('/requests', userRequestsRoutes);
-
-index.use('/auth', authRoutes);
 
 index.use('/stock', 
     swineBatchRoutes, productRoutes);

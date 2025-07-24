@@ -8,6 +8,8 @@ export const config = {
     DB_NAME : 'ProyectoIngenieria'
 };
 
+export const SECRET_KEY = 'viktorhernandez';
+
 
 
 //CONFIG REMOTE

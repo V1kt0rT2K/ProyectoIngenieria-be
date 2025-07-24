@@ -15,7 +15,11 @@ import Product from "../../models/stocks/productModel";
 class SalesCheckService{
 
     static async getAll(){
-        const data =  await SalesCheck.findAll();
+        const data =  await SalesCheck.findAll({
+            include: [
+                {model : Product, required:true}
+            ]
+        });
 
         if(data.length == 0){
             return JsonResponse.error(400,"No se han encontrado datos.");
