@@ -16,5 +16,11 @@ export const checkUserAction = (req: Request, res: Response, next: NextFunction)
     console.log("email: ",decodedToken?.email, "actionName: ",actionName);
 
     next();
+
+    // if(decodedToken?.email == 'viktor.hernandez@gmail.com'){
+    //     next();
+    // }else{
+    //     return res.status(403).json(JsonResponse.error(403,"Acceso no Autorizado"));
+    // }
     
 }

@@ -1,5 +1,8 @@
 import { Request, Response} from 'express';
 import SupplyBatchService from '../../services/supply/supplyBatchService'; 
+import { formatRequest } from '../../utils/requestParams';
+
+
 export const getAllSupplyBatches = async (req: Request, res: Response) => {
     try {
         const result = await SupplyBatchService.getAllSupplyBatches();
@@ -9,6 +12,7 @@ export const getAllSupplyBatches = async (req: Request, res: Response) => {
         return res.status(500).send('Error Interno del Servidor');
     }
 }
+
 export const getSupplyBatchById = async (req: Request, res: Response) => {
     try {
         const params = req.params;
@@ -17,6 +21,22 @@ export const getSupplyBatchById = async (req: Request, res: Response) => {
     } catch (error) {
         console.error('Error al ejecutar procedimiento:', error);
         return res.status(500).send('Error Interno del Servidor');
-    }}
+    }
+}
+
+export const getSupplyBatchesByIdType = async (req: Request, res: Response) => {
+    try {
+        const params = formatRequest(req);
+
+        let idSupplyType = parseInt(params.idSupplyType);
+
+        const result = await SupplyBatchService.getSupplyBatchesByIdType(idSupplyType);
+
+        res.status(result.getStatus()).json(result);
+    } catch (error) {
+        console.error('Error al ejecutar procedimiento:', error);
+        return res.status(500).send('Error Interno del Servidor');
+    }
+}
 
 
