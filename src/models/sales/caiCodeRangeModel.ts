@@ -1,5 +1,6 @@
 import { DataTypes, Model } from 'sequelize';
 import sequelize from '../../utils/connection';
+import CaiCode from './caiCodeModel';
 
 class CaiCodeRange extends Model {
 
@@ -23,6 +24,10 @@ class CaiCodeRange extends Model {
     get isActive(): boolean {
         return this.getDataValue("isActive");
     }
+    // get CaiCode(): CaiCode {
+    //     console.log(this.CaiCode)
+    //     return this.CaiCode;
+    // }
 }
 CaiCodeRange.init(
     {

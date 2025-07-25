@@ -12,3 +12,18 @@ export interface RegisterFormProps {
     idPerson: number;
     idRole: number;
 };
+
+export interface SalesCheckProp {   
+    identityNumber : string | null,
+    consumption: {
+        idProduct : number,
+        quantity : number
+    }[]
+}
+
+export interface IncomingBatchProp {
+    swineQuantityRemaining : number,
+    estimatedWeight : number,
+    quantity : number,
+
+}

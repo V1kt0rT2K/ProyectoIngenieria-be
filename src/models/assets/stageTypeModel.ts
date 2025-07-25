@@ -15,7 +15,7 @@ StageType.init(
             type: DataTypes.STRING('MAX'),
             allowNull: false
         },
-        description:{
+        stageTypeDescription:{
             type: DataTypes.STRING('MAX'),
         }
     },

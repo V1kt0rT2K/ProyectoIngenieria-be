@@ -1,10 +1,10 @@
 import { DataTypes, Model } from 'sequelize';
 import sequelize from '../../utils/connection';
 
-class SalesCheck extends Model {
+class SupplyPurcharse extends Model {
 
-    get idSalesCheck(): number {
-        return this.getDataValue("idSalesCheck");
+    get idSupplyPurcharse(): number {
+        return this.getDataValue("idSupplyPurcharse");
     }
     get generationDate(): Date {
         return this.getDataValue("generationDate"); 
@@ -18,13 +18,14 @@ class SalesCheck extends Model {
     get ISV(): number {
         return this.getDataValue("ISV");
     }
-    get idClient(): number {
-        return this.getDataValue("idClient");
+    get idProvider(): number {
+        return this.getDataValue("idProvider");
     }
 }   
-SalesCheck.init(
+
+SupplyPurcharse.init(
     {
-        idSalesCheck: {
+        idSupplyPurcharse: {
             type: DataTypes.INTEGER,
             autoIncrement: true,
             primaryKey: true,
@@ -49,34 +50,30 @@ SalesCheck.init(
             type: DataTypes.DECIMAL(8,2),
             allowNull: false,
         },
-        idClient: {
+        idProvider: {
             type: DataTypes.INTEGER,
             allowNull: true,
             references: {
-                model: 'Client',
-                key: 'idClient',
+                model: 'Provider',
+                key: 'idProvider',
             },
         },
-        idCaiCodeRange:{
+        idStatus : {
             type : DataTypes.INTEGER,
-            allowNull: false,
-            references: {
-                model: "CaiCodeRange",
-                key: "idCaiCodeRange"
+            allowNull  : false,
+            references : {
+                model : 'Status',
+                key: 'idStatus'
             }
-        },
-        saleCheckCode : {
-            type: DataTypes.STRING('MAX'),
-            allowNull: false
         }
     },
     {
         sequelize,
         timestamps: false,
-        modelName: 'SalesCheck',
-        tableName: 'tblSalesChecks',
-        schema: 'sales',
+        modelName: 'SupplyPurcharse',
+        tableName: 'tblSupplyPurcharses',
+        schema: 'orders',
     }
 );
-SalesCheck.sync();
-export default SalesCheck;
+SupplyPurcharse.sync();
+export default SupplyPurcharse;

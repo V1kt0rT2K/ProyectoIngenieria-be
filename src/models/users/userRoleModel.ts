@@ -1,7 +1,11 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "../../utils/connection";
 
-class UserRole extends Model {}
+class UserRole extends Model {
+  get roleName(): string {
+    return this.getDataValue("roleName");
+  }
+}
 
 UserRole.init(
   {
@@ -21,11 +25,11 @@ UserRole.init(
   },
   {
     // Other model options go here
-    sequelize, 
+    sequelize,
     timestamps: false,
-    modelName: 'UserRole', 
+    modelName: 'UserRole',
     tableName: 'tblUserRoles',
-    schema : 'users'
+    schema: 'users'
   },
 );
 

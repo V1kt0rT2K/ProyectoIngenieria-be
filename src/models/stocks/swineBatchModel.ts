@@ -1,7 +1,15 @@
 import { DataTypes, Model } from 'sequelize';
 import sequelize from '../../utils/connection';
 
-class SwineBatch extends Model{};
+class SwineBatch extends Model{
+    get idSwineBatch(): number {
+        return this.getDataValue("idSwineBatch");
+    }
+
+     get quantity(): number {
+        return this.getDataValue("quantity");
+    }
+};
 
 SwineBatch.init(
     {
@@ -10,7 +18,7 @@ SwineBatch.init(
             autoIncrement: true,
             primaryKey: true
         },
-        swineQuantityRemaining:{
+        quantity:{
             type:DataTypes.INTEGER,
             allowNull: false,
         },
@@ -19,7 +27,8 @@ SwineBatch.init(
             allowNull: false
         },
         generationDate:{
-            type: DataTypes.DATE
+            type: DataTypes.DATE,
+            allowNull: true, 
         },
         idStage:{
             type: DataTypes.INTEGER,
@@ -28,6 +37,10 @@ SwineBatch.init(
                 model:"Stage",
                 key:"idStage"
             }
+        },
+        stockQuantity:{
+            type:DataTypes.INTEGER,
+            allowNull: false,
         }
     },
     {

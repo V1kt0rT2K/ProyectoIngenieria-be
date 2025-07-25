@@ -1,10 +1,11 @@
 import { Request, Response} from 'express';
 import { formatRequest, badRequestMessage } from '../../utils/requestParams';
-import StatusService from '../../services/asset/statusService';
+import SalesCheckService from '../../services/sales/salesCheckService';
+import { getUserFromJWT } from '../../utils/jwtService';
 
-export const getAllStatus = async (req: Request, res: Response) => {
+export const getAll = async (req: Request, res: Response) => {
     try {
-        const result = await StatusService.getAll();
+        const result = await SalesCheckService.getAll();
 
         res.status(result.getStatus()).json(result);
     } 
@@ -15,14 +16,12 @@ export const getAllStatus = async (req: Request, res: Response) => {
 
 }
 
-export const getStatusByIdStatusType = async (req: Request, res: Response) => {
+export const generateSalesCheck = async (req: Request, res: Response) => {
     try {
-
         const params = formatRequest(req);
+        const user = await getUserFromJWT(req);
 
-        let idStatusType = parseInt(params.idStatusType)
-
-        const result = await StatusService.getStatusByIdStatusType(idStatusType);
+        const result = await SalesCheckService.generateSalesCheck(user,params);
 
         res.status(result.getStatus()).json(result);
     } 
@@ -30,9 +29,4 @@ export const getStatusByIdStatusType = async (req: Request, res: Response) => {
         console.error('Error al ejecutar procedimiento:', error);
         return res.status(500).send('Error Interno del Servidor');
     } 
-
 }
-
-
-
-

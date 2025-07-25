@@ -4,6 +4,7 @@ import SwineBatchService from '../../services/stock/swineBatchService';
 
 
 export const getAll = async (req: Request, res: Response) => {
+   
     try {
         const result = await SwineBatchService.getAll();
 
@@ -48,12 +49,12 @@ export const getSwineBatchById = async (req: Request, res: Response) => {
 
 }
 
-export const getMedicalRecordById = async (req: Request, res: Response) => {
+export const createSwineBatch = async (req: Request, res: Response) => {
     try {
-        const params = formatRequest(req);
-        let idSwineBatch = parseInt(params.idSwineBatch);
 
-        const result = await SwineBatchService.getMedicalRecordById(idSwineBatch);
+        const params = formatRequest(req);
+
+        const result = await SwineBatchService.createSwineBatch(params);
 
         res.status(result.getStatus()).json(result);
     } 

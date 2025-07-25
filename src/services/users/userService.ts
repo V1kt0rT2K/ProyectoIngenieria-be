@@ -54,6 +54,21 @@ class UserService {
         return JsonResponse.success({data: users, totalItems: totalItems},'La petición se ha respondido con éxito.');
     }
 
+    static async getUserById (idUser: number){
+        const data = await User.findByPk(idUser,{
+            include: [
+                {model: Person, required:true},
+                {model: UserRole, required : true}
+            ]
+        });
+
+        if(!data){
+            return JsonResponse.error(400,"El usuario no existe.");
+        }
+
+        return JsonResponse.success(data, "La petición ha sido un éxito.");
+    }
+
     static async searchUsers(searchParam : string) {
 
         const users = await User.findAll({
@@ -125,6 +140,8 @@ class UserService {
     static async registerUser(form: RegisterFormProps) {
         try {
             await sequelize.transaction(async (t) => {
+                const roleName = (await UserRole.findByPk(form.idRole))!.roleName;
+
                 const newPerson = await PersonService.createPerson({
                     firstName: form.firstName,
                     secondName: form.secondName,
@@ -135,7 +152,7 @@ class UserService {
 
                 const newUser = await this.createUser({
                     email: form.email,
-                    job: form.job,
+                    job: form.job ?? roleName,
                     password: form.password,
                     idPerson: newPerson.idPerson,
                     idRole: form.idRole
@@ -147,11 +164,13 @@ class UserService {
                     idStatus: 2,
                     userName: form.username,
                     email: form.email,
-                    job: form.job
+                    //job: form.job ?? "CCCCC"
+                    job: form.job ?? roleName
                 }, t);
             });
             return JsonResponse.success({},"Usuario registrado con éxito.");
         } catch (err) {
+            console.log(err);
             return JsonResponse.error(500, "Usuario no registrado.");
         }
     }
