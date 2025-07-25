@@ -8,14 +8,15 @@ import authRoutes from './routes/users/authRoutes';
 import stageRoutes from './routes/asset/stageRoutes';
 import swineBatchRoutes from './routes/stocks/swineBatchRoutes';
 import productRoutes from './routes/stocks/productRoutes';
-import supplyRouter from './routes/supplys/supplyRouter';
-import swineSuppliesRoutes from './routes/supplys/swineSuppliesRouter';
+import supplyRoutes from './routes/supplys/supplyRoutes';
+import swineSuppliesRoutes from './routes/supplys/swineSuppliesRoutes';
 import salesCheckRoutes from './routes/sales/salesCheckRoutes';
 
 import { verifyToken } from './utils/jwtService';
 import { checkUserAction } from './utils/permissionService';
 import Supply from './models/supplys/supplyModel';
-import supplyBatchRouter from './routes/supplys/supplyBatchRouter';
+import supplyBatchRoutes from './routes/supplys/supplyBatchRoutes';
+import providerRoutes from './routes/orders/providerRoutes';
 
 const index = express.Router();
 
@@ -36,8 +37,10 @@ index.use('/requests', userRequestsRoutes);
 index.use('/stock', 
     swineBatchRoutes, productRoutes);
 
-index.use('/supply', supplyRouter,swineSuppliesRoutes,supplyRouter,supplyBatchRouter);
+index.use('/supply', supplyRoutes,swineSuppliesRoutes,supplyRoutes,supplyBatchRoutes);
 
 index.use('/sales', salesCheckRoutes);
+
+index.use('/order',providerRoutes);
 
 export default index;
