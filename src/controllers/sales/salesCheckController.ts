@@ -1,6 +1,7 @@
 import { Request, Response} from 'express';
 import { formatRequest, badRequestMessage } from '../../utils/requestParams';
 import SalesCheckService from '../../services/sales/salesCheckService';
+import { getUserFromJWT } from '../../utils/jwtService';
 
 export const getAll = async (req: Request, res: Response) => {
     try {
@@ -18,8 +19,9 @@ export const getAll = async (req: Request, res: Response) => {
 export const generateSalesCheck = async (req: Request, res: Response) => {
     try {
         const params = formatRequest(req);
+        const user = await getUserFromJWT(req);
 
-        const result = await SalesCheckService.generateSalesCheck(params);
+        const result = await SalesCheckService.generateSalesCheck(user,params);
 
         res.status(result.getStatus()).json(result);
     } 

@@ -9,6 +9,7 @@ import CaiCodeRange from "../../models/sales/caiCodeRangeModel";
 import CaiCode from "../../models/sales/caiCodeModel";
 import ProductBatch from "../../models/stocks/productBatchModel";
 import Product from "../../models/stocks/productModel";
+import Person from "../../models/users/personModel";
 
 
 
@@ -29,14 +30,14 @@ class SalesCheckService{
     }
     
 
-    static async generateSalesCheck(salesCheckProp : SalesCheckProp){
+    static async generateSalesCheck(idUser: number | undefined,salesCheckProp : SalesCheckProp){
         
         //MANEJO DE ERRORES
-        const user = await UserService.getUserById(salesCheckProp.idUser);
 
-        if(user.hasError){
-            return user;
+        if(!idUser){
+            return JsonResponse.error(400,"No hay un usuario válido.");
         }
+
 
         const caiCodeRange = await CaiCodeRange.findOne({
             where: {
@@ -75,7 +76,7 @@ class SalesCheckService{
 
             let subTotal = 0;
 
-            for(let batchConsumption of salesCheckProp.SwineCutBatchConsumption){
+            for(let batchConsumption of salesCheckProp.consumption){
                 let b = await ProductBatch.findByPk(batchConsumption.idProduct,{
                     transaction: t
                 });
@@ -112,10 +113,10 @@ class SalesCheckService{
             }
 
             const salesCheck = await SalesCheck.create({
-                idUser: salesCheckProp.idUser,
+                idUser: idUser,
                 subTotal: subTotal,
                 ISV: subTotal * 0.15,
-                idClient : salesCheckProp.idClient,
+                //idClient : salesCheckProp.idClient,
                 idCaiCodeRange : caiCodeRange.idCaiCodeRange,
                 saleCheckCode : caiCodeCheck,
                 //generationDate : new Date().toDateString()
@@ -124,7 +125,7 @@ class SalesCheckService{
             });
             
             const salesCheckDetails = await SalesChecksDetail.bulkCreate(
-                salesCheckProp.SwineCutBatchConsumption.map(e=>{
+                salesCheckProp.consumption.map(e=>{
                     return {
                         idSalesCheck: salesCheck.idSalesCheck, 
                         idProduct: e.idProduct, 
@@ -134,9 +135,20 @@ class SalesCheckService{
                     transaction: t
                 }
             );
-            
+
             await t.commit();
-            return JsonResponse.success(salesCheckDetails, "La factura se ha creado con éxito.");
+
+            const data = await SalesCheck.findByPk(salesCheck.idSalesCheck,{
+                include:[
+                    {model : Product, required:true},
+                    {model: CaiCodeRange, required: true},
+                    {model : User, required: true, include:[
+                        {model:Person, required:true}
+                    ]}
+                ]
+            });
+
+            return JsonResponse.success(data, "La factura se ha creado con éxito.");
         }
         catch(err){
             console.log(err);

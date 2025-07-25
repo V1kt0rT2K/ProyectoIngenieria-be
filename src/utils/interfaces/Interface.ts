@@ -13,10 +13,9 @@ export interface RegisterFormProps {
     idRole: number;
 };
 
-export interface SalesCheckProp {
-    idUser : number,
-    idClient : number | null,
-    SwineCutBatchConsumption: {
+export interface SalesCheckProp {   
+    identityNumber : string | null,
+    consumption: {
         idProduct : number,
         quantity : number
     }[]
