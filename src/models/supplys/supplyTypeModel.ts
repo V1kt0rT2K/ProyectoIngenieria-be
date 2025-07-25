@@ -6,8 +6,8 @@ class SupplyType extends Model{
         return this.getDataValue("idSupplyType");
     }
 
-    get supplyTypeName(): string {
-        return this.getDataValue("supplyTypeName");
+    get nameSupplyType(): string {
+        return this.getDataValue("nameSupplyType");
     }
 
 };
@@ -19,7 +19,7 @@ SupplyType.init(
             autoIncrement: true,
             primaryKey: true
         },
-        supplyTypeName:{
+        nameSupplyType:{
             type:DataTypes.STRING('MAX'),
             allowNull: false,
         }

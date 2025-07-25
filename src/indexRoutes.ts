@@ -14,6 +14,8 @@ import salesCheckRoutes from './routes/sales/salesCheckRoutes';
 
 import { verifyToken } from './utils/jwtService';
 import { checkUserAction } from './utils/permissionService';
+import Supply from './models/supplys/supplyModel';
+import supplyBatchRouter from './routes/supplys/supplyBatchRouter';
 
 const index = express.Router();
 
@@ -34,7 +36,7 @@ index.use('/requests', userRequestsRoutes);
 index.use('/stock', 
     swineBatchRoutes, productRoutes);
 
-index.use('/supply', supplyRouter,swineSuppliesRoutes);
+index.use('/supply', supplyRouter,swineSuppliesRoutes,supplyRouter,supplyBatchRouter);
 
 index.use('/sales', salesCheckRoutes);
 
