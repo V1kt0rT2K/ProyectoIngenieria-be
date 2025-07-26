@@ -80,7 +80,7 @@ class SwineBatchService {
         try{
 
             //Manejo de errores
-            if(incomingBatchProp.swineQuantityRemaining <= 0 ){
+            if(incomingBatchProp.quantity <= 0 ){
                 return JsonResponse.error(500,"Datos invalidos.");
             }
 
@@ -99,7 +99,6 @@ class SwineBatchService {
             try{
             
                 const swineBatch = await SwineBatch.create({
-                    swineQuantityRemaining : incomingBatchProp.swineQuantityRemaining,
                     birthDate : new Date(incomingBatchProp.birthDate),
                     quantity : incomingBatchProp.quantity,
                     stockQuantity: incomingBatchProp.quantity,
