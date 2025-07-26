@@ -23,7 +23,7 @@ export interface SalesCheckProp {
 
 export interface IncomingBatchProp {
     swineQuantityRemaining : number,
-    estimatedWeight : number,
+    birthDate : Date,
     quantity : number,
 
 }

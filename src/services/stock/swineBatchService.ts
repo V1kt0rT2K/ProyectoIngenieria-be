@@ -80,7 +80,7 @@ class SwineBatchService {
         try{
 
             //Manejo de errores
-            if(incomingBatchProp.swineQuantityRemaining <= 0 || incomingBatchProp.estimatedWeight <= 0){
+            if(incomingBatchProp.swineQuantityRemaining <= 0 ){
                 return JsonResponse.error(500,"Datos invalidos.");
             }
 
@@ -97,10 +97,10 @@ class SwineBatchService {
             const t = await sequelize.transaction();
 
             try{
-
+            
                 const swineBatch = await SwineBatch.create({
                     swineQuantityRemaining : incomingBatchProp.swineQuantityRemaining,
-                    estimatedWeight : incomingBatchProp.estimatedWeight,
+                    birthDate : new Date(incomingBatchProp.birthDate),
                     quantity : incomingBatchProp.quantity,
                     stockQuantity: incomingBatchProp.quantity,
                     idStage : stage.idStage
