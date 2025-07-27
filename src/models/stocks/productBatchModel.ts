@@ -8,6 +8,9 @@ class ProductBatch extends Model{
     get stockQuantity(): number {
         return this.getDataValue("stockQuantity");
     }
+    get expirationDate(): Date {
+        return this.getDataValue("stockQuantity");
+    }
 
 };
 
@@ -33,6 +36,18 @@ ProductBatch.init(
         stockQuantity: {
             type: DataTypes.DECIMAL(8,2),
             allowNull: false
+        },
+        idSwineBatch:{
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            references:{
+                model: 'SwineBatch',
+                key: 'idSwineBatch'
+            }
+        },
+        entryQuantity : {
+            type : DataTypes.DECIMAL(8,2),
+            allowNull : false
         }
     },
     {

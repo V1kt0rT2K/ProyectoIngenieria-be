@@ -6,8 +6,12 @@ class Client extends Model {
     get idClient(): number {
         return this.getDataValue("idClient");
     }
-    get identitynumber(): string {
-        return this.getDataValue("identitynumber");
+    get identification(): string {
+        return this.getDataValue("identification");
+    }
+
+    get fullName(): string {
+        return this.getDataValue("fullName");
     }
 }
 
@@ -18,11 +22,19 @@ Client.init(
             autoIncrement: true,
             primaryKey: true,
         },
-        identitynumber: {
-            type: DataTypes.STRING(13),
+        identification: {
+            type: DataTypes.STRING(50),
             allowNull: false,
         },
-        
+        fullName : {
+            type: DataTypes.STRING('MAX'),
+        },
+        contact : {
+            type: DataTypes.STRING('MAX')
+        },
+        address : {
+            type: DataTypes.STRING('MAX')
+        }
     },
     {
         sequelize,
@@ -30,9 +42,9 @@ Client.init(
         modelName: 'Client',
         tableName: 'tblClients',
         schema: 'sales',
-        indexes: [
-            {   unique: true, fields: ['identitynumber'] }
-        ],
+        // indexes: [
+        //     {   unique: true, fields: ['identification'] }
+        // ],
     },
 
 );

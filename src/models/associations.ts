@@ -20,10 +20,11 @@ import SupplyBatch from "./supplys/supplyBatchModel";
 import SwineBatch from "./stocks/swineBatchModel";
 import Product from "./stocks/productModel";
 import ProductBatch from "./stocks/productBatchModel";
-import Production from "./stocks/productionModel";
 import SupplyPurcharse from "./orders/supplyPurcharseModel";
 import Provider from "./orders/providerModel";
 import SupplyPurcharseDetail from "./orders/supplyPurcharseDetailModel";
+import Action from "./assets/actionModel";
+import ActionRole from "./users/actionRoleModel";
 
 /********** USERS SCHEMA *********/  
 //User
@@ -48,6 +49,7 @@ UserRole.hasMany(User , {foreignKey: "idRole", sourceKey:"idRole"});
 UserRole.hasMany(UserRequest,  {foreignKey : "idRole", sourceKey: "idRole"});
 UserRole.hasMany(UserRolesHistoric, {foreignKey:"oldRoleId", sourceKey:"idRole"});
 UserRole.hasMany(UserRolesHistoric, {foreignKey:"newRoleId", sourceKey:"idRole"});
+UserRole.belongsToMany(Action, { through: ActionRole, foreignKey:"idRole", otherKey:"idAction", uniqueKey:"ukAction_Role"});
 
 //UserDataHistoric
 UserDataHistoric.belongsTo(User, {foreignKey: "idUser", targetKey : "idUser"});
@@ -74,6 +76,9 @@ Stage.belongsTo(StageType, {foreignKey: "idStageType", targetKey: "idStageType"}
 Stage.hasMany(Supply, {foreignKey:"idStage", sourceKey:"idStage"});
 Stage.hasMany(SwineBatch, { foreignKey:"idStage", sourceKey:"idStage"});
 
+//Actions
+Action.belongsToMany(UserRole, {through : ActionRole, foreignKey:"idAction", otherKey:"idRole", uniqueKey:"ukAction_Role"});
+
 /********** SUPPLY SCHEMA *********/ 
 
 //SupplyType
@@ -97,15 +102,15 @@ SwineSupply.belongsTo(User, {foreignKey:"idUser", targetKey:"idUser"});
 //SwineBatch
 SwineBatch.belongsToMany(Supply, { through : SwineSupply , foreignKey:"idSwineBatch", otherKey:"idSupply"});
 SwineBatch.belongsTo(Stage, {foreignKey:"idStage", targetKey:"idStage"});
-SwineBatch.belongsToMany(Product , {through: {model:Production, unique:false}, foreignKey:"idSwineBatch", otherKey:"idProduct", uniqueKey:"ukSwineBatch_Product"})
+SwineBatch.hasMany(ProductBatch, { foreignKey:"idSwineBatch", sourceKey:"idSwineBatch"});
 
 //Product
 Product.belongsToMany(SalesCheck, { through: SalesChecksDetail , foreignKey:"idProduct", otherKey:"idSalesCheck", uniqueKey:"ukSalesCheck_Product"});
 Product.hasMany(ProductBatch, { foreignKey:"idProduct", sourceKey:"idProduct"});
-Product.belongsToMany(SwineBatch , { through: {model:Production, unique:false} , foreignKey:"idProduct", otherKey:"idSwineBatch", uniqueKey:"ukSwineBatch_Product"});
 
 //ProductBatch
 ProductBatch.belongsTo(Product, {foreignKey:"idProduct", targetKey:"idProduct"});
+ProductBatch.belongsTo(SwineBatch, {foreignKey:"idSwineBatch", targetKey:"idSwineBatch"});
 
 
 /********* SALES SCHEMA **********/

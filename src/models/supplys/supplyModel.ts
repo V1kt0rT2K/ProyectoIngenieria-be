@@ -10,6 +10,10 @@ class Supply extends Model{
         return this.getDataValue("nameSupply");
     }
 
+    get price(): number {
+        return this.getDataValue("price");
+    }
+
 };
 
 Supply.init(
@@ -40,6 +44,10 @@ Supply.init(
             }
         },
         orderPoint : {
+            type : DataTypes.DECIMAL(8,2),
+            allowNull : false
+        },
+        price : {
             type : DataTypes.DECIMAL(8,2),
             allowNull : false
         }

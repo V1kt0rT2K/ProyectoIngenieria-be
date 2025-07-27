@@ -1,8 +1,11 @@
 import { Request, Response, NextFunction } from "express";
 import JsonResponse from './jsonResponse';
 import jwt, { JwtPayload } from 'jsonwebtoken';
+import User from "../models/users/userModel";
+import Action from "../models/assets/actionModel";
+import ActionRole from "../models/users/actionRoleModel";
 
-export const checkUserAction = (req: Request, res: Response, next: NextFunction) =>{
+export const checkUserAction = async (req: Request, res: Response, next: NextFunction) =>{
 
     const header = req.header("Authorization") || "";
     const token = header.split(" ")[1];
@@ -15,12 +18,28 @@ export const checkUserAction = (req: Request, res: Response, next: NextFunction)
 
     console.log("email: ",decodedToken?.email, "actionName: ",actionName);
 
-    next();
+    const user = await User.findOne({
+        where: {
+            email : decodedToken?.email
+        }
+    });
 
-    // if(decodedToken?.email == 'viktor.hernandez@gmail.com'){
-    //     next();
-    // }else{
-    //     return res.status(403).json(JsonResponse.error(403,"Acceso no Autorizado"));
-    // }
-    
+    const action = await Action.findOne({
+        where : {
+            actionName : actionName
+        }
+    });
+
+    const data = await ActionRole.findOne({
+        where :{
+            idRole : user?.idRole,
+            idAction : action?.idAction
+        }
+    });
+
+    if(!data){
+        return res.status(403).json(JsonResponse.error(403,"Acceso no autorizado."));
+    }else{
+        next();
+    }
 }

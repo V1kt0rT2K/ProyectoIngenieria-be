@@ -28,6 +28,27 @@ class SalesCheckService{
 
         return JsonResponse.success(data,"La petición ha sido un éxito.");
     }
+
+    static async getSalesCheckById(idSalesCheck: number){
+
+        const data = await SalesCheck.findByPk(idSalesCheck,{
+                include:[
+                    {model : Product, required:true},
+                    {model: CaiCodeRange, required: true, include:[
+                        {model: CaiCode, required:true}
+                    ]},
+                    {model : User, required: true, include:[
+                        {model:Person, required:true}
+                    ]}
+                ]
+            });
+
+        if(!data){
+            return JsonResponse.error(400,"No se han encontrado datos.");
+        }
+
+        return JsonResponse.success(data,"La petición ha sido un éxito.");
+    }
     
 
     static async generateSalesCheck(idUser: number | undefined,salesCheckProp : SalesCheckProp){
@@ -109,7 +130,7 @@ class SalesCheckService{
                         idProduct : batchConsumption.idProduct
                     },
                     transaction : t
-                })
+                });
             }
 
             const salesCheck = await SalesCheck.create({
@@ -138,17 +159,9 @@ class SalesCheckService{
 
             await t.commit();
 
-            const data = await SalesCheck.findByPk(salesCheck.idSalesCheck,{
-                include:[
-                    {model : Product, required:true},
-                    {model: CaiCodeRange, required: true},
-                    {model : User, required: true, include:[
-                        {model:Person, required:true}
-                    ]}
-                ]
-            });
+            const data = await this.getSalesCheckById(salesCheck.idSalesCheck);
 
-            return JsonResponse.success(data, "La factura se ha creado con éxito.");
+            return JsonResponse.success(data.data, "La factura se ha creado con éxito.");
         }
         catch(err){
             console.log(err);

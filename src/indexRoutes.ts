@@ -11,13 +11,12 @@ import productRoutes from './routes/stocks/productRoutes';
 import supplyRoutes from './routes/supplys/supplyRoutes';
 import swineSuppliesRoutes from './routes/supplys/swineSuppliesRoutes';
 import salesCheckRoutes from './routes/sales/salesCheckRoutes';
-
-import { verifyToken } from './utils/jwtService';
-import { checkUserAction } from './utils/permissionService';
-import Supply from './models/supplys/supplyModel';
 import supplyBatchRoutes from './routes/supplys/supplyBatchRoutes';
 import providerRoutes from './routes/orders/providerRoutes';
 import productBatchRoutes from './routes/stocks/productBatchRoutes';
+
+
+import { verifyToken } from './utils/jwtService';
 
 const index = express.Router();
 
