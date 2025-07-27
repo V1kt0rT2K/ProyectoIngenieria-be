@@ -17,6 +17,7 @@ import { checkUserAction } from './utils/permissionService';
 import Supply from './models/supplys/supplyModel';
 import supplyBatchRoutes from './routes/supplys/supplyBatchRoutes';
 import providerRoutes from './routes/orders/providerRoutes';
+import productBatchRoutes from './routes/stocks/productBatchRoutes';
 
 const index = express.Router();
 
@@ -35,7 +36,7 @@ index.use('/asset',
 index.use('/requests', userRequestsRoutes);
 
 index.use('/stock', 
-    swineBatchRoutes, productRoutes);
+    swineBatchRoutes, productRoutes,productBatchRoutes);
 
 index.use('/supply', supplyRoutes,swineSuppliesRoutes,supplyRoutes,supplyBatchRoutes);
 
