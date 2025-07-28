@@ -14,7 +14,7 @@ export interface RegisterFormProps {
 };
 
 export interface SalesCheckProp {   
-    identityNumber : string | null,
+    identification : string | null,
     consumption: {
         idProduct : number,
         quantity : number

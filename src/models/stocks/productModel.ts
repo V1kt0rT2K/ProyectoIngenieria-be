@@ -9,6 +9,13 @@ class Product extends Model{
         return this.getDataValue("price");
     }
 
+    get productName(): string {
+        return this.getDataValue("productName");
+    }
+
+    get orderPoint(): number {
+        return this.getDataValue("orderPoint");
+    }
 
 };
 

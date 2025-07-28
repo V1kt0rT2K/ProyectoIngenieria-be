@@ -2,6 +2,9 @@ import { DataTypes, Model } from 'sequelize';
 import sequelize from '../../utils/connection';
 
 class ProductBatch extends Model{
+    get idProductBatch(): number {
+        return this.getDataValue("idProductBatch");
+    }
     get idProduct(): number {
         return this.getDataValue("idProduct");
     }
