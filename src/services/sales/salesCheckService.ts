@@ -15,8 +15,6 @@ import { Op, Transaction } from "sequelize";
 import UserRole from "../../models/users/userRoleModel";
 import Notification from "../../models/assets/notificationModel";
 
-
-
 class SalesCheckService{
 
     static async getAll(){

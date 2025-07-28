@@ -14,6 +14,7 @@ import salesCheckRoutes from './routes/sales/salesCheckRoutes';
 import supplyBatchRoutes from './routes/supplys/supplyBatchRoutes';
 import providerRoutes from './routes/orders/providerRoutes';
 import productBatchRoutes from './routes/stocks/productBatchRoutes';
+import notificationRoutes from './routes/asset/notificationRoutes'
 
 
 import { verifyToken } from './utils/jwtService';
@@ -30,7 +31,7 @@ index.use(verifyToken);
 index.use('/users', usersRoutes);
 
 index.use('/asset', 
-    statusRoutes, stageRoutes);
+    statusRoutes, stageRoutes, notificationRoutes);
 
 index.use('/requests', userRequestsRoutes);
 
