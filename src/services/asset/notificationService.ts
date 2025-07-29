@@ -12,7 +12,7 @@ class NotificationService {
                 idUser : idUser
             }
         });
-        if(!data)
+        if(data.length == 0)
             return JsonResponse.error(404, "No se han encontrado datos.");
 
         return JsonResponse.success(data,'La petición fue exitosa.');

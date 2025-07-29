@@ -26,3 +26,21 @@ export interface IncomingBatchProp {
     quantity : number,
 
 }
+
+export interface SupplyPurcharseProp{
+    idProvider : number,
+    detail : {
+        idSupply : number,
+        quantity : number
+    }[]
+}
+
+export interface IncomingSupplyPurcharseProp{
+    idSupplyPurcharse: number,
+    isModified: boolean,
+    detail : {
+        idSupply: number,
+        quantity : number,
+        expirationDate : Date
+    }[]
+}

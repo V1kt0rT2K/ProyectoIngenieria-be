@@ -105,8 +105,10 @@ class SalesCheckService{
                         transaction: t
                     });
 
-                if(!product)
+                if(!product){
+                    await t.rollback();
                     return JsonResponse.error(400,"Datos inválidos.");
+                }
         
                 const batchList = await ProductBatch.findAll({
                     where: {

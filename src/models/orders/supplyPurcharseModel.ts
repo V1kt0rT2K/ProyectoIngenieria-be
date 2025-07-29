@@ -21,6 +21,9 @@ class SupplyPurcharse extends Model {
     get idProvider(): number {
         return this.getDataValue("idProvider");
     }
+    get idStatus(): number {
+        return this.getDataValue("idStatus");
+    }
 }   
 
 SupplyPurcharse.init(
@@ -34,6 +37,9 @@ SupplyPurcharse.init(
             type: DataTypes.DATE,
             allowNull: true,
         },
+        // entryDate : {
+        //     type : DataTypes.DATE,
+        // },
         idUser: {
             type: DataTypes.INTEGER,
             allowNull: false,
@@ -60,10 +66,16 @@ SupplyPurcharse.init(
         },
         idStatus : {
             type : DataTypes.INTEGER,
-            allowNull  : false,
             references : {
                 model : 'Status',
                 key: 'idStatus'
+            }
+        },
+        idFormerSupplyPurcharse : {
+            type : DataTypes.INTEGER,
+            references : {
+                model : "SupplyPurcharse",
+                key : "idSupplyPurcharse"
             }
         }
     },

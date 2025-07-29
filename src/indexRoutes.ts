@@ -14,7 +14,8 @@ import salesCheckRoutes from './routes/sales/salesCheckRoutes';
 import supplyBatchRoutes from './routes/supplys/supplyBatchRoutes';
 import providerRoutes from './routes/orders/providerRoutes';
 import productBatchRoutes from './routes/stocks/productBatchRoutes';
-import notificationRoutes from './routes/asset/notificationRoutes'
+import notificationRoutes from './routes/asset/notificationRoutes';
+import supplyPurcharseRoutes from './routes/orders/supplyPurcharseRoutes';
 
 
 import { verifyToken } from './utils/jwtService';
@@ -42,6 +43,6 @@ index.use('/supply', supplyRoutes,swineSuppliesRoutes,supplyRoutes,supplyBatchRo
 
 index.use('/sales', salesCheckRoutes);
 
-index.use('/order',providerRoutes);
+index.use('/order',providerRoutes, supplyPurcharseRoutes);
 
 export default index;
