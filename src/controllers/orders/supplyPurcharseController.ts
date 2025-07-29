@@ -57,7 +57,7 @@ export const generatePurcharse = async (req: Request, res: Response) => {
         const user =  await getUserFromJWT(req);
         
         const result = await SupplyPurcharseService.generatePurcharse(user,params);
-        
+
         res.status(result.getStatus()).json(result);
     } catch (error) {
         console.error('Error al ejecutar procedimiento:', error);

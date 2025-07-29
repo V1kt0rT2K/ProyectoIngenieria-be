@@ -13,8 +13,6 @@ import { Op, Transaction } from "sequelize";
 import SupplyBatch from "../../models/supplys/supplyBatchModel";
 
 class SupplyPurcharseService {
-    constructor() {}
-
     static async getAllSupplyPurcharses(page: number, size: number, sort: number) {
 
         if(page <=0){
@@ -30,6 +28,7 @@ class SupplyPurcharseService {
         const {count, rows} = await SupplyPurcharse.findAndCountAll({
             include: [
                 {model : Supply, required: true},
+                {model : Provider, required: true},
                 {model: User, required: true, include: [
                     {model : Person , required :true}
                 ]},
@@ -89,10 +88,11 @@ class SupplyPurcharseService {
         return JsonResponse.success({data: rows, totalItems: count}, "La petición ha sido un éxito.");
     }
 
-    static async getSupplyPurcharseById(idSupplyPurcharse: number){
-        const data = await SupplyPurcharse.findByPk(idSupplyPurcharse,{
+    static async getSupplyPurcharseById(idSupplyPurcharse: number) {
+        const data = await SupplyPurcharse.findByPk(idSupplyPurcharse, {
             include: [
-                {model : Supply, required: true},
+								{model : Supply, required: true},
+                {model : Provider, required: true},
                 {model: User, required: true, include: [
                     {model : Person , required :true}
                 ]},
