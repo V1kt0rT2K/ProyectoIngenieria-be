@@ -19,6 +19,19 @@ class ProductService {
             return JsonResponse.error(500, "Error Interno del Servidor.");
         }
     }
+    static async getProductsbyid(idProduct:number){
+        try{
+            const data= await Product.findByPk(idProduct);
+            if(data==null){
+                return JsonResponse.error(400, "No existen datos.");
+            }
+            return JsonResponse.success(data, 'Se ah encontrado el Producto con exito.');
+        }catch(error){
+            console.error(error);
+            return JsonResponse.error(500, "Error Interno del Servidor.");
+        }
+
+    }
 
 }
 export default ProductService;

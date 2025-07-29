@@ -36,6 +36,12 @@ ProductBatch.init(
             type: DataTypes.DATE,
             allowNull: false,
         },
+        generationDate:{
+            type: DataTypes.DATEONLY,
+            allowNull: false,
+            defaultValue: DataTypes.NOW
+        }
+        ,
         stockQuantity: {
             type: DataTypes.DECIMAL(8,2),
             allowNull: false

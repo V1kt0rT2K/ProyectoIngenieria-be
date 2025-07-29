@@ -44,3 +44,10 @@ export interface IncomingSupplyPurcharseProp{
         expirationDate : Date
     }[]
 }
+export interface IncomingProductBatchProp{
+    idProduct: number;
+    idSwineBatch: number;
+    entryQuantity: number;
+    generationDate: Date;
+    expirationDate: Date;
+}[]
