@@ -1,3 +1,4 @@
+import { Transaction } from 'sequelize';
 import Notification from '../../models/assets/notificationModel';
 import sequelize from '../../utils/connection';
 import JsonResponse from '../../utils/jsonResponse';
@@ -40,6 +41,18 @@ class NotificationService {
             await t.rollback();
             return JsonResponse.error(501, "Error al actualizar notificación.");
         }
+    }
+
+    static async createNotification(idUser: number | undefined, message: string, t : Transaction){
+        if(!idUser)
+            return;
+
+        await Notification.create({
+            idUser : idUser,
+            message : message
+        },{
+            transaction : t
+        });
     }
 }
 
