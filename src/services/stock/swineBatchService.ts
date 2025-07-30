@@ -59,6 +59,8 @@ class SwineBatchService {
     static async getSwineBatchByIdStage(idStage: number) {
         try {
             const data = await SwineBatch.findAll({
+                include:[{model : Stage, required: true}]
+            ,
                 where: { idStage }
             });
             
@@ -142,5 +144,6 @@ static async updateStockQuantity(idSwineBatch:number){
         await t.rollback();
         return JsonResponse.error(500, "Error al actualizar el lote de cerdos.");
 }
-}}
+}
+}
 export default SwineBatchService;
