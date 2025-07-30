@@ -9,6 +9,9 @@ class SwineBatch extends Model{
      get quantity(): number {
         return this.getDataValue("quantity");
     }
+    get stockQuantity(): number {
+        return this.getDataValue("stockQuantity");
+    }
 };
 
 SwineBatch.init(

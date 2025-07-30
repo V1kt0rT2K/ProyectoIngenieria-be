@@ -51,3 +51,9 @@ export interface IncomingProductBatchProp{
     generationDate: Date;
     expirationDate: Date;
 }[]
+export interface IncomingProductProp{ 
+    productName: string;
+    productDescription: string;
+    price: number;
+    orderPoint: number;
+}[]
