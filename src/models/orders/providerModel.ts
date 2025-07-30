@@ -10,6 +10,18 @@ class Provider extends Model{
         return this.getDataValue("providerName");
     }
 
+    get RTN(): string {
+        return this.getDataValue("RTN");
+    }
+
+    get providerContact(): string {
+        return this.getDataValue("providerContact");
+    }
+
+    get location(): string {
+        return this.getDataValue("location");
+    }
+
 };
 
 Provider.init(

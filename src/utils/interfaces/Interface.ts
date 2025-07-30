@@ -26,3 +26,10 @@ export interface IncomingBatchProp {
     quantity : number,
 
 }
+
+export interface ProviderProps {
+    name: string;
+    rtn: string;
+    contact: string;
+    address: string;
+};
