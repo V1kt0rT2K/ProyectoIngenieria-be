@@ -3,23 +3,17 @@ import sequelize from '../../utils/connection';
 
 class SupplyPurcharseDetail extends Model {
 
+    get idSupplyPurcharseDetail(): number {
+        return this.getDataValue("idSupplyPurcharseDetail");
+    }
     get idSupplyPurcharse(): number {
         return this.getDataValue("idSupplyPurcharse");
     }
-    get generationDate(): Date {
-        return this.getDataValue("generationDate"); 
+    get idSupply(): number {
+        return this.getDataValue("idSupply")
     }
-    get idUser(): number {
-        return this.getDataValue("idUser");
-    }
-    get subtotal(): number {
-        return this.getDataValue("subtotal");
-    }
-    get ISV(): number {
-        return this.getDataValue("ISV");
-    }
-    get idProvider(): number {
-        return this.getDataValue("idProvider");
+    get quantity(): number {
+        return this.getDataValue("quantity");
     }
 }   
 

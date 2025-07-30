@@ -4,7 +4,7 @@ import SwineBatchService from '../../services/stock/swineBatchService';
 
 
 export const getAll = async (req: Request, res: Response) => {
-   
+
     try {
         const result = await SwineBatchService.getAll();
 
@@ -62,7 +62,20 @@ export const createSwineBatch = async (req: Request, res: Response) => {
         console.error('Error al ejecutar procedimiento:', error);
         return res.status(500).send('Error Interno del Servidor');
     } 
+}
+export const updateStockQuantiy = async (req: Request, res: Response) => {
+    try {
+        const params = formatRequest(req);
+        const result = await SwineBatchService.updateStockQuantity(params.idSwineBatch);
 
+        return res.status(result.getStatus()).json(result);
+
+
+
+    }catch (error) {
+        console.error('Error al ejecutar procedimiento:', error);
+        return res.status(500).send('Error Interno del Servidor');
+    }
 }
 
 

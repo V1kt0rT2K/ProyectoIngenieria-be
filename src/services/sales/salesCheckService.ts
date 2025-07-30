@@ -14,6 +14,7 @@ import Client from "../../models/sales/clientModel";
 import { Op, Transaction } from "sequelize";
 import UserRole from "../../models/users/userRoleModel";
 import Notification from "../../models/assets/notificationModel";
+import NotificationService from "../asset/notificationService";
 
 class SalesCheckService{
 
@@ -94,6 +95,10 @@ class SalesCheckService{
             return JsonResponse.error(500,"El rango no tiene valores válidos.");
         }
 
+        if(new Set(salesCheckProp.consumption.
+            map(d => d.idProduct)).size < salesCheckProp.consumption.length)
+                return JsonResponse.error(500, "Solo se debe ingresar un tipo de producto por factura.");
+
         const t = await sequelize.transaction();
         try{
             let subTotal = 0;
@@ -105,8 +110,10 @@ class SalesCheckService{
                         transaction: t
                     });
 
-                if(!product)
+                if(!product){
+                    await t.rollback();
                     return JsonResponse.error(400,"Datos inválidos.");
+                }
         
                 const batchList = await ProductBatch.findAll({
                     where: {
@@ -241,10 +248,15 @@ class SalesCheckService{
 
             if(totalInStock[0].stockQuantity <= product.orderPoint){
                 for(let user of users){
-                    await Notification.create({
-                        message : `El producto '${product.productName}' ha llegado a su punto de reorden.`,
-                        idUser : user.idUser
-                    });
+                    // await Notification.create({
+                    //     message : `El producto '${product.productName}' ha llegado a su punto de reorden.`,
+                    //     idUser : user.idUser
+                    // });
+
+                    await NotificationService.createNotification(user.idUser,
+                        `El producto '${product.productName}' ha llegado a su punto de reorden.`,
+                        t
+                    );
                 }
             }
         }

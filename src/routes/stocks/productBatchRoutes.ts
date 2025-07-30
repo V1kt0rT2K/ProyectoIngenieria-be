@@ -3,4 +3,5 @@ import * as productBatchController from "../../controllers/stock/productBatchCon
 const router = express.Router();
 const path = "/product/batch";
 router.get(`${path}/get/all`, productBatchController.getAllProductBatches);
+router.post(`${path}/create`, productBatchController.createProductBatch);
 export default router;

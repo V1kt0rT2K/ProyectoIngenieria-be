@@ -59,6 +59,8 @@ class SwineBatchService {
     static async getSwineBatchByIdStage(idStage: number) {
         try {
             const data = await SwineBatch.findAll({
+                include:[{model : Stage, required: true}]
+            ,
                 where: { idStage }
             });
             
@@ -120,6 +122,28 @@ class SwineBatchService {
 
             }
     
+}
+static async updateStockQuantity(idSwineBatch:number){
+    const swineBatchbyid = await SwineBatch.findByPk(idSwineBatch);
+
+        if (!swineBatchbyid) {
+            return JsonResponse.error(404, "Lote de cerdos no encontrado.");
+        } else if (swineBatchbyid.stockQuantity <= 0) {
+            return JsonResponse.error(400, "No hay cerdos disponibles en el lote.");
+        }
+
+        const t = await sequelize.transaction();
+    try {
+        await swineBatchbyid.update({
+        stockQuantity: swineBatchbyid.stockQuantity - 1
+    }  , { transaction: t });
+
+        await t.commit();
+        return JsonResponse.success(swineBatchbyid, "Cantidad de cerdos actualizada exitosamente.");
+    } catch (error) {
+        await t.rollback();
+        return JsonResponse.error(500, "Error al actualizar el lote de cerdos.");
+}
 }
 }
 export default SwineBatchService;

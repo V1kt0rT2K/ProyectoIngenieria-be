@@ -4,8 +4,6 @@ import SupplyType from "../../models/supplys/supplyTypeModel";
 
 
 class SupplyService {
-    constructor() {}
-
     static async getAll() {
         const data = await Supply.findAll(
         { include: [
