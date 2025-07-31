@@ -54,9 +54,12 @@ class SalesCheckService{
                     idClientType === 0 ? {"$Client.ClientType.idClientType$" : {[Op.ne]: null}} : {}
                 ]
             },
+            distinct:true,
             offset: (page-1) * size,
             limit: size
         });
+
+        console.log(count);
 
         if(rows.length == 0){
             return JsonResponse.error(400,"No se han encontrado datos.");
@@ -91,15 +94,19 @@ class SalesCheckService{
                 ]}
             ],
             where: {
-                idUser : idUser,
-                [Op.or]: [
+                [Op.and] : {
+                    idUser : idUser,
+                    [Op.or]: [
                     {"$Client.ClientType.idClientType$" : idClientType},
                     idClientType === 0 ? {"$Client.ClientType.idClientType$" : {[Op.ne]: null}} : {}
                 ]
+                }
+                
             },
             order:[
                 ["generationDate", sort == 0 ? "DESC" : "ASC"]
             ],
+            distinct:true,
             offset: (page-1) * size,
             limit: size
         });
@@ -107,6 +114,9 @@ class SalesCheckService{
         if(rows.length == 0){
             return JsonResponse.error(400,"No se han encontrado datos.");
         }
+
+        
+        console.log(count);
 
         return JsonResponse.success({data:rows, totalItems:count},"La petición ha sido un éxito.");
     }
