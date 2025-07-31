@@ -15,21 +15,110 @@ import { Op, Transaction } from "sequelize";
 import UserRole from "../../models/users/userRoleModel";
 import Notification from "../../models/assets/notificationModel";
 import NotificationService from "../asset/notificationService";
+import ClientType from "../../models/sales/clientTypeModel";
 
 class SalesCheckService{
 
-    static async getAll(){
-        const data =  await SalesCheck.findAll({
+    static async getAllSalesChecksByClientType(idClientType: number,page:number, size:number, sort: number){
+
+        const clientType = await ClientType.findByPk(idClientType);
+        if(!clientType && idClientType != 0)
+            return JsonResponse.error(400,"Tipo de cliente inválido.");
+
+        if(page <=0){
+            page = 1;
+        }
+        if(size <= 0){
+            size = 15;
+        }
+        if(sort != 0 && sort != 1){
+            sort = 0;
+        }
+
+        const {count ,rows} =  await SalesCheck.findAndCountAll({
             include: [
-                {model : Product, required:true}
-            ]
+                {model : Product, required:true},
+                {model : User, required:true , include: [
+                    {model:Person, required:true}
+                ]},
+                {model: Client, required: true, include: [
+                    {model : ClientType, required: true}
+                ]}
+            ],
+            order:[
+                ["generationDate", sort == 0 ? "DESC" : "ASC"]
+            ],
+            where: {
+                [Op.or]: [
+                    {"$Client.ClientType.idClientType$" : idClientType},
+                    idClientType === 0 ? {"$Client.ClientType.idClientType$" : {[Op.ne]: null}} : {}
+                ]
+            },
+            distinct:true,
+            offset: (page-1) * size,
+            limit: size
         });
 
-        if(data.length == 0){
+        console.log(count);
+
+        if(rows.length == 0){
             return JsonResponse.error(400,"No se han encontrado datos.");
         }
 
-        return JsonResponse.success(data,"La petición ha sido un éxito.");
+        return JsonResponse.success({data:rows, totalItems: count},"La petición ha sido un éxito.");
+    }
+
+    static async getAllSalesChecksForUserByClientType(idUser: number | undefined,idClientType:number, page:number, size:number, sort: number){
+        if(!idUser)
+            return JsonResponse.error(400,"No se ha encontrado al usuario.");
+
+        const clientType = await ClientType.findByPk(idClientType);
+        if(!clientType && idClientType != 0)
+            return JsonResponse.error(400,"Tipo de cliente inválido.");
+
+        if(page <=0){
+            page = 1;
+        }
+        if(size <= 0){
+            size = 15;
+        }
+        if(sort != 0 && sort != 1){
+            sort = 0;
+        }
+
+        const {count ,rows} =  await SalesCheck.findAndCountAll({
+            include: [
+                {model : Product, required:true},
+                {model: Client, required: true, include: [
+                    {model : ClientType, required: true}
+                ]}
+            ],
+            where: {
+                [Op.and] : {
+                    idUser : idUser,
+                    [Op.or]: [
+                    {"$Client.ClientType.idClientType$" : idClientType},
+                    idClientType === 0 ? {"$Client.ClientType.idClientType$" : {[Op.ne]: null}} : {}
+                ]
+                }
+                
+            },
+            order:[
+                ["generationDate", sort == 0 ? "DESC" : "ASC"]
+            ],
+            distinct:true,
+            offset: (page-1) * size,
+            limit: size
+        });
+
+        if(rows.length == 0){
+            return JsonResponse.error(400,"No se han encontrado datos.");
+        }
+
+        
+        console.log(count);
+
+        return JsonResponse.success({data:rows, totalItems:count},"La petición ha sido un éxito.");
     }
 
     static async getSalesCheckById(idSalesCheck: number){
@@ -169,8 +258,7 @@ class SalesCheckService{
                 ISV: subTotal * 0.15,
                 idClient : client.idClient,
                 idCaiCodeRange : caiCodeRange.idCaiCodeRange,
-                saleCheckCode : salesCheckCode,
-                //generationDate : new Date().toDateString()
+                saleCheckCode : salesCheckCode
             }, { 
                 transaction : t
             });
@@ -248,15 +336,15 @@ class SalesCheckService{
 
             if(totalInStock[0].stockQuantity <= product.orderPoint){
                 for(let user of users){
-                    // await Notification.create({
-                    //     message : `El producto '${product.productName}' ha llegado a su punto de reorden.`,
-                    //     idUser : user.idUser
-                    // });
+                    await Notification.create({
+                        message : `El producto '${product.productName}' ha llegado a su punto de reorden.`,
+                        idUser : user.idUser
+                    });
 
-                    await NotificationService.createNotification(user.idUser,
-                        `El producto '${product.productName}' ha llegado a su punto de reorden.`,
-                        t
-                    );
+                    // await NotificationService.createNotification(user.idUser,
+                    //     `El producto '${product.productName}' ha llegado a su punto de reorden.`,
+                    //     t
+                    // );
                 }
             }
         }

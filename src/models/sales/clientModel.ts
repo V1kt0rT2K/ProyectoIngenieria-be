@@ -13,6 +13,9 @@ class Client extends Model {
     get fullName(): string {
         return this.getDataValue("fullName");
     }
+    get idClientType(): number {
+        return this.getDataValue("idClientType");
+    }
 }
 
 Client.init(
@@ -34,6 +37,14 @@ Client.init(
         },
         address : {
             type: DataTypes.STRING('MAX')
+        },
+        idClientType : {
+            type: DataTypes.INTEGER,
+            allowNull : false,
+            references: {
+                model: "ClientType",
+                key: "idClientType"
+            }
         }
     },
     {

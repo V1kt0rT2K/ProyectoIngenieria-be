@@ -25,6 +25,7 @@ import Provider from "./orders/providerModel";
 import SupplyPurcharseDetail from "./orders/supplyPurcharseDetailModel";
 import Action from "./assets/actionModel";
 import ActionRole from "./users/actionRoleModel";
+import ClientType from "./sales/clientTypeModel";
 
 /********** USERS SCHEMA *********/  
 //User
@@ -115,8 +116,12 @@ ProductBatch.belongsTo(SwineBatch, {foreignKey:"idSwineBatch", targetKey:"idSwin
 
 /********* SALES SCHEMA **********/
 
+//ClientTypes
+ClientType.hasMany(Client, {foreignKey:"idClientType", sourceKey:"idClientType"});
+
 //Clients
 Client.hasMany(SalesCheck, {foreignKey:"idClient", sourceKey:"idClient"});
+Client.belongsTo(ClientType , {foreignKey:"idClientType", targetKey:"idClientType"});
 
 //SalesChecks
 SalesCheck.belongsTo(User, {foreignKey:"idUser", targetKey:"idUser"});
