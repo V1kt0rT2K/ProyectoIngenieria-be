@@ -63,6 +63,7 @@ class SupplyPurcharseService {
         const {count, rows} = await SupplyPurcharse.findAndCountAll({
             include: [
                 //{model : Supply, required: true},
+                {model : Provider, required: true},
                 {model: User, required: true, include: [
                     {model : Person , required :true}
                 ]},
@@ -82,7 +83,7 @@ class SupplyPurcharseService {
         });
 
         if (rows.length === 0) {
-            return JsonResponse.error(400, "No existen proveedores.");
+            return JsonResponse.error(400, "No existen datos.");
         }
 
         return JsonResponse.success({data: rows, totalItems: count}, "La petición ha sido un éxito.");
