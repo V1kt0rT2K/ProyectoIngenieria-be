@@ -61,7 +61,11 @@ class SwineBatchService {
             const data = await SwineBatch.findAll({
                 include:[{model : Stage, required: true}]
             ,
-                where: { idStage }
+                where: { idStage,
+                    stockQuantity :{
+                        [Op.gt] : 0
+                    }
+                }
             });
             
             if (data.length === 0) {
@@ -123,7 +127,7 @@ class SwineBatchService {
             }
     
 }
-static async updateStockQuantity(idSwineBatch:number){
+static async updateStockQuantity(idSwineBatch:number,quantitySwine:number) {
     const swineBatchbyid = await SwineBatch.findByPk(idSwineBatch);
 
         if (!swineBatchbyid) {
@@ -135,7 +139,7 @@ static async updateStockQuantity(idSwineBatch:number){
         const t = await sequelize.transaction();
     try {
         await swineBatchbyid.update({
-        stockQuantity: swineBatchbyid.stockQuantity - 1
+        stockQuantity: swineBatchbyid.stockQuantity - quantitySwine
     }  , { transaction: t });
 
         await t.commit();

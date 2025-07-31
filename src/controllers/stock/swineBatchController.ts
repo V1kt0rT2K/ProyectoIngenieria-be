@@ -66,7 +66,7 @@ export const createSwineBatch = async (req: Request, res: Response) => {
 export const updateStockQuantiy = async (req: Request, res: Response) => {
     try {
         const params = formatRequest(req);
-        const result = await SwineBatchService.updateStockQuantity(params.idSwineBatch);
+        const result = await SwineBatchService.updateStockQuantity(params.idSwineBatch, params.quantitySwine);
 
         return res.status(result.getStatus()).json(result);
 

@@ -33,7 +33,7 @@ ProductBatch.init(
             }
         },
         expirationDate : {
-            type: DataTypes.DATE,
+            type: DataTypes.DATEONLY,
             allowNull: false,
         },
         generationDate:{

@@ -54,8 +54,9 @@ export interface IncomingProductBatchProp{
     idProduct: number;
     idSwineBatch: number;
     entryQuantity: number;
-    generationDate: Date;
     expirationDate: Date;
+    generationDate: Date;
+    
 }[]
 export interface IncomingProductProp{ 
     productName: string;
