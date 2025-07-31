@@ -1,6 +1,6 @@
 import JsonResponse from "../../utils/jsonResponse";
 import Provider from "../../models/orders/providerModel";
-import { Transaction } from "sequelize";
+import { Op, Transaction } from "sequelize";
 import { ProviderProps } from "../../utils/interfaces/Interface";
 import sequelize from "../../utils/connection";
 
@@ -21,16 +21,21 @@ class ProviderService {
         return await Provider.create(provider, { transaction });
     }
 
-    static async registerProvider(idUser: number | undefined, form: ProviderProps) {
+    static async registerProvider( form: ProviderProps) {
 
         try {
-            // const existing = await Provider.findOne({
-            //     where: { providerContact: form.providerContact }
-            // });
+            const existing = await Provider.findOne({
+                where: {
+                    [Op.or] : [
+                        {providerContact : form.contact},
+                        {RTN : form.rtn}
+                    ]
+                }
+            });
 
-            // if (existing) {
-            //     return JsonResponse.error(400, "Ya existe un proveedor con este correo.");
-            // }
+            if (existing) {
+                return JsonResponse.error(400, "El correo o RTN que ingresó ya está registrado.");
+            }
 
             let data: any;
             await sequelize.transaction(async (t) => {

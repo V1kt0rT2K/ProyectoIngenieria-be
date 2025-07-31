@@ -16,9 +16,8 @@ export const getAllProviders = async (req: Request, res: Response) => {
 export const registerProvider = async (req: Request, res: Response) => {
     try {
         const params = formatRequest(req);
-        const user = await getUserFromJWT(req);
         
-        const result = await ProviderService.registerProvider(user,params);
+        const result = await ProviderService.registerProvider(params);
         res.status(result.getStatus()).json(result);
     } 
     catch (error) {
