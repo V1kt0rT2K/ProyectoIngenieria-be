@@ -25,10 +25,25 @@ export const verifyToken = (req: Request, res: Response, next: NextFunction) =>{
     try {
         const payload = jwt.verify(token, SECRET_KEY);
 
-        next();
+        const decodedToken = jwt.decode(token,{json:true});
+
+        refreshToken(decodedToken,res,next);
+
+        //next();
+        
     } catch (error) {
+        console.log(error);
         return res.status(403).json(JsonResponse.error(403,"Autorización inválida."));
     }
+}
+
+const refreshToken = (decodedToken: any, res: Response, next: NextFunction) => {
+
+    const newToken = generateToken(decodedToken);
+
+    res.setHeader("Authorization", `Bearer ${newToken}`);
+    
+    next();
 }
 
 export const verifyTokenTest = (req: Request, res: Response, next: NextFunction) =>{

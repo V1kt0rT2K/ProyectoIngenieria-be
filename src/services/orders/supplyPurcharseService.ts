@@ -342,18 +342,18 @@ class SupplyPurcharseService {
                 return JsonResponse.error(500, "La orden no esta aprobada.");
         }else if(purcharse.idStatus == 2){  ///REVISION
             if(idStatus != 4)
-                return JsonResponse.error(500, "La orden no esta aprobada.");
+                return JsonResponse.error(500, "La orden aún esta en revisión.");
         }else if(purcharse.idStatus == 3){   ///DENEGADO
-            return JsonResponse.error(500, "La orden no esta aprobada.");
+            return JsonResponse.error(500, "La orden esta denegada.");
         }else if(purcharse.idStatus == 4){   //EN CAMINO
             if(idStatus != 5)
-                return JsonResponse.error(500, "La orden no esta aprobada.");
+                return JsonResponse.error(500, "La orden esta en camino.");
         }else if(purcharse.idStatus == 5){  //POR INGRESAR  NO SE DEBE ACTUALIZAR CON ESTE SERVICIO
-           return JsonResponse.error(500, "La orden no esta aprobada.");
+           return JsonResponse.error(500, "Acción inválida.");
         }else if(purcharse.idStatus == 6){  //INGRESADO 
-            return JsonResponse.error(500, "La orden no esta aprobada.");
+            return JsonResponse.error(500, "La orden ya fue ingresada.");
         }else if(purcharse.idStatus == 7){   //CANCELADO
-            return JsonResponse.error(500, "La orden no esta aprobada.");
+            return JsonResponse.error(500, "La orden fue cancelada.");
         }
 
         const t = await sequelize.transaction();
