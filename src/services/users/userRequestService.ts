@@ -1,4 +1,4 @@
-import { Transaction } from "sequelize";
+import { Op, Transaction } from "sequelize";
 import UserRequest from "../../models/users/userRequestModel";
 import User from "../../models/users/userModel";
 import Status from "../../models/assets/statusModel";
@@ -23,7 +23,7 @@ class UserRequestService {
             sort = 0;
         }
 
-        const data = await UserRequest.findAll({
+        const {count,rows} = await UserRequest.findAndCountAll({
             include:[
                 {
                     model: User, required: true,
@@ -43,17 +43,17 @@ class UserRequestService {
             limit: size
         });
 
-        if(data.length === 0){
+        if(rows.length === 0){
             return JsonResponse.error(400,"No existen datos.");
         }
 
-        return JsonResponse.success(data, 'La petición ha sido un éxito.');
+        return JsonResponse.success({data:rows, totalItems: count}, 'La petición ha sido un éxito.');
     }
 
     static async getUserRequestsByIdStatus(idStatus : number, page:number, size:number, sort:number) {
 
         let status = await Status.findByPk(idStatus);
-        if(!status){
+        if(!status && idStatus != 0){
             return JsonResponse.error(400,"El estado seleccionado es inválido.");
         }
 
@@ -67,7 +67,7 @@ class UserRequestService {
             sort = 0;
         }
 
-        const data = await UserRequest.findAll({
+        const {count, rows} = await UserRequest.findAndCountAll({
             include:[
                 {
                     model: User, required: true,
@@ -86,14 +86,19 @@ class UserRequestService {
             ],
             offset: (page-1) * size,
             limit: size,
-            where:{idStatus : idStatus}
+            where: {
+                [Op.or]: [
+                    {idStatus : idStatus},
+                    idStatus === 0 ? {idStatus : {[Op.ne]: null}} : {}
+                ]
+            }
         });
 
-        if(data.length === 0){
+        if(rows.length === 0){
             return JsonResponse.error(400,"No existen datos.");
         }
 
-        return JsonResponse.success(data, 'La petición ha sido un éxito.');
+        return JsonResponse.success({data: rows, totalItems: count}, 'La petición ha sido un éxito.');
     }
 
     static async getUserRequestsByIdUser(idUser: number) {
