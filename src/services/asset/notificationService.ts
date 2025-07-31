@@ -1,4 +1,4 @@
-import { Transaction } from 'sequelize';
+import { Op, Transaction } from 'sequelize';
 import Notification from '../../models/assets/notificationModel';
 import sequelize from '../../utils/connection';
 import JsonResponse from '../../utils/jsonResponse';
@@ -10,7 +10,10 @@ class NotificationService {
 
         const data =  await Notification.findAll({
             where:{
-                idUser : idUser
+                [Op.and]: [
+                    {idUser : idUser},
+                    {show : true}
+                ]
             }
         });
         if(data.length == 0)

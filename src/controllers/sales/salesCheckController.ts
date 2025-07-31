@@ -44,6 +44,22 @@ export const getAllSalesChecksForUser = async (req: Request, res: Response) => {
 
 }
 
+export const getSalesCheckById = async (req: Request, res: Response) => {
+    try {
+        const params = formatRequest(req);
+
+        let idSalesCheck = parseInt(params.idSalesCheck);
+        const result = await SalesCheckService.getSalesCheckById(idSalesCheck);
+
+        res.status(result.getStatus()).json(result);
+    } 
+    catch (error) {
+        console.error('Error al ejecutar procedimiento:', error);
+        return res.status(500).send('Error Interno del Servidor');
+    } 
+
+}
+
 export const generateSalesCheck = async (req: Request, res: Response) => {
     try {
         const params = formatRequest(req);
