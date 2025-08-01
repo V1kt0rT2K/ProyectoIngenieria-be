@@ -9,6 +9,8 @@ import StageType from "./assets/stageTypeModel";
 import Stage from "./assets/stageModel";
 import SalesCheck from "./sales/salesCheckModel";
 import Client from "./sales/clientModel";
+import OrderWholesaler from "./sales/orderWholesalerModel";
+import OrderWholesalerDetails from "./sales/orderWholesalerDetailsModel";
 import SalesChecksDetail from "./sales/salesChecksDetailModel";
 import CaiCodeRange from "./sales/caiCodeRangeModel";
 import CaiCode from "./sales/caiCodeModel";
@@ -69,6 +71,8 @@ StatusType.hasMany(Status, {foreignKey: "idStatusType", sourceKey:"idStatusType"
 Status.hasMany(UserRequest, { foreignKey: "idStatus" ,sourceKey:"idStatus"});
 Status.belongsTo(StatusType, { foreignKey: "idStatusType", targetKey: "idStatusType"});
 Status.hasMany(SupplyPurcharse, {foreignKey:"idStatus", sourceKey:"idStatus"});
+Status.hasMany(SupplyPurcharse, {foreignKey:"idStatus", sourceKey:"idStatus"});
+Status.hasMany(OrderWholesaler, {foreignKey:"idStatus", sourceKey:"idStatus"});
 
 //StageType
 StageType.hasMany(Stage, {foreignKey:"idStageType", sourceKey:"idStageType"});
@@ -125,6 +129,7 @@ ClientType.hasMany(Client, {foreignKey:"idClientType", sourceKey:"idClientType"}
 
 //Clients
 Client.hasMany(SalesCheck, {foreignKey:"idClient", sourceKey:"idClient"});
+Client.hasMany(OrderWholesaler, {foreignKey:"idClient", sourceKey:"idClient"});
 Client.belongsTo(ClientType , {foreignKey:"idClientType", targetKey:"idClientType"});
 
 //SalesChecks
@@ -139,6 +144,14 @@ CaiCode.hasMany(CaiCodeRange, {foreignKey:"idCaiCode", sourceKey:"idCaiCode"});
 //CaiCodeRange
 CaiCodeRange.belongsTo(CaiCode, {foreignKey:"idCaiCode", targetKey:"idCaiCode"});
 CaiCodeRange.hasMany(SalesCheck, {foreignKey:"idCaiCodeRange",sourceKey:"idCaiCodeRange"});
+
+//OrderWholesaler
+OrderWholesaler.hasMany(OrderWholesalerDetails, { foreignKey: "idOrderWholesaler", sourceKey: "idOrderWholesaler"});
+
+//OrderWholesalerDetails
+OrderWholesalerDetails.belongsTo(OrderWholesaler, { foreignKey: "idOrderWholesaler", targetKey: "idOrderWholesaler" });
+OrderWholesalerDetails.belongsTo(Client, { foreignKey: "idClient", targetKey: "idClient" });
+OrderWholesalerDetails.belongsTo(Status, { foreignKey: "idStatus", targetKey: "idStatus" });
 
 /********** ORDERS SCHEMA  ***************/
 
