@@ -53,3 +53,16 @@ export const updateProvider = async (req: Request, res: Response)  => {
         res.status(500).json(JsonResponse.error(500,"Error Interno del Servidor."));
     }
 }
+
+export const deleteProvider = async ( req: Request, res: Response) => {
+    try {
+        const params = formatRequest(req);
+        const idProvider = parseInt(params.idProvider);
+
+        const result = await ProviderService.deleteProvider(idProvider);
+        res.status(result.getStatus()).json(result);
+    } catch (err) {
+        console.log(err);
+        res.status(500).json(JsonResponse.error(500, "Error interno del servidor."));
+    }
+}

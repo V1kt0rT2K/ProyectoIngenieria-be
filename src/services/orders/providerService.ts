@@ -8,7 +8,11 @@ class ProviderService {
     constructor() { }
 
     static async getAllProvider() {
-        const data = await Provider.findAll();
+        const data = await Provider.findAll({
+            where: {
+                isEnabled: 1
+            }
+        });
 
         if (data.length === 0) {
             return JsonResponse.error(400, "No existen proveedores.");
@@ -74,8 +78,6 @@ class ProviderService {
         const provider = await Provider.findByPk(idProvider);
         let data = null;
 
-        
-
         if (!provider) {
             return JsonResponse.error(400, "El proveedor no existe.");
         }
@@ -118,6 +120,22 @@ class ProviderService {
         } catch (err) {
             console.log(err);
             return JsonResponse.error(500, "No se actualizó ningún proveedor");
+        }
+    }
+
+    static async deleteProvider(idProvider: number) {
+        const provider = await Provider.findByPk(idProvider);
+
+        if (!provider) {
+            return JsonResponse.error(400, "El proveedor no existe.");
+        }
+
+        try {
+            await provider.update({ isEnabled: 0 });
+            return JsonResponse.success(provider, "Proveedor inhabilitado con éxito")
+        } catch (error) {
+            console.error("Error al inhabilitar al proveedor", error);
+            return JsonResponse.error(500, "No se pudo inhabilitar el proveedor")
         }
     }
 
