@@ -38,5 +38,26 @@ export const getSupplyBatchesByIdType = async (req: Request, res: Response) => {
         return res.status(500).send('Error Interno del Servidor');
     }
 }
+export const getSuppbyBatchbyMenorExpirationDate = async (req: Request, res: Response) => {
+    try {
+        const result = await SupplyBatchService.getSuppbyBatchbyMenorExpirationDate();
+        res.status(result.getStatus()).json(result);
+    } catch (error) {
+        console.error('Error al ejecutar procedimiento:', error);
+        return res.status(500).send('Error Interno del Servidor');
+    }
+}
+export const updateStckSupplyBatch = async (req: Request, res: Response) => {
+    try {
+        const params = formatRequest(req);
+        const idSupplyBatch = parseInt(params.idSupplyBatch);
+        const quantity = parseInt(params.quantity);
 
+        const result = await SupplyBatchService.updateStckSupplyBatch(idSupplyBatch, quantity);
+        res.status(result.getStatus()).json(result);
+    } catch (error) {
+        console.error('Error al ejecutar procedimiento:', error);
+        return res.status(500).send('Error Interno del Servidor');
+    }
+}
 
