@@ -147,6 +147,7 @@ CaiCodeRange.hasMany(SalesCheck, {foreignKey:"idCaiCodeRange",sourceKey:"idCaiCo
 
 //OrderWholesaler
 OrderWholesaler.hasMany(OrderWholesalerDetails, { foreignKey: "idOrderWholesaler", sourceKey: "idOrderWholesaler"});
+OrderWholesaler.belongsTo(Status, { foreignKey: "idStatus", targetKey: "idStatus"});
 
 //OrderWholesalerDetails
 OrderWholesalerDetails.belongsTo(OrderWholesaler, { foreignKey: "idOrderWholesaler", targetKey: "idOrderWholesaler" });
