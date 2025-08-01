@@ -1,5 +1,6 @@
 import { RegisterFormProps } from '../../utils/interfaces/Interface';
 import User from '../../models/users/userModel';
+import UserRequest from '../../models/users/userRequestModel';
 import {Op} from 'sequelize';
 import PersonService from './personService';
 import UserRequestService from './userRequestService';
@@ -11,8 +12,6 @@ import JsonResponse from '../../utils/jsonResponse';
 
 
 class UserService {
-    constructor() { }
-
     static async getAll(page: number, size:number, sort: number) {
 
         if(page <=0){
@@ -59,6 +58,7 @@ class UserService {
             include: [
                 {model: Person, required:true},
                 {model: UserRole, required : true}
+                {model: UserRequest, required : true}
             ]
         });
 
