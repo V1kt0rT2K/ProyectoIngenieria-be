@@ -7,5 +7,6 @@ import * as clientController from "../../controllers/sales/clientController";
 
 router.get(`${path}/get/types`, clientController.getClientTypes);
 
+router.get(`${path}/get/all/:page/:size/:sort`, clientController.getClients);
 
 export default router;
