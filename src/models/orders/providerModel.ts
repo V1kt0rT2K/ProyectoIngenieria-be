@@ -22,6 +22,10 @@ class Provider extends Model{
         return this.getDataValue("location");
     }
 
+    get isEnabled(): boolean {
+        return this.getDataValue("isEnabled");
+    }
+
 };
 
 Provider.init(
@@ -46,6 +50,9 @@ Provider.init(
         location:{
             type:DataTypes.STRING('MAX'),
             allowNull: false,
+        },
+        isEnabled : {
+            type: DataTypes.BOOLEAN,
         }
     },
     {

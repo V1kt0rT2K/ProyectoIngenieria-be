@@ -92,6 +92,9 @@ class SupplyPurcharseService {
     static async getSupplyPurcharseById(idSupplyPurcharse: number) {
         const data = await SupplyPurcharse.findByPk(idSupplyPurcharse, {
             include: [
+                { model : SupplyPurcharse, as:"FormerSupplyPurcharse" , include: [
+                    {model : Supply, required:true}
+                ]},
 				{model : Supply, required: true},
                 {model : Provider, required: true},
                 {model: User, required: true, include: [

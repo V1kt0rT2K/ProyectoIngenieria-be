@@ -150,7 +150,7 @@ SupplyPurcharse.belongsTo(Provider , {foreignKey:"idProvider", targetKey:"idProv
 SupplyPurcharse.belongsTo(User, {foreignKey:"idUser", targetKey:"idUser"});
 SupplyPurcharse.belongsTo(Status, {foreignKey:"idStatus", targetKey:"idStatus"});
 SupplyPurcharse.belongsToMany(Supply ,{ through: SupplyPurcharseDetail, foreignKey:"idSupplyPurcharse", otherKey:"idSupply", uniqueKey:"ukSupplyPurcharse_Supply"});
-//RELACION INTERNA
-SupplyPurcharse.hasOne(SupplyPurcharse, {as: "FormerSupplyPurcharse", foreignKey: "idFormerSupplyPurcharse",sourceKey: "idSupplyPurcharse"});
-SupplyPurcharse.belongsTo(SupplyPurcharse, {as: "CurrentSupplyPurcharse", foreignKey: "idFormerSupplyPurcharse",targetKey: "idSupplyPurcharse"});
+//RELACION INTERNA  FormerSupplyPurcharse
+SupplyPurcharse.hasOne(SupplyPurcharse, {as: "CurrentSupplyPurcharse", foreignKey: "idFormerSupplyPurcharse",sourceKey: "idSupplyPurcharse"});
+SupplyPurcharse.belongsTo(SupplyPurcharse, {as: "FormerSupplyPurcharse", foreignKey: "idFormerSupplyPurcharse",targetKey: "idSupplyPurcharse"});
 

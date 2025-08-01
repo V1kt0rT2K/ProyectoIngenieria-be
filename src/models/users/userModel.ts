@@ -14,6 +14,10 @@ class User extends Model {
     return this.getDataValue("email");
   }
 
+  get password(): string {
+    return this.getDataValue("password");
+  }
+
   get job(): string {
     return this.getDataValue("job");
   }
