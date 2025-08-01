@@ -57,7 +57,7 @@ class UserService {
         const data = await User.findByPk(idUser,{
             include: [
                 {model: Person, required:true},
-                {model: UserRole, required : true}
+                {model: UserRole, required : true},
                 {model: UserRequest, required : true}
             ]
         });
