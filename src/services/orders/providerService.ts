@@ -5,8 +5,6 @@ import { ProviderProps } from "../../utils/interfaces/Interface";
 import sequelize from "../../utils/connection";
 
 class ProviderService {
-    constructor() { }
-
     static async getAllProvider() {
         const data = await Provider.findAll({
             where: {

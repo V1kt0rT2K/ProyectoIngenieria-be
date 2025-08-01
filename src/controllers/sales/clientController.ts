@@ -33,3 +33,16 @@ export const getClients = async (req: Request, res: Response) => {
     } 
 
 }
+
+export const registerClient = async (req: Request, res: Response) => {
+    try {
+        const params = formatRequest(req);
+        
+        const result = await ClientService.registerClient(params);
+        res.status(result.getStatus()).json(result);
+    } 
+    catch (error) {
+        console.error('Error al ejecutar procedimiento:', error);
+        return res.status(500).send('Error Interno del Servidor');
+    } 
+}

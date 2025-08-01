@@ -64,3 +64,11 @@ export interface IncomingProductProp{
     price: number;
     orderPoint: number;
 }[]
+
+export interface ClientProps {
+		identification: string;
+		fullName: string;
+		contact: string;
+		address: string;
+		idClientType: number,
+}

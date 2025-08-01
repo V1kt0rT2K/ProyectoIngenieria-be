@@ -9,4 +9,6 @@ router.get(`${path}/get/types`, clientController.getClientTypes);
 
 router.get(`${path}/get/all/:page/:size/:sort`, clientController.getClients);
 
+router.post(`${path}/create`, clientController.registerClient);
+
 export default router;

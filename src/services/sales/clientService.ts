@@ -1,7 +1,9 @@
 import ClientType from "../../models/sales/clientTypeModel";
 import Client from "../../models/sales/clientModel";
 import JsonResponse from "../../utils/jsonResponse";
-
+import { ClientProps } from "../../utils/interfaces/Interface";
+import { Op, Transaction } from "sequelize";
+import sequelize from "../../utils/connection";
 
 class ClientService{
 
@@ -42,6 +44,45 @@ class ClientService{
 
         return JsonResponse.success({data: data, totalItems: totalItems}, "La petición se ha realizado con éxito.");
 
+    }
+
+    static async createClient(client: any, transaction: Transaction) {
+        return await Client.create(client, { transaction });
+    }
+
+    static async registerClient(form: ClientProps) {
+
+        try {
+            const existing = await Client.findOne({
+                where: {
+                    [Op.or]: [
+                        { identification: form.identification }
+                    ]
+                }
+            });
+
+            if (existing) {
+                return JsonResponse.error(400, "El numero de identidad que ingresó ya está registrado.");
+            }
+
+            let data: any;
+            await sequelize.transaction(async (t) => {
+                const newClient = await this.createClient({
+                    identification: form.identification,
+                    fullName: form.fullName,
+                    contact: form.contact,
+                    address: form.address,
+										idClientType: form.idClientType,
+                }, t);
+
+                data = newClient;
+
+            });
+            return JsonResponse.success(data, "Proveedor registrado con éxito.");
+        } catch (err) {
+            console.log(err);
+            return JsonResponse.error(500, "Proveedor no registrado.");
+        }
     }
 
 }
