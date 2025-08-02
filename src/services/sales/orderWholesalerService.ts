@@ -1,6 +1,8 @@
 import OrderWholesaler from "../../models/sales/orderWholesalerModel";
 import Status from "../../models/assets/statusModel";
 import JsonResponse from "../../utils/jsonResponse";
+import Client from "../../models/sales/clientModel";
+import OrderWholesalerDetails from "../../models/sales/orderWholesalerDetailsModel";
 
 class OrderWholesalerService {
     static async getAll(page: number, size: number, sort: number) {
@@ -33,6 +35,27 @@ class OrderWholesalerService {
         }
 
         return JsonResponse.success({ data: rows, totalItems: count }, "La petición ha sido un éxito.");
+    }
+
+    static async getOrderWholesalerById(idOrderWholesaler: number) {
+        const data = await OrderWholesalerDetails.findOne({
+            where: {
+                idOrderWholesaler: idOrderWholesaler
+            },
+            include: [
+                {
+                    model: OrderWholesaler, required: true, include: [
+                        { model: Client, required: true },
+                        { model: Status, required: true }
+                    ]
+                }
+            ]
+        });
+
+        if (!data)
+            return JsonResponse.error(400, "No se han encontrado datos.");
+
+        return JsonResponse.success(data, "La petición se ha realizado con éxito.");
     }
 }
 

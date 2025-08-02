@@ -116,6 +116,7 @@ SwineBatch.hasMany(SwineSupply, {foreignKey:"idSwineBatch", sourceKey:"idSwineBa
 //Product
 Product.belongsToMany(SalesCheck, { through: SalesChecksDetail , foreignKey:"idProduct", otherKey:"idSalesCheck", uniqueKey:"ukSalesCheck_Product"});
 Product.hasMany(ProductBatch, { foreignKey:"idProduct", sourceKey:"idProduct"});
+Product.hasMany(OrderWholesalerDetails, { foreignKey:"idProduct", sourceKey:"idProduct"});
 
 //ProductBatch
 ProductBatch.belongsTo(Product, {foreignKey:"idProduct", targetKey:"idProduct"});
@@ -148,11 +149,12 @@ CaiCodeRange.hasMany(SalesCheck, {foreignKey:"idCaiCodeRange",sourceKey:"idCaiCo
 //OrderWholesaler
 OrderWholesaler.hasMany(OrderWholesalerDetails, { foreignKey: "idOrderWholesaler", sourceKey: "idOrderWholesaler"});
 OrderWholesaler.belongsTo(Status, { foreignKey: "idStatus", targetKey: "idStatus"});
+OrderWholesaler.belongsTo(Client, { foreignKey: "idClient", targetKey: "idClient"});
 
 //OrderWholesalerDetails
 OrderWholesalerDetails.belongsTo(OrderWholesaler, { foreignKey: "idOrderWholesaler", targetKey: "idOrderWholesaler" });
-OrderWholesalerDetails.belongsTo(Client, { foreignKey: "idClient", targetKey: "idClient" });
-OrderWholesalerDetails.belongsTo(Status, { foreignKey: "idStatus", targetKey: "idStatus" });
+OrderWholesalerDetails.belongsTo(Product, { foreignKey: "idProduct", targetKey: "idProduct" });
+
 
 /********** ORDERS SCHEMA  ***************/
 
