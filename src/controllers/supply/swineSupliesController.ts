@@ -1,5 +1,6 @@
 import { Request, Response} from 'express';
 import SwineSupplyService from '../../services/supply/swineSuppliesService';
+import { formatRequest, badRequestMessage } from '../../utils/requestParams';
 export const getAllSwineSupply = async (req: Request, res: Response) => {
     try {
         const result = await SwineSupplyService.getAllSwineSupply();
@@ -19,3 +20,13 @@ export const getAllSwineSupplybyidSwineBatch = async (req: Request, res: Respons
         return res.status(500).send('Error Interno del Servidor');
     }
 }  
+export const createSwineSupply = async (req: Request, res: Response) => {
+    try {
+        const params = formatRequest(req);
+        const result = await SwineSupplyService.createSwineSupply(params);
+        res.status(result.getStatus()).json(result);
+    } catch (error) {
+        console.error('Error al ejecutar procedimiento:', error);
+        return res.status(500).send('Error Interno del Servidor');
+    }
+}

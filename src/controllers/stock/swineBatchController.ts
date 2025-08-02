@@ -6,7 +6,11 @@ import SwineBatchService from '../../services/stock/swineBatchService';
 export const getAll = async (req: Request, res: Response) => {
 
     try {
-        const result = await SwineBatchService.getAll();
+        const params = formatRequest(req);
+        let page = parseInt(params.page);
+        let size = parseInt(params.size);
+        let sort = parseInt(params.sort);
+        const result = await SwineBatchService.getAllSwineBatch(page, size, sort);
 
         res.status(result.getStatus()).json(result);
     } 

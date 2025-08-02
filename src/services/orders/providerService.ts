@@ -5,18 +5,37 @@ import { ProviderProps } from "../../utils/interfaces/Interface";
 import sequelize from "../../utils/connection";
 
 class ProviderService {
-    static async getAllProvider() {
-        const data = await Provider.findAll({
-            where: {
-                isEnabled: 1
-            }
-        });
 
-        if (data.length === 0) {
-            return JsonResponse.error(400, "No existen proveedores.");
+    static async getAllProvider(page: number, size: number, sort: number) {
+
+        if (page <= 0) {
+            page = 1;
+        }
+        if (size <= 0) {
+            size = 5;
+        }
+        if (sort != 0 && sort != 1) {
+            sort = 0;
         }
 
-        return JsonResponse.success(data, "La petición ha sido un éxito.");
+        const {count, rows} = await Provider.findAndCountAll({
+            where: {
+                isEnabled: 1
+            },
+            order: [
+                ["providerName", sort == 0 ? "DESC" : "ASC"]
+            ],
+            offset: (page - 1) * size,
+            limit: size
+        });
+
+        if(rows.length == 0){
+            return JsonResponse.error(400, "No se han encontrado datos");
+        }
+        return JsonResponse.success(
+            { data: rows, totalItems: count },
+            "La petición ha sido un éxito."
+        );
     }
 
     static async createProvider(provider: any, transaction: Transaction) {

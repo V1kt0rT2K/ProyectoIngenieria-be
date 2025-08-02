@@ -72,3 +72,11 @@ export interface ClientProps {
 		address: string;
 		idClientType: number,
 }
+export interface IncomingSwineSupplyProp{
+    idSwineBatch: number;
+    idSupply: number;
+    quantity: number;
+    generationDate: Date;
+    idUser: number;
+            
+}
