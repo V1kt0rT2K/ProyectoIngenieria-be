@@ -17,6 +17,10 @@ class AuthService {
         const differenceMin = direcenceMs / (1000 * 60); // Convert milliseconds to minutes
         const result= 1-differenceMin;
 
+        
+        console.log("currenTTIme",currentTime);
+        console.log("diferences",differenceMin);
+
         return result > 0? Math.ceil(result): 0;
 
     }
@@ -35,6 +39,7 @@ class AuthService {
         let lockTime = lockedUsers.get(email);
         if(lockTime){
             const remainingTime = this.getRemainingTime(lockTime);
+            console.log("reamining TIme",remainingTime);
             if(remainingTime > 0){
                 return JsonResponse.error(403,"Muchos intentos fallidos, intente de nuevo en unos minutos.");
             }else{
@@ -43,8 +48,8 @@ class AuthService {
                     lockedUsers.delete(email);
                     return JsonResponse.success(user,"La petición se ha realizado con éxito.");
                 }else{
-                    lockedUsers.set(email, new Date());
-                    return JsonResponse.error(403,"Muchos intentos fallidos, intente de nuevo en unos minutos.");
+                    //lockedUsers.set(email, new Date());
+                    return JsonResponse.error(403,"Credenciales Inválidas.");
                 }
                 
             }

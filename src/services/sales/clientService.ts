@@ -29,20 +29,18 @@ class ClientService{
             sort = 0;
         }
 
-				const totalItems = await Client.count();
-
-        const data = await Client.findAll({
+        const {count , rows} = await Client.findAndCountAll({
             order:[
                 ["fullName", sort == 0 ? "DESC" : "ASC"]
             ],
             offset: (page-1) * size,
             limit: size
-				});
+			});
 
-        if(!data)
+        if(!rows)
             return JsonResponse.error(400,"No se han encontrado datos.");
 
-        return JsonResponse.success({data: data, totalItems: totalItems}, "La petición se ha realizado con éxito.");
+        return JsonResponse.success({data: rows, totalItems: count}, "La petición se ha realizado con éxito.");
 
     }
 

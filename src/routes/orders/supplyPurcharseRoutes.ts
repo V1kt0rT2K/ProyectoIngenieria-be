@@ -11,5 +11,6 @@ router.get(`${path}/get/status/:idStatus/:page/:size/:sort`,
 router.get(`${path}/get/:idSupplyPurcharse`, supplyPurcharseController.getSupplyPurcharseById);
 router.post(`${path}/generate`, supplyPurcharseController.generatePurcharse);
 router.post(`${path}/entry`, supplyPurcharseController.enterSupplyPurcharse);
+router.put(`${path}/update`, supplyPurcharseController.updatePurcharseStatus);
 
 export default router;

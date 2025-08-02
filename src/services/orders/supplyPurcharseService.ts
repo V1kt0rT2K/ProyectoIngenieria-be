@@ -342,7 +342,7 @@ class SupplyPurcharseService {
         ////VALIDACION DE LOS ESTADOS
         if(purcharse.idStatus == 1){        ////APROBADO
             if(idStatus != 7 && idStatus != 4)
-                return JsonResponse.error(500, "La orden no esta aprobada.");
+                return JsonResponse.error(500, "La orden no esta en camino.");
         }else if(purcharse.idStatus == 2){  ///REVISION
             if(idStatus != 4)
                 return JsonResponse.error(500, "La orden aún esta en revisión.");
@@ -352,7 +352,8 @@ class SupplyPurcharseService {
             if(idStatus != 5)
                 return JsonResponse.error(500, "La orden esta en camino.");
         }else if(purcharse.idStatus == 5){  //POR INGRESAR  NO SE DEBE ACTUALIZAR CON ESTE SERVICIO
-           return JsonResponse.error(500, "Acción inválida.");
+            if(idStatus != 7)
+                return JsonResponse.error(500, "Acción inválida.");
         }else if(purcharse.idStatus == 6){  //INGRESADO 
             return JsonResponse.error(500, "La orden ya fue ingresada.");
         }else if(purcharse.idStatus == 7){   //CANCELADO
