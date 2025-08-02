@@ -1,7 +1,7 @@
 ////CONFIG LOCAL
 export const config = {
     DB_USER : 'UserProyectoIngenieria',
-    DB_PASSWORD : 'LOSFA	BULOSOSCADILLAC11',
+    DB_PASSWORD : 'LOSFABULOSOSCADILLAC11',
     DB_SERVER: 'localhost',
     DB_NAME : 'ProyectoIngenieria'
 };
