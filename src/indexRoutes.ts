@@ -18,6 +18,7 @@ import notificationRoutes from './routes/asset/notificationRoutes';
 import supplyPurcharseRoutes from './routes/orders/supplyPurcharseRoutes';
 import clientRoutes from './routes/sales/clientRoutes';
 import orderWholesalerRoutes from './routes/sales/orderWholesalerRoutes';
+import caiCodeRoutes from './routes/sales/caiCodeRoutes';
 
 
 import { verifyToken } from './utils/jwtService';
@@ -43,7 +44,7 @@ index.use('/stock',
 
 index.use('/supply', supplyRoutes,swineSuppliesRoutes,supplyRoutes,supplyBatchRoutes);
 
-index.use('/sales', salesCheckRoutes, clientRoutes, orderWholesalerRoutes);
+index.use('/sales', salesCheckRoutes, clientRoutes, orderWholesalerRoutes, caiCodeRoutes);
 
 index.use('/order',providerRoutes, supplyPurcharseRoutes);
 

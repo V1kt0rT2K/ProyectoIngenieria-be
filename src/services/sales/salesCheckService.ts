@@ -142,6 +142,40 @@ class SalesCheckService{
 
         return JsonResponse.success(data,"La petición ha sido un éxito.");
     }
+
+    static async searchSalesCheck(searchParam : string) {
+
+        const sales = await SalesCheck.findAll({
+            include:[
+                {model : Client, required : true},
+                {model : Product, required:true},
+                {model: CaiCodeRange, required: true, include:[
+                    {model: CaiCode, required:true}
+                ]},
+                {model : User, required: true, include:[
+                    {model:Person, required:true}
+                ]}
+            ],
+            where:{
+                [Op.or]: [
+                    {'$Client.identification$' : {[Op.like] : searchParam + "%"}},
+                    {'$Client.fullName$' : {[Op.like] : searchParam + "%"}},
+                    // sequelize.where(
+                    //     sequelize.fn("CONCAT", sequelize.col("Person.firstName"),sequelize.col("Person.secondName")), 
+                    //     Op.like , 
+                    //     searchParam + "%"
+                    // ),
+                    {"salesCheckCode" : {[Op.like] : searchParam + "%"}}
+                ]
+            }
+        });
+
+        if(sales.length == 0){
+            return JsonResponse.error(400,"No se han encontrado usuarios.");
+        }
+
+        return JsonResponse.success(sales,'La petición se ha respondido con éxito.');
+    }
     
 
     static async generateSalesCheck(idUser: number | undefined,salesCheckProp : SalesCheckProp){

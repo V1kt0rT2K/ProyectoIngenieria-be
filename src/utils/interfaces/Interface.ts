@@ -43,7 +43,6 @@ export interface SupplyPurcharseProp{
 
 export interface IncomingSupplyPurcharseProp{
     idSupplyPurcharse: number,
-    isModified: boolean,
     detail : {
         idSupply: number,
         quantity : number,

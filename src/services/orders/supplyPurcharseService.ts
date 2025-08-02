@@ -199,16 +199,14 @@ class SupplyPurcharseService {
         if(purcharse.idStatus !== 5){   //Estado Por Ingresar
             return JsonResponse.error(403, "La orden de compra no esta por ingresarse.");
         }        
-
-        //Validar que no existan insumos duplicados
-        // if(new Set(incomingSupplyPurcharseProp.detail.
-        //     map(d => d.idSupply)).size < incomingSupplyPurcharseProp.detail.length)
-        //         return JsonResponse.error(500, "Solo se debe ingresar un insumo por categoria.");
         
+        ////VERIFICAR SI LA COMPRA FUE MODIFICADA A LA HORA DE INGRESARSE
+
+        let isModified = await this.verifyPurcharseDetails(purcharse.idSupplyPurcharse,incomingSupplyPurcharseProp.detail);
 
         const t = await sequelize.transaction();
         try{
-            if(incomingSupplyPurcharseProp.isModified){///Si fue modificado se debe crear una nueva
+            if(isModified){///Si fue modificado se debe crear una nueva
 
                 let subTotal = 0;
                 for(let s of incomingSupplyPurcharseProp.detail){
@@ -321,6 +319,29 @@ class SupplyPurcharseService {
         return true;
     }
 
+    static async verifyPurcharseDetails(idSupplyPurcharse: number, detail : {idSupply:number, quantity:number, expirationDate:Date}[]): Promise<boolean> {
+
+        const purcharseDetail = await SupplyPurcharseDetail.findAll({
+            attributes : [
+                "idSupply", "quantity"
+            ],
+            where :{
+                idSupplyPurcharse : idSupplyPurcharse
+            }
+        });
+
+        if (purcharseDetail.length !== detail.length) return true;
+
+        const sortedA = [...purcharseDetail].sort((x, y) => x.idSupply - y.idSupply);
+        const sortedB = [...detail].sort((x, y) => x.idSupply - y.idSupply);
+
+        return !(sortedA.every((item, index) => 
+            item.idSupply === sortedB[index].idSupply && 
+            item.quantity === sortedB[index].quantity
+        ));
+
+    }
+
     static async updatePurcharseStatus(idSupplyPurcharse : number, idStatus : number): Promise<JsonResponse>{
 
         // const allowedStatus = await Status.findAll({
@@ -344,16 +365,15 @@ class SupplyPurcharseService {
             if(idStatus != 7 && idStatus != 4)
                 return JsonResponse.error(500, "La orden no esta en camino.");
         }else if(purcharse.idStatus == 2){  ///REVISION
-            if(idStatus != 4)
+            if(idStatus != 4 && idStatus != 7)
                 return JsonResponse.error(500, "La orden aún esta en revisión.");
         }else if(purcharse.idStatus == 3){   ///DENEGADO
             return JsonResponse.error(500, "La orden esta denegada.");
         }else if(purcharse.idStatus == 4){   //EN CAMINO
-            if(idStatus != 5)
+            if(idStatus != 5 && idStatus != 7)
                 return JsonResponse.error(500, "La orden esta en camino.");
         }else if(purcharse.idStatus == 5){  //POR INGRESAR  NO SE DEBE ACTUALIZAR CON ESTE SERVICIO
-            if(idStatus != 7)
-                return JsonResponse.error(500, "Acción inválida.");
+            return JsonResponse.error(500, "Acción inválida, debe ingresar inventarios a sistema.");
         }else if(purcharse.idStatus == 6){  //INGRESADO 
             return JsonResponse.error(500, "La orden ya fue ingresada.");
         }else if(purcharse.idStatus == 7){   //CANCELADO
