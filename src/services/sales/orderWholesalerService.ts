@@ -3,6 +3,7 @@ import Status from "../../models/assets/statusModel";
 import JsonResponse from "../../utils/jsonResponse";
 import Client from "../../models/sales/clientModel";
 import OrderWholesalerDetails from "../../models/sales/orderWholesalerDetailsModel";
+import Product from "../../models/stocks/productModel";
 
 class OrderWholesalerService {
     static async getAll(page: number, size: number, sort: number) {
@@ -38,22 +39,29 @@ class OrderWholesalerService {
     }
 
     static async getOrderWholesalerById(idOrderWholesaler: number) {
-        const data = await OrderWholesalerDetails.findOne({
+        const order = await OrderWholesaler.findByPk(idOrderWholesaler, {
+            include: [
+                { model: Client, required: true },
+                { model: Status, required: true }
+            ]
+        });
+
+        if (!order)
+            return JsonResponse.error(400, "No se han encontrado datos.");
+
+        const details = await OrderWholesalerDetails.findAll({
             where: {
                 idOrderWholesaler: idOrderWholesaler
             },
             include: [
-                {
-                    model: OrderWholesaler, required: true, include: [
-                        { model: Client, required: true },
-                        { model: Status, required: true }
-                    ]
-                }
+                { model: Product, required: true }
             ]
         });
 
-        if (!data)
-            return JsonResponse.error(400, "No se han encontrado datos.");
+        const data = {
+            order: order,
+            details: details
+        };
 
         return JsonResponse.success(data, "La petición se ha realizado con éxito.");
     }
