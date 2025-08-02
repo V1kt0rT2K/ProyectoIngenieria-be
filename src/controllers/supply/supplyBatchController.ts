@@ -67,4 +67,36 @@ export const updateStckSupplyBatch = async (req: Request, res: Response) => {
         return res.status(500).send('Error Interno del Servidor');
     }
 }
+export const searchSupplyBatch = async (req: Request, res: Response) => {
+    const params = formatRequest(req);
+    let searchParam = params.searchParam;
+    let page = parseInt(params.page);
+    let size = parseInt(params.size);
+    let sort = parseInt(params.sort);
+    try {
+        const result = await SupplyBatchService.searchSupplyBatch(searchParam, page, size, sort);
+        res.status(result.getStatus()).json(result);
+    } catch (error) {
+        console.error('Error al ejecutar procedimiento:', error);
+        return res.status(500).send('Error Interno del Servidor');
+    }
+
+}
+export const searchSupplyBatchByType = async (req: Request, res: Response) => {
+    const params = formatRequest(req);
+    let idSupplyType = parseInt(params.idSupplyType);
+    let searchParam = params.searchParam;
+    let page = parseInt(params.page);
+    let size = parseInt(params.size);
+    let sort = parseInt(params.sort);
+    try {
+        const result = await SupplyBatchService.searchSupplyBatchByType(idSupplyType,searchParam, page, size, sort);
+        res.status(result.getStatus()).json(result);
+    } catch (error) {
+        console.error('Error al ejecutar procedimiento:', error);
+        return res.status(500).send('Error Interno del Servidor');
+    }
+
+}
+
 

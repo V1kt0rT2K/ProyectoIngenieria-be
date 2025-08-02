@@ -71,6 +71,9 @@ class SupplyBatchService {
                     ]
             }],
             where: {
+                    stockQuantity: {
+                    [Op.gt]: 0
+                },
                 '$Supply.SupplyType.idSupplyType$' : idSupplyType
             },
             order: [['expirationDate', sort === 0 ? 'DESC' : 'ASC']],
@@ -140,10 +143,85 @@ class SupplyBatchService {
             console.error('Error al actualizar el lote de suministro:', error);
             return JsonResponse.error(500, "Error Interno del Servidor.");
         }
-
-
-
     }
+    static async searchSupplyBatch(searchParam : string,page:number , size:number,  sort:number ) {
+        if (page <= 0) {
+            page = 1;
+        }
+        if (size <= 0) {
+            size = 15;
+        }
+        if (sort !== 0 && sort !== 1) {
+            sort = 0;
+        }
+        const {count,rows} = await SupplyBatch.findAndCountAll({
+            include: [
+                { model: Supply, required: true,
+                    include: [
+                        { model: SupplyType, required: true}
+                    ]
+                }
+            ],
+            where: {
+                stockQuantity :{
+                        [Op.gt] : 0
+                    },
+                [Op.or]: [
+                    {'$Supply.nameSupply$' : {[Op.like] : searchParam + "%"}},
+                    {'$Supply.SupplyType.nameSupplyType$' : {[Op.like] : searchParam + "%"}},
+                    {'expirationDate' : {[Op.like] : searchParam + "%"}},
+                ]
+            },
+            offset: (page - 1) * size,
+            limit: size
+        });
+
+        if (!rows || rows.length === 0) {
+            return JsonResponse.error(400, "No se han encontrado lotes de suministros.");
+        }
+
+        return JsonResponse.success({data:rows,totalItems:count}, "La petición ha sido un éxito.");
+    }
+    static async searchSupplyBatchByType(idSupplyType:number,searchParam : string,page:number , size:number,  sort:number ) {
+        if (page <= 0) {
+            page = 1;
+        }
+        if (size <= 0) {
+            size = 15;
+        }
+        if (sort !== 0 && sort !== 1) {
+            sort = 0;
+        }
+        const {count,rows} = await SupplyBatch.findAndCountAll({
+            include: [
+                { model: Supply, required: true,
+                    include: [
+                        { model: SupplyType, required: true}
+                    ]
+                }
+            ],
+            where: {
+                '$Supply.SupplyType.idSupplyType$' : idSupplyType,
+                stockQuantity :{
+                        [Op.gt] : 0
+                    },
+                [Op.or]: [
+                    {'$Supply.nameSupply$' : {[Op.iLike] : searchParam + "%"}},
+                    {'$Supply.SupplyType.nameSupplyType$' : {[Op.iLike] : searchParam + "%"}},
+                    {'expirationDate' : {[Op.iLike] : searchParam + "%"}},
+                ]
+            },
+            offset: (page - 1) * size,
+            limit: size
+        });
+
+        if (!rows || rows.length === 0) {
+            return JsonResponse.error(400, "No se han encontrado lotes de suministros.");
+        }
+
+        return JsonResponse.success({data:rows,totalItems:count}, "La petición ha sido un éxito.");
+    }
+
 
 }
 export default SupplyBatchService;

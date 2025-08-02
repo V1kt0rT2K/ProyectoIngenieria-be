@@ -26,3 +26,16 @@ export const createProductBatch = async (req: Request, res: Response) => {
         return res.status(500).send('Error Interno del Servidor');
     }
 }
+export const searchProductBatch = async (req: Request, res: Response) => {
+    const params = formatRequest(req);
+    let page = parseInt(params.page);
+    let size = parseInt(params.size);
+    let sort = parseInt(params.sort);
+    try {
+        const result = await ProductBatchService.searchProductBatch(params.searchParam, page, size, sort);
+        res.status(result.getStatus()).json(result);
+    } catch (error) {
+        console.error('Error al buscar lote de producto:', error);
+        return res.status(500).send('Error Interno del Servidor');
+    }
+}
