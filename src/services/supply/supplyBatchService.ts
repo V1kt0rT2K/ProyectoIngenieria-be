@@ -8,8 +8,17 @@ import { Model, Op } from "sequelize";
 class SupplyBatchService {
     constructor() {}
 
-    static async getAllSupplyBatches() {
-        const data = await SupplyBatch.findAll({
+    static async getAllSupplyBatches(page:number,size:number,sort:number) {
+        if (page <= 0) {
+            page = 1;
+        }
+        if (size <= 0) {
+            size = 15;
+        }
+        if (sort !== 0 && sort !== 1) {
+            sort = 0;
+        }
+        const {count,rows} = await SupplyBatch.findAndCountAll({
             include: [{
                 model: Supply,
                 required: true,
@@ -17,13 +26,21 @@ class SupplyBatchService {
                     model: SupplyType,
                     required: true
                 }]
-            }]
+            }],
+            where: {
+                stockQuantity: {
+                    [Op.gt]: 0
+                }
+            },
+            order: [['expirationDate', sort === 0 ? 'DESC' : 'ASC']],
+            offset: (page - 1) * size,
+            limit: size
         });
 
-        if (!data || data.length === 0) {
+        if (!rows || rows.length === 0) {
             return JsonResponse.error(400, "No existen lotes de suministros.");
         }
-        return JsonResponse.success(data, "La petición ha sido un éxito.");
+        return JsonResponse.success({data:rows,totalItems:count}, "La petición ha sido un éxito.");
     }
 
     static async getSupplyBatchById(idSupplyBatch: string) {
@@ -36,8 +53,17 @@ class SupplyBatchService {
         return JsonResponse.success(data, "La petición ha sido un éxito.");
     }
 
-    static async getSupplyBatchesByIdType(idSupplyType: number) {
-        const data = await SupplyBatch.findAll({
+    static async getSupplyBatchesByIdType(idSupplyType: number,page:number, size:number, sort:number) {
+        if (page <= 0) {
+            page = 1;
+        }
+        if (size <= 0) {
+            size = 15;
+        }
+        if (sort !== 0 && sort !== 1) {
+            sort = 0;
+        }
+        const {count,rows}= await SupplyBatch.findAndCountAll({
             include: [
                 { model: Supply,required: true,
                     include: [
@@ -46,14 +72,17 @@ class SupplyBatchService {
             }],
             where: {
                 '$Supply.SupplyType.idSupplyType$' : idSupplyType
-            }
+            },
+            order: [['expirationDate', sort === 0 ? 'DESC' : 'ASC']],
+            offset: (page - 1) * size,
+            limit: size
         });
 
-        if (!data) {
+        if (!rows || rows.length === 0) {
             return JsonResponse.error(400, "No existe el lote de suministro con el id proporcionado.");
         }
 
-        return JsonResponse.success(data, "La petición ha sido un éxito.");
+        return JsonResponse.success({data:rows,totalItems:count}, "La petición ha sido un éxito.");
     }
     static async getSuppbyBatchbyMenorExpirationDate() {
         const data = await SupplyBatch.findAll({

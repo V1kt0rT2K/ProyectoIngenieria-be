@@ -4,8 +4,12 @@ import { formatRequest } from '../../utils/requestParams';
 
 
 export const getAllSupplyBatches = async (req: Request, res: Response) => {
+    const params = formatRequest(req);
+    let page = parseInt(params.page);
+    let size = parseInt(params.size);
+    let sort = parseInt(params.sort);
     try {
-        const result = await SupplyBatchService.getAllSupplyBatches();
+        const result = await SupplyBatchService.getAllSupplyBatches(page, size, sort);
         res.status(result.getStatus()).json(result);
     } catch (error) {
         console.error('Error al ejecutar procedimiento:', error);
@@ -29,8 +33,11 @@ export const getSupplyBatchesByIdType = async (req: Request, res: Response) => {
         const params = formatRequest(req);
 
         let idSupplyType = parseInt(params.idSupplyType);
+        let page = parseInt(params.page);
+        let size = parseInt(params.size);
+        let sort = parseInt(params.sort);
 
-        const result = await SupplyBatchService.getSupplyBatchesByIdType(idSupplyType);
+        const result = await SupplyBatchService.getSupplyBatchesByIdType(idSupplyType, page, size, sort);
 
         res.status(result.getStatus()).json(result);
     } catch (error) {

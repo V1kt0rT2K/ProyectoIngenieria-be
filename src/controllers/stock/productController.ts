@@ -2,10 +2,13 @@ import { Request, Response} from 'express';
 import { formatRequest, badRequestMessage } from '../../utils/requestParams';
 import ProductService from '../../services/stock/productService';
 
-export const getAll = async (req: Request, res: Response) => {
-
+export const getAllProducts = async (req: Request, res: Response) => {
+    const params = formatRequest(req);
+    let page = parseInt(params.page);
+    let size = parseInt(params.size);
+    let sort = parseInt(params.sort);
     try {
-        const result = await ProductService.getAll();
+        const result = await ProductService.getAllProducts(page, size, sort);
 
         res.status(result.getStatus()).json(result);
     } 
