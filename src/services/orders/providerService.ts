@@ -6,37 +6,75 @@ import sequelize from "../../utils/connection";
 
 class ProviderService {
 
-    static async getAllProvider(page: number, size: number, sort: number) {
+    // static async getAllProvider(page: number, size: number, sort: number) {
 
-        if (page <= 0) {
-            page = 1;
-        }
-        if (size <= 0) {
-            size = 5;
-        }
-        if (sort != 0 && sort != 1) {
-            sort = 0;
-        }
+    //     if (page <= 0) {
+    //         page = 1;
+    //     }
+    //     if (size <= 0) {
+    //         size = 5;
+    //     }
+    //     if (sort != 0 && sort != 1) {
+    //         sort = 0;
+    //     }
 
-        const {count, rows} = await Provider.findAndCountAll({
-            where: {
-                isEnabled: 1
-            },
-            order: [
-                ["providerName", sort == 0 ? "DESC" : "ASC"]
-            ],
-            offset: (page - 1) * size,
-            limit: size
-        });
+    //     const { count, rows } = await Provider.findAndCountAll({
+    //         where: {
+    //             isEnabled: 1
+    //         },
+    //         order: [
+    //             ["providerName", sort == 0 ? "DESC" : "ASC"]
+    //         ],
+    //         offset: (page - 1) * size,
+    //         limit: size
+    //     });
 
-        if(rows.length == 0){
-            return JsonResponse.error(400, "No se han encontrado datos");
-        }
-        return JsonResponse.success(
-            { data: rows, totalItems: count },
-            "La petición ha sido un éxito."
-        );
+    //     if (rows.length == 0) {
+    //         return JsonResponse.error(400, "No se han encontrado datos");
+    //     }
+    //     return JsonResponse.success(
+    //         { data: rows, totalItems: count },
+    //         "La petición ha sido un éxito."
+    //     );
+    // }
+
+    static async getAllProvider(page: number, size: number, sort: number, enabled?: number) {
+
+    if (page <= 0) {
+        page = 1
+    };
+    if (size <= 0) {
+        size = 5
+    };
+    if (sort != 0 && sort != 1) {
+        sort = 0
+    };
+
+    const whereCondition: any = {};
+
+    if (enabled === 0 || enabled === 1) {
+        whereCondition.isEnabled = enabled;
     }
+
+    const { count, rows } = await Provider.findAndCountAll({
+        where: whereCondition, 
+        order: [
+            ["providerName", sort === 0 ? "DESC" : "ASC"]
+        ],
+        offset: (page - 1) * size,
+        limit: size
+    });
+
+    if (rows.length === 0) {
+        return JsonResponse.error(400, "No se han encontrado datos");
+    }
+
+    return JsonResponse.success(
+        { data: rows, totalItems: count },
+        "La petición ha sido un éxito."
+    );
+}
+
 
     static async createProvider(provider: any, transaction: Transaction) {
         return await Provider.create(provider, { transaction });
@@ -153,6 +191,50 @@ class ProviderService {
         } catch (error) {
             console.error("Error al inhabilitar al proveedor", error);
             return JsonResponse.error(500, "No se pudo inhabilitar el proveedor")
+        }
+    }
+
+    static async searchProvider(searchParam: string) {
+
+        const providers = await Provider.findAll({
+            where: {
+                [Op.or]: [
+                    { providerName: { [Op.like]: searchParam + "%" } },
+                    { RTN: { [Op.like]: searchParam + "%" } },
+                    { providerContact: { [Op.like]: searchParam + "%" } }
+                ]
+            }
+        });
+
+        if (providers.length == 0) {
+            return JsonResponse.error(400, "No se han encontrado proveedores.");
+        }
+
+        return JsonResponse.success(providers, 'La petición se ha respondido con éxito.');
+    }
+
+    static async updateEnabledStatus(idProvider: number, enabled: boolean) {
+        const provider = await Provider.findByPk(idProvider);
+
+        if (!provider) {
+            return JsonResponse.error(400, "El proveedor no existe.");
+        }
+
+        try {
+            await sequelize.transaction(async (t) => {
+                await Provider.update(
+                    { isEnabled: enabled },
+                    {
+                        where: { idProvider },
+                        transaction: t
+                    }
+                );
+            });
+
+            return JsonResponse.success({}, "El proveedor ha sido actualizado con éxito.");
+        } catch (err) {
+            console.error(err);
+            return JsonResponse.error(500, "Ha ocurrido un error.");
         }
     }
 
