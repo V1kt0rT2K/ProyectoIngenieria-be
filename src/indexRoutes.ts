@@ -19,7 +19,7 @@ import supplyPurcharseRoutes from './routes/orders/supplyPurcharseRoutes';
 import clientRoutes from './routes/sales/clientRoutes';
 import orderWholesalerRoutes from './routes/sales/orderWholesalerRoutes';
 import caiCodeRoutes from './routes/sales/caiCodeRoutes';
-
+import publicRoutes from './routes/publicRoutes';
 
 import { verifyToken } from './utils/jwtService';
 
@@ -27,12 +27,12 @@ const index = express.Router();
 
 index.use('/auth', authRoutes);
 
-index.use('/roles', userRolesRoutes);
+index.use('/public', publicRoutes);
 
 index.use(verifyToken);
 //index.use(checkUserAction);
 
-index.use('/users', usersRoutes);
+index.use('/users', usersRoutes, userRolesRoutes);
 
 index.use('/asset', 
     statusRoutes, stageRoutes, notificationRoutes);
