@@ -365,8 +365,7 @@ class SupplyPurcharseService {
             if(idStatus != 7 && idStatus != 4)
                 return JsonResponse.error(500, "La orden no esta en camino.");
         }else if(purcharse.idStatus == 2){  ///REVISION
-            if(idStatus != 4 && idStatus != 7)
-                return JsonResponse.error(500, "La orden aún esta en revisión.");
+            return JsonResponse.error(500, "La orden aún esta en revisión.");
         }else if(purcharse.idStatus == 3){   ///DENEGADO
             return JsonResponse.error(500, "La orden esta denegada.");
         }else if(purcharse.idStatus == 4){   //EN CAMINO

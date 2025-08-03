@@ -46,10 +46,13 @@ class CaiCodeService{
         return JsonResponse.success({data:rows, totalItems: count},"La petición ha sido un éxito.");
     }
 
-    static async generateNewRange(idCaiCode : number){
+    static async generateNewRange(idCaiCode : number, newRange: number){
         const caiCode = await CaiCode.findByPk(idCaiCode);
         if(!caiCode)
             return JsonResponse.error(400,"No se ha encontrado el código CAI.");
+
+        if(newRange <= 0 || newRange > 50)
+            return JsonResponse.error(500,"Rango inválido.");
 
         const caiCodeRange = await CaiCodeRange.findOne({
             where: {
@@ -83,7 +86,7 @@ class CaiCodeService{
 
             await CaiCodeRange.create({
                 startRange : caiCodeRange.startRange.substring(0,11) + String(oldEndRange + 1).padStart(8,"0"),
-                endRange : caiCodeRange.startRange.substring(0,11) + String(oldEndRange + 16).padStart(8,"0"),
+                endRange : caiCodeRange.startRange.substring(0,11) + String(oldEndRange + newRange).padStart(8,"0"),
                 idCaiCode : caiCodeRange.idCaiCode,
                 expirationDate : expirationDate.toISOString()
 

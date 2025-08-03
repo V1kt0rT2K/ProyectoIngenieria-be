@@ -5,9 +5,10 @@ import CaiCodeService from '../../services/sales/caiCodeService';
 export const generateNewRange = async (req: Request, res: Response) => {
     try {
         const params = formatRequest(req);
-        let idCaiCode = parseInt(params.idCaiCode)
+        let idCaiCode = parseInt(params.idCaiCode);
+        let newRange = parseInt(params.newRange);
         
-        const result = await CaiCodeService.generateNewRange(idCaiCode);
+        const result = await CaiCodeService.generateNewRange(idCaiCode, newRange);
 
         res.status(result.getStatus()).json(result);
     } 

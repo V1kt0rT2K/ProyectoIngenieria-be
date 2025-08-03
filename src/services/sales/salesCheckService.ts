@@ -187,7 +187,7 @@ class SalesCheckService{
             ],
             where:{
                 [Op.or]: [
-                    {'$Client.identification$' : {[Op.like] : searchParam + "%"}},
+                    // {'$Client.identification$' : {[Op.like] : searchParam + "%"}},
                     {'$User.email$' : {[Op.like] : searchParam + "%"}},
                     // sequelize.where(
                     //     sequelize.fn("CONCAT", sequelize.col("Person.firstName"),sequelize.col("Person.secondName")), 
