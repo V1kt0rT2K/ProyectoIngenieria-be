@@ -93,3 +93,18 @@ export const updatePurcharseStatus = async (req: Request, res: Response) => {
         return res.status(500).send('Error Interno del Servidor');
     }
 }
+
+export const approveOrRejectSupplyPurcharse = async (req: Request, res: Response) => {
+    try {
+        const params = formatRequest(req);
+        let idSupplyPurcharse = parseInt(params.idSupplyPurcharse);
+        let idStatus = parseInt(params.idStatus);
+        
+        const result = await SupplyPurcharseService.approveOrRejectSupplyPurcharse(idSupplyPurcharse,idStatus);
+        
+        res.status(result.getStatus()).json(result);
+    } catch (error) {
+        console.error('Error al ejecutar procedimiento:', error);
+        return res.status(500).send('Error Interno del Servidor');
+    }
+}

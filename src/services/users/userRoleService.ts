@@ -3,9 +3,11 @@ import UserRolesHistoric from '../../models/users/userRolesHistoricModel';
 import UserRole from '../../models/users/userRoleModel';
 import sequelize from '../../utils/connection';
 import JsonResponse from '../../utils/jsonResponse';
+import { UpdateRoleProp } from '../../utils/interfaces/Interface';
 
 class UserRoleService {
-    static async getUserRoles() {
+
+    static async getUserRolesForAdmin() {
         const data = await UserRole.findAll();
 
         if(data.length === 0){
@@ -15,17 +17,17 @@ class UserRoleService {
         return JsonResponse.success(data, "La petición ha sido un éxito.");
     }
 
-    static async updateUserRole(idUser: number, newRoleId: number, description?: string) {
+    static async updateUserRole(updateRoleProp : UpdateRoleProp) {
         try {
             await sequelize.transaction(async (t) => {
                 
                 //Manejo de Errores
-                const user = await User.findByPk(idUser, { transaction: t });
+                const user = await User.findByPk(updateRoleProp.idUser, { transaction: t });
                 if (!user) {
                     return JsonResponse.error(400,"El usuario no existe.");
                 }
 
-                const role = await UserRole.findByPk(newRoleId);
+                const role = await UserRole.findByPk(updateRoleProp.idRole, { transaction : t});
                 if(!role){
                     return JsonResponse.error(400,"El rol seleccionado no es válido.");
                 }
@@ -33,18 +35,23 @@ class UserRoleService {
                 const oldRoleId = user.idRole;
 
                 // Actualizar rol
-                await User.update(
-                    { idRole: newRoleId },
-                    { where: { idUser }, transaction: t }
+                await User.update({ 
+                    idRole: updateRoleProp.idRole 
+                },{ 
+                    where: {
+                        idUser : updateRoleProp.idUser
+                    }, 
+                    transaction: t 
+                }
                 );
 
                 // Insertar historial
                 await UserRolesHistoric.create(
                     {
-                        idUser: idUser,
+                        idUser: updateRoleProp.idUser,
                         oldRoleId: oldRoleId,
-                        newRoleId: newRoleId,
-                        description: description ?? "Cambio de rol realizado"
+                        newRoleId: updateRoleProp.idRole,
+                        description: updateRoleProp.description ?? "Cambio de rol realizado"
                     },
                     { transaction: t }
                 );

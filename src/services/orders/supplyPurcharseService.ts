@@ -402,6 +402,47 @@ class SupplyPurcharseService {
             return JsonResponse.error(500, "Error Interno del Servidor.");
         }
     }
+
+    static async approveOrRejectSupplyPurcharse(idSupplyPurcharse: number, idStatus : number){
+
+        const avaliableStatus = await Status.findAll({
+            where : {
+                idStatusType : 1
+            }
+        });
+
+        if(!(avaliableStatus.find((s) => s.idStatus === idStatus)) || idStatus == 2)
+            return JsonResponse.error(500, "Estado ingresado no válido.");
+
+        const purcharse = await SupplyPurcharse.findByPk(idSupplyPurcharse);
+        if(!purcharse)
+            return JsonResponse.error(400, "Orden no encontrada.");
+
+        if(purcharse.idStatus != 2)
+            return JsonResponse.error(500,"La orden ya fue gestionada.");
+
+        const t = await sequelize.transaction();
+        try{
+
+            await SupplyPurcharse.update({
+                idStatus : idStatus
+            },{
+                where :{
+                    idSupplyPurcharse: idSupplyPurcharse
+                }, 
+                transaction : t
+            });
+
+            await t.commit();
+
+            return JsonResponse.success({},"La orden de compra se ha actualizado con éxito.");
+
+        }catch(err){
+            await t.rollback();
+            console.log(err);
+            return JsonResponse.error(500, "Error Interno del Servidor.");
+        }
+    }
 }
 
 export default SupplyPurcharseService;

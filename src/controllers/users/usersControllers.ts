@@ -46,18 +46,6 @@ export const searchUsers = async (req: Request, res: Response) => {
     }
 }
 
-export const registerUser = async (req: Request, res: Response) => {
-    try {
-        const params = formatRequest(req);
-
-        const result = await UserService.registerUser(params);
-        res.status(result.getStatus()).json(result);
-    } catch (err) {
-        console.log(err);
-        res.status(500).json(JsonResponse.error(500,"Error Interno del Servidor."));
-    }
-}
-
 export const updateEnabledStatus = async (req: Request, res: Response)  => {
     try {
         const params = formatRequest(req);

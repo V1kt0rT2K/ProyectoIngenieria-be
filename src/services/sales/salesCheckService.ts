@@ -37,7 +37,6 @@ class SalesCheckService{
 
         const {count ,rows} =  await SalesCheck.findAndCountAll({
             include: [
-                {model : Product, required:true},
                 {model : User, required:true , include: [
                     {model:Person, required:true}
                 ]},
@@ -54,7 +53,6 @@ class SalesCheckService{
                     idClientType === 0 ? {"$Client.ClientType.idClientType$" : {[Op.ne]: null}} : {}
                 ]
             },
-            distinct:true,
             offset: (page-1) * size,
             limit: size
         });
@@ -88,7 +86,6 @@ class SalesCheckService{
 
         const {count ,rows} =  await SalesCheck.findAndCountAll({
             include: [
-                {model : Product, required:true},
                 {model: Client, required: true, include: [
                     {model : ClientType, required: true}
                 ]}
@@ -106,7 +103,6 @@ class SalesCheckService{
             order:[
                 ["generationDate", sort == 0 ? "DESC" : "ASC"]
             ],
-            distinct:true,
             offset: (page-1) * size,
             limit: size
         });
@@ -143,6 +139,39 @@ class SalesCheckService{
         return JsonResponse.success(data,"La petición ha sido un éxito.");
     }
 
+    static async searchSalesCheckForUser(idUser: number | undefined,searchParam : string) {
+
+        const sales = await SalesCheck.findAll({
+            include:[
+                {model : Client, required : true},
+                {model : Product, required:true},
+                {model: CaiCodeRange, required: true, include:[
+                    {model: CaiCode, required:true}
+                ]}
+            ],
+            where:{
+                idUser : idUser,
+
+                [Op.or]: [
+                    {'$Client.identification$' : {[Op.like] : searchParam + "%"}},
+                    {'$Client.fullName$' : {[Op.like] : searchParam + "%"}},
+                    // sequelize.where(
+                    //     sequelize.fn("CONCAT", sequelize.col("Person.firstName"),sequelize.col("Person.secondName")), 
+                    //     Op.like , 
+                    //     searchParam + "%"
+                    // ),
+                    {"saleCheckCode" : {[Op.like] : searchParam + "%"}}
+                ]
+            }
+        });
+
+        if(sales.length == 0){
+            return JsonResponse.error(400,"No se han encontrado usuarios.");
+        }
+
+        return JsonResponse.success(sales,'La petición se ha respondido con éxito.');
+    }
+
     static async searchSalesCheck(searchParam : string) {
 
         const sales = await SalesCheck.findAll({
@@ -159,13 +188,13 @@ class SalesCheckService{
             where:{
                 [Op.or]: [
                     {'$Client.identification$' : {[Op.like] : searchParam + "%"}},
-                    {'$Client.fullName$' : {[Op.like] : searchParam + "%"}},
+                    {'$User.email$' : {[Op.like] : searchParam + "%"}},
                     // sequelize.where(
                     //     sequelize.fn("CONCAT", sequelize.col("Person.firstName"),sequelize.col("Person.secondName")), 
                     //     Op.like , 
                     //     searchParam + "%"
                     // ),
-                    {"salesCheckCode" : {[Op.like] : searchParam + "%"}}
+                    {"saleCheckCode" : {[Op.like] : searchParam + "%"}}
                 ]
             }
         });

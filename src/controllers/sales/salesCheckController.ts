@@ -60,6 +60,22 @@ export const getSalesCheckById = async (req: Request, res: Response) => {
 
 }
 
+export const searchSalesCheckForUser = async (req: Request, res: Response) => {
+    try {
+        const params = formatRequest(req);
+        const user = await getUserFromJWT(req);
+
+        const result = await SalesCheckService.searchSalesCheckForUser(user,params.searchParam);
+
+        res.status(result.getStatus()).json(result);
+    } 
+    catch (error) {
+        console.error('Error al ejecutar procedimiento:', error);
+        return res.status(500).send('Error Interno del Servidor');
+    } 
+
+}
+
 export const searchSalesCheck = async (req: Request, res: Response) => {
     try {
         const params = formatRequest(req);

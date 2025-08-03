@@ -12,5 +12,6 @@ router.get(`${path}/get/:idSupplyPurcharse`, supplyPurcharseController.getSupply
 router.post(`${path}/generate`, supplyPurcharseController.generatePurcharse);
 router.post(`${path}/entry`, supplyPurcharseController.enterSupplyPurcharse);
 router.put(`${path}/update`, supplyPurcharseController.updatePurcharseStatus);
+router.put(`${path}/manage`, supplyPurcharseController.approveOrRejectSupplyPurcharse);
 
 export default router;

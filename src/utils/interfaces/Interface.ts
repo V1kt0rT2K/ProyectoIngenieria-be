@@ -13,6 +13,12 @@ export interface RegisterFormProps {
     idRole: number;
 };
 
+export interface UpdateRoleProp {
+    idUser : number,
+    idRole : number,
+    description? : string
+}
+
 export interface SalesCheckProp {   
     identification : string | null,
     consumption: {
