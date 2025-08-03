@@ -67,20 +67,6 @@ export const createSwineBatch = async (req: Request, res: Response) => {
         return res.status(500).send('Error Interno del Servidor');
     } 
 }
-export const updateStockQuantiy = async (req: Request, res: Response) => {
-    try {
-        const params = formatRequest(req);
-        const result = await SwineBatchService.updateStockQuantity(params.idSwineBatch, params.quantitySwine);
-
-        return res.status(result.getStatus()).json(result);
-
-
-
-    }catch (error) {
-        console.error('Error al ejecutar procedimiento:', error);
-        return res.status(500).send('Error Interno del Servidor');
-    }
-}
 
 
 

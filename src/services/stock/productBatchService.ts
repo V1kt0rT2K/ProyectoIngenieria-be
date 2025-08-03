@@ -2,8 +2,10 @@ import JsonResponse from "../../utils/jsonResponse";
 import ProductBatch from "../../models/stocks/productBatchModel";
 import Product from "../../models/stocks/productModel";
 import sequelize from "../../utils/connection";
+import SwineBatchService from "./swineBatchService";
 import { IncomingProductBatchProp } from "../../utils/interfaces/Interface";
 import { Op,Sequelize } from "sequelize";
+import SwineBatch from "../../models/stocks/swineBatchModel";
 
 class ProductBatchService {
 
@@ -44,39 +46,41 @@ class ProductBatchService {
         }
     }
 
-    static async createProductBatch(IncomingProductBatchProp : IncomingProductBatchProp) {
-        try{
-            if(IncomingProductBatchProp.entryQuantity <= 0) {
-                return JsonResponse.error(400, "La cantidad de entrada debe ser mayor a cero.");
-            }
-            const t = await sequelize.transaction();
-            try{
-            const productBatch = await ProductBatch.create({
-                idProduct: IncomingProductBatchProp.idProduct,
-                idSwineBatch: IncomingProductBatchProp.idSwineBatch,
-                entryQuantity: IncomingProductBatchProp.entryQuantity,
-                stockQuantity: IncomingProductBatchProp.entryQuantity,
-                expirationDate: IncomingProductBatchProp.expirationDate,
-                generationDate:IncomingProductBatchProp.generationDate
-            },{
-                transaction: t
-            });
-            await t.commit();
+    static async createProductBatch(payload: IncomingProductBatchProp) {
+    const t = await sequelize.transaction();
+    
+    try {
 
-            return JsonResponse.success(productBatch, 'Lote de Producto agregado con exito.');
-        }catch(error) {
-            console.error(error);
-            await t.rollback();
-            return JsonResponse.error(500, "Error Interno del Servidor.");
+        const swineBatch = await SwineBatch.findByPk(payload.idSwineBatch, { transaction: t });
+        if (!swineBatch) throw new Error("Lote de cerdos no encontrado");
+        if (swineBatch.stockQuantity < payload.decrementSwine) throw new Error("Stock insuficiente");
+
+        swineBatch.update({
+            stockQuantity: swineBatch.stockQuantity - payload.decrementSwine },
+            { transaction: t });
+
+        for (const detail of payload.detail) {
+            if (detail.entryQuantity <= 0) throw new Error("Cantidad inválida");
+            if (detail.expirationDate <= new Date()) throw new Error("Fecha expiración inválida");
+            
+            await ProductBatch.create({
+                idProduct: detail.idProduct,
+                idSwineBatch: payload.idSwineBatch,
+                entryQuantity: detail.entryQuantity,
+                stockQuantity: detail.entryQuantity,
+                expirationDate: detail.expirationDate,
+                generationDate: detail.generationDate
+            }, { transaction: t });
         }
 
-
-
-        }catch (error) {
-            console.error(error);
-            return JsonResponse.error(500, "Error Interno del Servidor.");
-        }
+        await t.commit();
+        return JsonResponse.success(null, 'Lotes creados exitosamente');
+        
+    } catch (error) {
+        await t.rollback();
+        return JsonResponse.error(400, "eror al crear lotes de producto");
     }
+}
 static async searchProductBatch(searchParam: string, page: number, size: number, sort: number) {
     if (page <= 0) page = 1;
     if (size <= 0) size = 15;

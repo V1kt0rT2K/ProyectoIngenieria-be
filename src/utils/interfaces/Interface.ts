@@ -56,13 +56,15 @@ export interface IncomingSupplyPurcharseProp{
     }[]
 }
 export interface IncomingProductBatchProp{
-    idProduct: number;
     idSwineBatch: number;
+    decrementSwine:number;
+    detail: {
+    idProduct: number;
     entryQuantity: number;
     expirationDate: Date;
     generationDate: Date;
-    
-}[]
+    }[];
+}
 export interface IncomingProductProp{ 
     productName: string;
     productDescription: string;
