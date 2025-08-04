@@ -9,6 +9,12 @@ class SupplyBatch extends Model{
     get stockQuantity(): number {
         return this.getDataValue("stockQuantity");
     }
+    get idSupply(): number {
+        return this.getDataValue("idSupply");
+    }
+    get expirationDate(): Date {
+        return this.getDataValue("expirationDate");
+    }
 
 };
 

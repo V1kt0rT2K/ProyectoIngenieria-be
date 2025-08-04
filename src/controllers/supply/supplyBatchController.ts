@@ -45,9 +45,9 @@ export const getSupplyBatchesByIdType = async (req: Request, res: Response) => {
         return res.status(500).send('Error Interno del Servidor');
     }
 }
-export const getSuppbyBatchbyMenorExpirationDate = async (req: Request, res: Response) => {
+export const getSupplyBatchesNearExpiration = async (req: Request, res: Response) => {
     try {
-        const result = await SupplyBatchService.getSuppbyBatchbyMenorExpirationDate();
+        const result = await SupplyBatchService.getSupplyBatchesNearExpiration();
         res.status(result.getStatus()).json(result);
     } catch (error) {
         console.error('Error al ejecutar procedimiento:', error);

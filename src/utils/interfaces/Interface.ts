@@ -81,9 +81,12 @@ export interface ClientProps {
 }
 export interface IncomingSwineSupplyProp{
     idSwineBatch: number;
+    idUser: number;
+    quantityNeeded: number;
+    detail:{
     idSupply: number;
     quantity: number;
     generationDate: Date;
-    idUser: number;
+    }[]
             
 }

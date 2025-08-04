@@ -1,6 +1,7 @@
 import JsonResponse from "../../utils/jsonResponse";
 import SupplyBatch from "../../models/supplys/supplyBatchModel";
 import SupplyService from "./supplyService";
+import Stage from "../../models/assets/stageModel";
 import sequelize from "../../utils/connection";
 import Supply from "../../models/supplys/supplyModel";
 import SupplyType from "../../models/supplys/supplyTypeModel";
@@ -24,8 +25,9 @@ class SupplyBatchService {
                 required: true,
                 include: [{
                     model: SupplyType,
-                    required: true
-                }]
+                    required: true, 
+                },{model:Stage,
+                    required: true}]
             }],
             where: {
                 stockQuantity: {
@@ -67,7 +69,8 @@ class SupplyBatchService {
             include: [
                 { model: Supply,required: true,
                     include: [
-                        { model: SupplyType, required: true}
+                        { model: SupplyType, required: true},{model:Stage,
+                    required: true}
                     ]
             }],
             where: {
@@ -87,31 +90,40 @@ class SupplyBatchService {
 
         return JsonResponse.success({data:rows,totalItems:count}, "La petición ha sido un éxito.");
     }
-    static async getSuppbyBatchbyMenorExpirationDate() {
-        const data = await SupplyBatch.findAll({
+    static async getSupplyBatchesNearExpiration() {
+    
+        const today = new Date();
+        
+        const batches = await SupplyBatch.findAll({
             include: [
-                { model: Supply, required: true,
-                    include: [
-                        { model: SupplyType, required: true}
-                    ]
+                {
+                    model: Supply,
+                    required: true,
+                    include: [{
+                        model: SupplyType,
+                        required: true,
+                        
+                    }]
                 }
             ],
             where: {
-                    stockQuantity :{
-                        [Op.gt] : 0
-                    }
-            
+                stockQuantity: { [Op.gt]: 0 },
+                expirationDate: { [Op.gte]: today } 
             },
-            order: [['expirationDate', 'ASC']]
-            
+            order: [
+                ['expirationDate', 'ASC'] 
+            ],
         });
 
-        if (!data || data.length === 0) {
-            return JsonResponse.error(400, "No existen lotes de suministros.");
+        if (!batches || batches.length === 0) {
+            return JsonResponse.error(400,"No se encontraron lotes próximos a expirar");
         }
-
-        return JsonResponse.success(data, "La petición ha sido un éxito.");
-    }
+        return JsonResponse.success(
+            batches , 
+            "Lotes próximos a expirar obtenidos con éxito"
+        );
+    
+}
     static async updateStckSupplyBatch(idSupplyBatch: number, quantity: number) {
         const SupplyBatchbyid = await SupplyBatch.findByPk(idSupplyBatch);
 
