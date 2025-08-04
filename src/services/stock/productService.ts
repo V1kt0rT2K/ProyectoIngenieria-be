@@ -78,27 +78,19 @@ class ProductService {
     if (page <= 0) page = 1;
     if (size <= 0) size = 15;
     if (sort !== 0 && sort !== 1) sort = 0;
-
-    // Verificar si el parámetro es numérico (para búsqueda por precio)
     const isNumeric = !isNaN(parseFloat(searchParam));
 
     const whereClause: any = {};
     const searchConditions = [];
-    
-    // Búsqueda por nombre de producto (case-insensitive)
     searchConditions.push(Sequelize.where(
         Sequelize.fn('LOWER', Sequelize.col('productName')),
         { [Op.like]: `%${searchParam.toLowerCase()}%` }
     ));
-
-    // Si es numérico, buscar por precio
     if (isNumeric) {
         searchConditions.push({ 
             price: { [Op.eq]: parseFloat(searchParam) }
         });
     }
-
-    // Solo aplicar condiciones si hay parámetro de búsqueda
     if (searchParam) {
         whereClause[Op.or] = searchConditions;
     }

@@ -66,7 +66,7 @@ SalesCheck.init(
             }
         },
         saleCheckCode : {
-            type: DataTypes.STRING('MAX'),
+            type: DataTypes.STRING(19),
             allowNull: false
         }
     },

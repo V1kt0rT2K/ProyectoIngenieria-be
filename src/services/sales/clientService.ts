@@ -44,6 +44,33 @@ class ClientService{
 
     }
 
+    static async searchClients(searchParam : string) {
+
+        const clients = await Client.findAll({
+            include: [
+                {model: ClientType  , required : true}
+            ],
+            where:{
+                [Op.or]: [
+                    {"identification" : {[Op.like] : searchParam + "%"}},
+                    {"fullName" : {[Op.like] : searchParam + "%"}},
+                    // sequelize.where(
+                    //     sequelize.fn("CONCAT", sequelize.col("Person.firstName"),sequelize.col("Person.secondName")), 
+                    //     Op.like , 
+                    //     searchParam + "%"
+                    // ),
+                    {"contact" : {[Op.like] : searchParam+"%"}}
+                ]
+            }
+        });
+
+        if(clients.length == 0){
+            return JsonResponse.error(400,"No se han encontrado clientes.");
+        }
+
+        return JsonResponse.success(clients,'La petición se ha respondido con éxito.');
+    }
+
     static async createClient(client: any, transaction: Transaction) {
         return await Client.create(client, { transaction });
     }

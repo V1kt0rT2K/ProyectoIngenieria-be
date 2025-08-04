@@ -70,7 +70,7 @@ export interface IncomingProductProp{
     productDescription: string;
     price: number;
     orderPoint: number;
-}[]
+}
 
 export interface ClientProps {
 		identification: string;
@@ -81,9 +81,12 @@ export interface ClientProps {
 }
 export interface IncomingSwineSupplyProp{
     idSwineBatch: number;
+    idUser: number;
+    quantityNeeded: number;
+    detail:{
     idSupply: number;
     quantity: number;
     generationDate: Date;
-    idUser: number;
+    }[]
             
 }

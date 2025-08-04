@@ -32,3 +32,14 @@ export const getSupplyByType = async (req: Request, res: Response) => {
         return res.status(500).send('Error Interno del Servidor');
     }
 }
+export const getSupplyByStage = async (req: Request, res: Response) => {
+    try {
+        const params = req.params;
+        let idStage = Number(params.idStage);
+        const result = await SupplyService.getSuppybyStage(idStage);   
+        res.status(result.getStatus()).json(result);
+    } catch (error) {
+        console.error('Error al ejecutar procedimiento:', error);
+        return res.status(500).send('Error Interno del Servidor');
+    }
+}

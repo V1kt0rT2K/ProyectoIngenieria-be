@@ -94,11 +94,10 @@ class SalesCheckService{
                 [Op.and] : {
                     idUser : idUser,
                     [Op.or]: [
-                    {"$Client.ClientType.idClientType$" : idClientType},
-                    idClientType === 0 ? {"$Client.ClientType.idClientType$" : {[Op.ne]: null}} : {}
-                ]
+                        {"$Client.ClientType.idClientType$" : idClientType},
+                        idClientType === 0 ? {"$Client.ClientType.idClientType$" : {[Op.ne]: null}} : {}
+                    ]
                 }
-                
             },
             order:[
                 ["generationDate", sort == 0 ? "DESC" : "ASC"]

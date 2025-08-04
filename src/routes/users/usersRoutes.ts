@@ -4,10 +4,10 @@ import { checkUserAction } from "../../utils/permissionService";
 
 const router = express.Router();
 
-router.put('/update/:id', usersController.updateUser);
-router.put('/update/status', usersController.updateEnabledStatus);
-router.get('/get/all/:page/:size/:sort', usersController.getAllUsers);
-router.get('/:id', usersController.getUserById);
-router.get('/search/:searchParam', usersController.searchUsers);
+router.put('/update/:id',checkUserAction, usersController.updateUser);
+router.put('/update/status',checkUserAction, usersController.updateEnabledStatus);
+router.get('/get/all/:page/:size/:sort',checkUserAction, usersController.getAllUsers);
+router.get('/:id',checkUserAction, usersController.getUserById);
+router.get('/search/:searchParam',checkUserAction, usersController.searchUsers);
 
 export default router;

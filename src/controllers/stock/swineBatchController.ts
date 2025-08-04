@@ -3,7 +3,7 @@ import { formatRequest, badRequestMessage } from '../../utils/requestParams';
 import SwineBatchService from '../../services/stock/swineBatchService';
 
 
-export const getAll = async (req: Request, res: Response) => {
+export const getAllSwineBatch = async (req: Request, res: Response) => {
 
     try {
         const params = formatRequest(req);
