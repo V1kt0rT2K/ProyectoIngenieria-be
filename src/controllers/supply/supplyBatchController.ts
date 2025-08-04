@@ -90,7 +90,7 @@ export const searchSupplyBatchByType = async (req: Request, res: Response) => {
     let size = parseInt(params.size);
     let sort = parseInt(params.sort);
     try {
-        const result = await SupplyBatchService.searchSupplyBatchByType(idSupplyType,searchParam, page, size, sort);
+        const result = await SupplyBatchService.searchSupplyBatchType(idSupplyType,searchParam, page, size, sort);
         res.status(result.getStatus()).json(result);
     } catch (error) {
         console.error('Error al ejecutar procedimiento:', error);
