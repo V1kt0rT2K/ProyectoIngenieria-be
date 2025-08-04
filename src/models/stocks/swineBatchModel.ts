@@ -12,6 +12,10 @@ class SwineBatch extends Model{
     get stockQuantity(): number {
         return this.getDataValue("stockQuantity");
     }
+
+    get idStage(): number {
+        return this.getDataValue("idStage");
+    }
 };
 
 SwineBatch.init(
