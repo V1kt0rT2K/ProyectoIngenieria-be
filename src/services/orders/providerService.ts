@@ -38,7 +38,7 @@ class ProviderService {
     //     );
     // }
 
-    static async getAllProvider(page: number, size: number, sort: number, enabled?: number) {
+    static async getAllProvider(page: number, size: number, sort: number, isEnabled: number) {
 
     if (page <= 0) {
         page = 1
@@ -50,14 +50,13 @@ class ProviderService {
         sort = 0
     };
 
-    const whereCondition: any = {};
-
-    if (enabled === 0 || enabled === 1) {
-        whereCondition.isEnabled = enabled;
-    }
-
     const { count, rows } = await Provider.findAndCountAll({
-        where: whereCondition, 
+        where: {
+            [Op.or]: [
+                {"isEnabled" : isEnabled},
+                isEnabled === 2 ? {"isEnabled" : {[Op.ne]: null}} : {}
+            ]
+        }, 
         order: [
             ["providerName", sort === 0 ? "DESC" : "ASC"]
         ],

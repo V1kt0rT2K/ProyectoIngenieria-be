@@ -27,9 +27,9 @@ export const getAllProviders = async (req: Request, res: Response) => {
         let page = parseInt(params.page);
         let size = parseInt(params.size);
         let sort = parseInt(params.sort);
-        const enabled = req.query.enabled ? parseInt(req.query.enabled as string) : undefined;
+        let isEnabled = parseInt(params.isEnabled);
 
-        const result = await ProviderService.getAllProvider( page, size, sort, enabled );
+        const result = await ProviderService.getAllProvider( page, size, sort, isEnabled);
 
         return res.status(result.getStatus()).json(result);
     } catch (error) {
