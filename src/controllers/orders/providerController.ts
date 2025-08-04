@@ -107,7 +107,7 @@ export const searchProvider = async (req: Request, res: Response) => {
 
 }
 
-export const updateEnabledStatus = async (req: Request, res: Response) => {
+export const updateProviderEnabledStatus = async (req: Request, res: Response) => {
     try {
         const params = formatRequest(req);
         const idProvider = parseInt(params.idProvider);

@@ -38,7 +38,7 @@ export const checkUserAction = async (req: Request, res: Response, next: NextFun
     });
 
     if(!data){
-        return res.status(403).json(JsonResponse.error(403,"Acceso no autorizado."));
+        return res.status(405).json(JsonResponse.error(403,"Acceso no autorizado."));
     }else{
         next();
     }

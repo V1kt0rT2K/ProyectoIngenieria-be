@@ -30,14 +30,11 @@ index.use('/auth', authRoutes);
 index.use('/public', publicRoutes);
 
 index.use(verifyToken);
-//index.use(checkUserAction);
 
-index.use('/users', usersRoutes, userRolesRoutes);
+index.use('/users', usersRoutes, userRolesRoutes, userRequestsRoutes);
 
 index.use('/asset', 
     statusRoutes, stageRoutes, notificationRoutes);
-
-index.use('/requests', userRequestsRoutes);
 
 index.use('/stock', 
     swineBatchRoutes, productRoutes,productBatchRoutes);
