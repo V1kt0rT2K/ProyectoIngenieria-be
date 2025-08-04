@@ -6,5 +6,6 @@ const router = express.Router();
 router.get(`/get/all`, supplyController.getAllSupplies);
 router.get(`/get/:idSupply`, supplyController.getSupplyById);
 router.get(`/get/type/:idSupplyType`, supplyController.getSupplyByType);
+router.get(`/get/stage/:idStage`, supplyController.getSupplyByStage);
 
 export default router;

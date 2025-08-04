@@ -70,7 +70,7 @@ export interface IncomingProductProp{
     productDescription: string;
     price: number;
     orderPoint: number;
-}[]
+}
 
 export interface ClientProps {
 		identification: string;

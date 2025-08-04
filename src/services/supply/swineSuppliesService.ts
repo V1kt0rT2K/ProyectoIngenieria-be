@@ -64,25 +64,22 @@ class SwineSupplyService {
         }
         return JsonResponse.success(data, "La petición ha sido un éxito.");
     }
-   static async createSwineSupply(payload: IncomingSwineSupplyProp) {
+    static async createSwineSupply(payload: IncomingSwineSupplyProp) {
     const t = await sequelize.transaction();
     
     try {
         if (payload.quantityNeeded <= 0) {
             return JsonResponse.error(400, "La cantidad necesaria debe ser mayor a cero.");
         }
-
-        // 2. Obtener lotes de insumos 
+        
         const supplyIds = payload.detail.map(d => d.idSupply);
         const supplyBatches = await SupplyBatch.findAll({
-            where: { idSupply: supplyIds },
+            where: { idSupply: supplyIds, },
             order: [['expirationDate', 'ASC']],
             transaction: t,
             lock: t.LOCK.UPDATE
         });
-    
 
-        // 3. Verificar y reservar stock
         const stockMap = new Map<number, number>();
         const validBatches = supplyBatches.filter(b => b.stockQuantity > 0);
 
@@ -99,18 +96,15 @@ class SwineSupplyService {
                 return JsonResponse.error(400, `Stock insuficiente para insumo ${item.idSupply}`);
             }
         }
-
-        // 4. Actualizar lotes (FIFO)
             for (const item of payload.detail) {
                 let remaining = item.quantity;
                 
-                // Solo filtrar - sin volver a ordenar
                 const batches = supplyBatches.filter(b => b.idSupply === item.idSupply);
 
                 for (const batch of batches) {
                     if (remaining <= 0) break;
                     
-                    if (batch.stockQuantity <= 0) continue; // Saltar lotes sin stock
+                    if (batch.stockQuantity <= 0) continue; 
 
                     const discount = Math.min(batch.stockQuantity, remaining);
                     await batch.update({
@@ -124,7 +118,6 @@ class SwineSupplyService {
                     throw new Error(`No se pudo cubrir la cantidad completa para insumo ${item.idSupply}. Faltan ${remaining} unidades`);
                 }
             }
-        // 5. Crear registros de suministro
         const createdSupplies = [];
         for (const detail of payload.detail) {
             const newSupply = await SwineSupply.create({
