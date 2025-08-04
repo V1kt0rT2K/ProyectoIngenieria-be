@@ -16,4 +16,3 @@ export const config = {
 
 export const SECRET_KEY = '77396e5f454a7adf';
 export const TIME_OUT = "3600s";
-
