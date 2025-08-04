@@ -8,34 +8,44 @@ import authRoutes from './routes/users/authRoutes';
 import stageRoutes from './routes/asset/stageRoutes';
 import swineBatchRoutes from './routes/stocks/swineBatchRoutes';
 import productRoutes from './routes/stocks/productRoutes';
-import supplyRouter from './routes/supplys/supplyRouter';
-import swineSuppliesRoutes from './routes/supplys/swineSuppliesRouter';
+import supplyRoutes from './routes/supplys/supplyRoutes';
+import swineSuppliesRoutes from './routes/supplys/swineSuppliesRoutes';
 import salesCheckRoutes from './routes/sales/salesCheckRoutes';
+import supplyBatchRoutes from './routes/supplys/supplyBatchRoutes';
+import providerRoutes from './routes/orders/providerRoutes';
+import productBatchRoutes from './routes/stocks/productBatchRoutes';
+import notificationRoutes from './routes/asset/notificationRoutes';
+import supplyPurcharseRoutes from './routes/orders/supplyPurcharseRoutes';
+import clientRoutes from './routes/sales/clientRoutes';
+import orderWholesalerRoutes from './routes/sales/orderWholesalerRoutes';
+import caiCodeRoutes from './routes/sales/caiCodeRoutes';
+import publicRoutes from './routes/publicRoutes';
 
 import { verifyToken } from './utils/jwtService';
-import { checkUserAction } from './utils/permissionService';
 
 const index = express.Router();
 
 index.use('/auth', authRoutes);
 
-index.use('/roles', userRolesRoutes);
+index.use('/public', publicRoutes);
 
 index.use(verifyToken);
 //index.use(checkUserAction);
 
-index.use('/users', usersRoutes);
+index.use('/users', usersRoutes, userRolesRoutes);
 
 index.use('/asset', 
-    statusRoutes, stageRoutes);
+    statusRoutes, stageRoutes, notificationRoutes);
 
 index.use('/requests', userRequestsRoutes);
 
 index.use('/stock', 
-    swineBatchRoutes, productRoutes);
+    swineBatchRoutes, productRoutes,productBatchRoutes);
 
-index.use('/supply', supplyRouter,swineSuppliesRoutes);
+index.use('/supply', supplyRoutes,swineSuppliesRoutes,supplyRoutes,supplyBatchRoutes);
 
-index.use('/sales', salesCheckRoutes);
+index.use('/sales', salesCheckRoutes, clientRoutes, orderWholesalerRoutes, caiCodeRoutes);
+
+index.use('/order',providerRoutes, supplyPurcharseRoutes);
 
 export default index;

@@ -6,10 +6,11 @@ const path = "/swinebatch"
 import * as swineBatchController from "../../controllers/stock/swineBatchController";
 
 
-router.get(`${path}/get/all`, swineBatchController.getAll);
+router.get(`${path}/get/all/:page/:size/:short`, swineBatchController.getAll);
 router.get(`${path}/get/stage/:idStage`, swineBatchController.getSwineBatchByIdStage);
 router.get(`${path}/get/:idSwineBatch`, swineBatchController.getSwineBatchById);
 router.post(`${path}/create`, swineBatchController.createSwineBatch);
+
 
 
 export default router;

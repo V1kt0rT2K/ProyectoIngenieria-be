@@ -3,6 +3,20 @@ import UserService from '../../services/users/userService';
 import { formatRequest } from '../../utils/requestParams';
 import JsonResponse from '../../utils/jsonResponse';
 
+export const getUserById = async (req: Request, res: Response) => {
+    try {
+        const params = formatRequest(req);
+        const id = parseInt(params.id);
+
+        const result = await UserService.getUserById(id);
+        res.status(result.getStatus()).json(result);
+    }
+    catch (error) {
+        console.log(error);
+        res.status(500).json(JsonResponse.error(500,"Error Interno del Servidor."));
+    }
+}
+
 export const getAllUsers = async (req: Request, res: Response) => {
     try {
         const params = formatRequest(req);
@@ -28,18 +42,6 @@ export const searchUsers = async (req: Request, res: Response) => {
     }
     catch (error) {
         console.log(error);
-        res.status(500).json(JsonResponse.error(500,"Error Interno del Servidor."));
-    }
-}
-
-export const registerUser = async (req: Request, res: Response) => {
-    try {
-        const params = formatRequest(req);
-
-        const result = await UserService.registerUser(params);
-        res.status(result.getStatus()).json(result);
-    } catch (err) {
-        console.log(err);
         res.status(500).json(JsonResponse.error(500,"Error Interno del Servidor."));
     }
 }

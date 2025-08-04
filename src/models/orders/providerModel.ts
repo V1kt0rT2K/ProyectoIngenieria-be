@@ -10,6 +10,22 @@ class Provider extends Model{
         return this.getDataValue("providerName");
     }
 
+    get RTN(): string {
+        return this.getDataValue("RTN");
+    }
+
+    get providerContact(): string {
+        return this.getDataValue("providerContact");
+    }
+
+    get location(): string {
+        return this.getDataValue("location");
+    }
+
+    get isEnabled(): boolean {
+        return this.getDataValue("isEnabled");
+    }
+
 };
 
 Provider.init(
@@ -34,6 +50,9 @@ Provider.init(
         location:{
             type:DataTypes.STRING('MAX'),
             allowNull: false,
+        },
+        isEnabled : {
+            type: DataTypes.BOOLEAN,
         }
     },
     {

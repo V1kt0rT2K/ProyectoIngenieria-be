@@ -6,8 +6,8 @@ class SupplyBatch extends Model{
         return this.getDataValue("idSupplyBatch");
     }
 
-    get quantity(): number {
-        return this.getDataValue("quantity");
+    get stockQuantity(): number {
+        return this.getDataValue("stockQuantity");
     }
 
 };
@@ -27,7 +27,7 @@ SupplyBatch.init(
                 key: 'idSupply'
             }
         },
-        quantity : {
+        stockQuantity : {
             type : DataTypes.DECIMAL(8,2),
             allowNull: false,
         },

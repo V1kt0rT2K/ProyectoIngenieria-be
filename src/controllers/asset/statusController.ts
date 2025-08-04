@@ -15,6 +15,34 @@ export const getAllStatus = async (req: Request, res: Response) => {
 
 }
 
+export const getStatusForUserRequests = async (req: Request, res: Response) => {
+    try {
+
+        const result = await StatusService.getStatusForUserRequests();
+
+        res.status(result.getStatus()).json(result);
+    } 
+    catch (error) {
+        console.error('Error al ejecutar procedimiento:', error);
+        return res.status(500).send('Error Interno del Servidor');
+    } 
+
+}
+
+export const getStatusForPurcharses = async (req: Request, res: Response) => {
+    try {
+
+        const result = await StatusService.getStatusForPurcharses();
+
+        res.status(result.getStatus()).json(result);
+    } 
+    catch (error) {
+        console.error('Error al ejecutar procedimiento:', error);
+        return res.status(500).send('Error Interno del Servidor');
+    } 
+
+}
+
 export const getStatusByIdStatusType = async (req: Request, res: Response) => {
     try {
 

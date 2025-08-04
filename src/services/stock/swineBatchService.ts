@@ -8,10 +8,19 @@ import { Op } from "sequelize";
 
 class SwineBatchService {
 
-    static async getAll() {
+    static async getAllSwineBatch(page:number, size:number, sort:number) {
+        if (page <= 0) {
+            page = 1;
+        }
+        if (size <= 0) {
+            size = 15;
+        }
+        if (sort !== 0 && sort !== 1) {
+            sort = 0;
+        }
         try {
         
-            const data = await SwineBatch.findAll({
+            const {count,rows} = await SwineBatch.findAndCountAll({
                 include:[
                     {model : Stage, required: true}
                 ],
@@ -20,13 +29,18 @@ class SwineBatchService {
                         [Op.gt] : 0
                     }
                 },
+                order: [
+                    [Stage, "stageName", sort === 0 ? "DESC" : "ASC"]
+                ],
+                offset: (page - 1) * size,
+                limit: size
             });
 
-            if(data.length == 0){
+            if(rows.length == 0){
                 return JsonResponse.error(400, "No existen datos.");
             }
             
-            return JsonResponse.success(data, 'All swine batches retrieved successfully.');
+            return JsonResponse.success({data:rows,totalItems:count}, 'La peticion a sido un exito.');
         } catch (error) {
             console.error(error);
             return JsonResponse.error(500, "Error Interno del Servidor.");
@@ -59,7 +73,13 @@ class SwineBatchService {
     static async getSwineBatchByIdStage(idStage: number) {
         try {
             const data = await SwineBatch.findAll({
-                where: { idStage }
+                include:[{model : Stage, required: true}]
+            ,
+                where: { idStage,
+                    stockQuantity :{
+                        [Op.gt] : 0
+                    }
+                }
             });
             
             if (data.length === 0) {
@@ -80,7 +100,7 @@ class SwineBatchService {
         try{
 
             //Manejo de errores
-            if(incomingBatchProp.swineQuantityRemaining <= 0 || incomingBatchProp.estimatedWeight <= 0){
+            if(incomingBatchProp.quantity <= 0 ){
                 return JsonResponse.error(500,"Datos invalidos.");
             }
 
@@ -97,10 +117,9 @@ class SwineBatchService {
             const t = await sequelize.transaction();
 
             try{
-
+            
                 const swineBatch = await SwineBatch.create({
-                    swineQuantityRemaining : incomingBatchProp.swineQuantityRemaining,
-                    estimatedWeight : incomingBatchProp.estimatedWeight,
+                    birthDate : new Date(incomingBatchProp.birthDate),
                     quantity : incomingBatchProp.quantity,
                     stockQuantity: incomingBatchProp.quantity,
                     idStage : stage.idStage

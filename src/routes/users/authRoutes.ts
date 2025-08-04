@@ -6,6 +6,7 @@ import { verifyTokenTest } from "../../utils/jwtService";
 const router = express.Router();
 
 router.post('/login', authController.loginUser);
+router.post('/register', authController.registerUser);
 router.post('/token/test', verifyTokenTest);
 
 export default router;

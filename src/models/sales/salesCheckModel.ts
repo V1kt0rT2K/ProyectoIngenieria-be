@@ -76,6 +76,7 @@ SalesCheck.init(
         modelName: 'SalesCheck',
         tableName: 'tblSalesChecks',
         schema: 'sales',
+        hasTrigger : true
     }
 );
 SalesCheck.sync();

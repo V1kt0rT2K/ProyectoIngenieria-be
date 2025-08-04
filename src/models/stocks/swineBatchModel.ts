@@ -9,6 +9,9 @@ class SwineBatch extends Model{
      get quantity(): number {
         return this.getDataValue("quantity");
     }
+    get stockQuantity(): number {
+        return this.getDataValue("stockQuantity");
+    }
 };
 
 SwineBatch.init(
@@ -22,10 +25,11 @@ SwineBatch.init(
             type:DataTypes.INTEGER,
             allowNull: false,
         },
-        estimatedWeight:{
-            type: DataTypes.DECIMAL(10,2),
+        birthDate:{
+            type: DataTypes.DATEONLY,
             allowNull: false
-        },
+        }
+        ,
         generationDate:{
             type: DataTypes.DATE,
             allowNull: true, 

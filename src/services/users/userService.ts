@@ -1,5 +1,6 @@
 import { RegisterFormProps } from '../../utils/interfaces/Interface';
 import User from '../../models/users/userModel';
+import UserRequest from '../../models/users/userRequestModel';
 import {Op} from 'sequelize';
 import PersonService from './personService';
 import UserRequestService from './userRequestService';
@@ -8,11 +9,10 @@ import { Transaction } from 'sequelize';
 import Person from '../../models/users/personModel';
 import UserRole from '../../models/users/userRoleModel';
 import JsonResponse from '../../utils/jsonResponse';
+import Notification from '../../models/assets/notificationModel';
 
 
 class UserService {
-    constructor() { }
-
     static async getAll(page: number, size:number, sort: number) {
 
         if(page <=0){
@@ -58,7 +58,8 @@ class UserService {
         const data = await User.findByPk(idUser,{
             include: [
                 {model: Person, required:true},
-                {model: UserRole, required : true}
+                {model: UserRole, required : true},
+                {model: UserRequest, required : true}
             ]
         });
 
@@ -136,44 +137,6 @@ class UserService {
     static async createUser(user: {}, transaction: Transaction) {
         return await User.create(user, { transaction });
     }
-
-    static async registerUser(form: RegisterFormProps) {
-        try {
-            await sequelize.transaction(async (t) => {
-                const roleName = (await UserRole.findByPk(form.idRole))!.roleName;
-
-                const newPerson = await PersonService.createPerson({
-                    firstName: form.firstName,
-                    secondName: form.secondName,
-                    lastName: form.lastName,
-                    secondLastName: form.secondLastName,
-                    identityNumber: form.identityNumber
-                }, t);
-
-                const newUser = await this.createUser({
-                    email: form.email,
-                    job: form.job ?? roleName,
-                    password: form.password,
-                    idPerson: newPerson.idPerson,
-                    idRole: form.idRole
-                }, t);
-
-                const newRequest = await UserRequestService.createRequest({
-                    idUser: newUser.idUser,
-                    idRole: form.idRole,
-                    idStatus: 2,
-                    userName: form.username,
-                    email: form.email,
-                    //job: form.job ?? "CCCCC"
-                    job: form.job ?? roleName
-                }, t);
-            });
-            return JsonResponse.success({},"Usuario registrado con éxito.");
-        } catch (err) {
-            console.log(err);
-            return JsonResponse.error(500, "Usuario no registrado.");
-        }
-    }
     
 
     static async updateUser(idUser: number, values: any) {
@@ -214,15 +177,7 @@ class UserService {
                         transaction: t
                     }
                 );
-                // await UserRequest.update(
-                //     {
-                //         userName: values.username
-                //     },
-                //     {
-                //         where: { idUser: idUser },
-                //         transaction: t
-                //     }
-                // );
+                
             });
 
             return JsonResponse.success({}, "Usuario actualizado con éxito.");
