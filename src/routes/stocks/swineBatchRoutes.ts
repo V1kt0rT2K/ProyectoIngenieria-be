@@ -10,5 +10,6 @@ router.get(`${path}/get/all/:page/:size/:short`,checkUserAction, swineBatchContr
 router.get(`${path}/get/stage/:idStage`,checkUserAction, swineBatchController.getSwineBatchByIdStage);
 router.get(`${path}/get/:idSwineBatch`,checkUserAction, swineBatchController.getSwineBatchById);
 router.post(`${path}/create`,checkUserAction, swineBatchController.createSwineBatch);
+router.put(`${path}/update/stage`,checkUserAction, swineBatchController.updateSwineBatchStage);
 
 export default router;

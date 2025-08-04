@@ -68,6 +68,22 @@ export const createSwineBatch = async (req: Request, res: Response) => {
     } 
 }
 
+export const updateSwineBatchStage = async (req: Request, res: Response) => {
+    try {
+        const params = formatRequest(req);
+        let idSwineBatch = parseInt(params.idSwineBatch);
+        let idStage = parseInt(params.idStage);
+
+        const result = await SwineBatchService.updateSwineBatchStage(idSwineBatch,idStage);
+
+        res.status(result.getStatus()).json(result);
+    } 
+    catch (error) {
+        console.error('Error al ejecutar procedimiento:', error);
+        return res.status(500).send('Error Interno del Servidor');
+    } 
+}
+
 
 
 

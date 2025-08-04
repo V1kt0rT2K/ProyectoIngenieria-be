@@ -200,6 +200,7 @@ class SupplyPurcharseService {
         ////VERIFICAR SI LA COMPRA FUE MODIFICADA A LA HORA DE INGRESARSE
 
         let isModified = await this.verifyPurcharseDetails(purcharse.idSupplyPurcharse,incomingSupplyPurcharseProp.detail);
+        console.log("detail", incomingSupplyPurcharseProp.detail);
 
         const t = await sequelize.transaction();
         try{
@@ -272,9 +273,9 @@ class SupplyPurcharseService {
                 const entry = await this.addEntriesToStock(purcharse.idSupplyPurcharse,
                     incomingSupplyPurcharseProp.detail, 
                     t);
-                if(!entry){
+                if(!(entry === true)){
                     await t.rollback();
-                    return JsonResponse.error(500,"Error al ingresar lotes a inventario.");
+                    return JsonResponse.error(500,`${entry}`);
                 }
             }
 
@@ -299,6 +300,10 @@ class SupplyPurcharseService {
 
         for(let d of detail){
             let supplyExpirationDate = expirationDates.find(date => date.idSupply === d.idSupply)?.expirationDate;
+
+            console.log("supplyExpirationDate", supplyExpirationDate);
+
+            console.log("isValid", !supplyExpirationDate);
 
             if(!supplyExpirationDate || isNaN(new Date(supplyExpirationDate).getDate()))
                 return "Fecha de expiración ingresada inválida";
