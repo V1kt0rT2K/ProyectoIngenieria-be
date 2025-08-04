@@ -2,6 +2,8 @@ import { Op, Transaction } from 'sequelize';
 import Notification from '../../models/assets/notificationModel';
 import sequelize from '../../utils/connection';
 import JsonResponse from '../../utils/jsonResponse';
+import User from '../../models/users/userModel';
+import UserRole from '../../models/users/userRoleModel';
 
 class NotificationService {
     constructor(){}
@@ -46,16 +48,62 @@ class NotificationService {
         }
     }
 
-    static async createNotification(idUser: number | undefined, message: string, t : Transaction){
+    static async sendNotificationByRole(idRole: number | undefined, message: string, t : Transaction){
+        if(!idRole)
+            return;
+
+        const users = await User.findAll({
+            include : [
+                {model : UserRole, required:true}
+            ],
+            where :{
+                "$UserRole.idRole$" : idRole
+            },
+            transaction : t
+        });
+
+        if(!users)
+            return;
+
+        await Notification.bulkCreate(
+            users.map((user) => {
+                return {
+                    message : message,
+                    idUser : user.idUser
+                }
+            }),
+            {
+                transaction : t
+            }
+        );
+
+        return;
+    }
+
+    static async sendNotificationByUser(idUser: number | undefined, message: string, t : Transaction){
         if(!idUser)
             return;
 
-        await Notification.create({
-            idUser : idUser,
-            message : message
-        },{
-            transaction : t
-        });
+        const users = await User.findByPk(idUser,
+            {
+                transaction : t
+            }
+        );
+
+        if(!users)
+            return;
+
+        await Notification.create(
+            {
+                idUser : idUser,
+                message : message
+            },
+            {
+                transaction : t
+            }
+        );
+
+        return;
     }
 }
 

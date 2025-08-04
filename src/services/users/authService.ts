@@ -7,6 +7,7 @@ import UserRole from '../../models/users/userRoleModel';
 import sequelize from '../../utils/connection';
 import UserRequest from '../../models/users/userRequestModel';
 import { RegisterFormProps } from '../../utils/interfaces/Interface';
+import NotificationService from '../asset/notificationService';
 
 const failedAttempts= new Map<string, number>();
 const lockedUsers = new Map<string, Date>(); 
@@ -139,6 +140,11 @@ class AuthService {
                 }, {
                     transaction: t
                 });
+
+                await NotificationService.sendNotificationByRole( 1,
+                    "Se ha registrado una nueva solicitud de usuario.",
+                    t
+                );
             });
 
             

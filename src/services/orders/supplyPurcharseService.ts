@@ -164,14 +164,11 @@ class SupplyPurcharseService {
             );
 
             ///CREAR NOTIFICACION DE ORDEN DE COMPRA GENERADA
-            const adminUser = await User.findOne({
-                where : {
-                    idRole : 1      ////ROL ADMINISTRADOR
-                },
-                transaction : t
-            });
-
-            await NotificationService.createNotification(adminUser?.idUser,"Se ha generado una nueva orden de compra.", t);
+            ///PARA ROL DE ADMINISTRADOR
+            await NotificationService.sendNotificationByRole( 1,
+                `El usuario ${user.email} ha generado una nueva orden de compra con código ${purcharse.idSupplyPurcharse}.`, 
+                t
+            );
 
             await t.commit();
 
@@ -431,6 +428,11 @@ class SupplyPurcharseService {
                 }, 
                 transaction : t
             });
+
+            await NotificationService.sendNotificationByRole(3,
+                `La orden de compra con código ${purcharse.idSupplyPurcharse} ha sido ${idStatus == 1 ? "aprobada": "denegada"}.`,
+                t
+            );
 
             await t.commit();
 

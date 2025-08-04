@@ -4,6 +4,7 @@ import { Op, Transaction } from "sequelize";
 import sequelize from "../../utils/connection";
 import CaiCode from "../../models/sales/caiCodeModel";
 import { start } from "repl";
+import NotificationService from "../asset/notificationService";
 
 class CaiCodeService{
 
@@ -51,7 +52,7 @@ class CaiCodeService{
         if(!caiCode)
             return JsonResponse.error(400,"No se ha encontrado el código CAI.");
 
-        if(newRange <= 0 || newRange > 50)
+        if(newRange <= 0 || newRange > 500)
             return JsonResponse.error(500,"Rango inválido.");
 
         const caiCodeRange = await CaiCodeRange.findOne({
@@ -93,6 +94,12 @@ class CaiCodeService{
             },{
                 transaction : t
             });
+
+            ////MANDAR NOTIFICACIONES DE NUEVO RANGO A CAJEROS
+            await NotificationService.sendNotificationByRole(2, 
+                "Se ha generado un nuevo rango para emisión de facturas.",
+                t
+            );
 
             await t.commit();
 

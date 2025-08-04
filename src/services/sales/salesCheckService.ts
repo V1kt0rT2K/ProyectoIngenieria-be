@@ -339,7 +339,7 @@ class SalesCheckService{
             );
 
             //Generar notificaciones de puntos de reorden
-            this.checkStockQuantity(salesCheckProp.consumption.map(e=>e.idProduct), t);
+            await this.checkStockQuantity(salesCheckProp.consumption.map(e=>e.idProduct), t);
 
             await t.commit();
             //await t.rollback();
@@ -374,17 +374,12 @@ class SalesCheckService{
 
     static async checkStockQuantity( productList : number[], t: Transaction){
 
-        const users = await User.findAll({
-            where : {
-                idRole : 3      /////ROL ENCARGADO DE ALMACEN
-            }
-        });
-
-        if(users.length == 0)
-            return;
-
         for(let p of productList){
-            const product = await Product.findByPk(p);
+            const product = await Product.findByPk(p,
+                {
+                    transaction : t
+                }
+            );
             if(!product)
                 return;
 
@@ -394,21 +389,16 @@ class SalesCheckService{
                 ],
                 where:{
                     idProduct : product.idProduct
-                }
+                },
+                transaction : t
             });
 
             if(totalInStock[0].stockQuantity <= product.orderPoint){
-                for(let user of users){
-                    await Notification.create({
-                        message : `El producto '${product.productName}' ha llegado a su punto de reorden.`,
-                        idUser : user.idUser
-                    });
-
-                    // await NotificationService.createNotification(user.idUser,
-                    //     `El producto '${product.productName}' ha llegado a su punto de reorden.`,
-                    //     t
-                    // );
-                }
+                ////ENVIAR NOTIFICACIONES AL ENCARGADO DE ALMACEN
+                await NotificationService.sendNotificationByRole(3, 
+                    `El producto ${product.productName} ha llegado al punto de reorden`, 
+                    t
+                );
             }
         }
 
